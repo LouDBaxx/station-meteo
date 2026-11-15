@@ -1,25 +1,33 @@
 
 <!DOCTYPE html>
 <html lang="fr">
-<head> 
- <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#05090c">
 <title>Station météo</title>
 
 <style>
-*{box-sizing:border-box}
+*{
+  box-sizing:border-box;
+}
+
+html,body{
+  margin:0;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+}
 
 body{
-  margin:0;
   background:#05090c;
   color:#e9f5f4;
   font-family:-apple-system,BlinkMacSystemFont,sans-serif;
-  min-height:100vh;
-  overflow:hidden;
 }
+
+/* GESTION DES ÉCRANS */
 
 .screen{
   position:fixed;
@@ -27,7 +35,7 @@ body{
   display:flex;
   align-items:center;
   justify-content:center;
-  padding:24px;
+  padding:clamp(12px,3vw,28px);
   opacity:0;
   pointer-events:none;
   transition:opacity 1.5s ease-in-out;
@@ -47,25 +55,26 @@ body{
 
 .clock-label{
   color:#777f86;
-  font-size:12px;
+  font-size:clamp(9px,1.7vw,12px);
   letter-spacing:5px;
   text-transform:uppercase;
-  margin-bottom:35px;
+  margin-bottom:clamp(12px,3vh,30px);
 }
 
 .clock-frame{
   border:1px solid #30383e;
   border-radius:14px;
-  padding:35px 22px;
+  padding:clamp(15px,4vh,35px) 22px;
   width:100%;
-  max-width:650px;
+  max-width:850px;
   text-align:center;
   background:rgba(12,15,19,.85);
-  box-shadow:0 0 30px rgba(255,255,255,.015),
-             inset 0 0 30px rgba(255,255,255,.015);
+  box-shadow:
+    0 0 30px rgba(255,255,255,.015),
+    inset 0 0 30px rgba(255,255,255,.015);
 }
 
-/* AFFICHAGE À 7 SEGMENTS */
+/* AFFICHAGE 7 SEGMENTS */
 
 #clock{
   display:flex;
@@ -73,9 +82,8 @@ body{
   justify-content:center;
   gap:.09em;
   height:1.15em;
-  font-size:clamp(75px,21vw,145px);
+  font-size:clamp(65px,18vw,145px);
   color:#e8edf0;
-  filter:none;
 }
 
 .digit{
@@ -98,8 +106,6 @@ body{
   box-shadow:0 0 2px rgba(255,255,255,.35);
 }
 
-/* Segments horizontaux */
-
 .seg.a,.seg.d,.seg.g{
   width:60%;
   height:7%;
@@ -110,8 +116,6 @@ body{
 .seg.g{top:46.5%}
 .seg.d{bottom:0}
 
-/* Segments verticaux */
-
 .seg.b,.seg.c,.seg.e,.seg.f{
   width:8%;
   height:35%;
@@ -121,8 +125,6 @@ body{
 .seg.c{right:10%;bottom:7%}
 .seg.e{left:10%;bottom:7%}
 .seg.f{left:10%;top:7%}
-
-/* Deux points de séparation */
 
 .colon{
   position:relative;
@@ -146,119 +148,204 @@ body{
 .colon::after{top:63%}
 
 #date{
-  margin-top:25px;
+  margin-top:clamp(12px,3vh,25px);
   color:#929ba2;
-  font-size:16px;
+  font-size:clamp(12px,2.5vw,16px);
   letter-spacing:3px;
   text-transform:uppercase;
 }
 
 .clock-footer{
-  margin-top:55px;
+  margin-top:clamp(15px,4vh,40px);
   color:#626c74;
   font-size:10px;
   letter-spacing:4px;
 }
 
-/* MÉTÉO */
+/* HABILLAGE COMMUN DES ÉCRANS MÉTÉO */
 
 .weather-screen{
   background:#101820;
-  overflow-y:auto;
 }
 
-main{
+.dashboard{
   width:100%;
-  max-width:650px;
+  max-width:900px;
   margin:auto;
 }
 
 header{
   text-align:center;
-  margin-bottom:25px;
+  margin-bottom:clamp(15px,3vh,30px);
 }
 
 h1{
-  font-size:15px;
+  font-size:clamp(12px,2vw,16px);
   color:#91a2af;
   letter-spacing:4px;
   font-weight:500;
+  margin:0 0 8px;
 }
 
 .weather-date{
   color:#71838e;
-  font-size:13px;
+  font-size:clamp(11px,1.8vw,14px);
 }
 
-h2{
-  font-size:13px;
-  color:#91a2af;
-  text-transform:uppercase;
-  letter-spacing:2px;
-  font-weight:500;
-  margin:22px 0 12px;
+.subtitle{
+  color:#71838e;
+  font-size:11px;
+  letter-spacing:4px;
+  margin-top:10px;
 }
 
-.panel{
-  background:#1b2934;
-  border-radius:18px;
-  padding:22px;
-  margin-bottom:13px;
-}
+/* CLIMAT INTÉRIEUR */
 
-.grid{
+.climate-grid{
   display:grid;
   grid-template-columns:1fr 1fr;
-  gap:12px;
+  gap:clamp(12px,3vw,24px);
+  margin-top:25px;
 }
 
-.value{
-  font-size:clamp(32px,8vw,48px);
-  font-weight:300;
-}
-
-.unit{
-  font-size:18px;
-  color:#a8b5bf;
+.climate-panel{
+  background:#1b2934;
+  border:1px solid #293946;
+  border-radius:18px;
+  padding:clamp(18px,4vw,35px);
+  text-align:center;
 }
 
 .label{
-  font-size:13px;
+  font-size:clamp(11px,1.8vw,14px);
   color:#a8b5bf;
-  margin-bottom:12px;
+  letter-spacing:1px;
 }
 
-#weatherDesc{
-  font-size:18px;
-  margin-bottom:12px;
+.value{
+  font-size:clamp(38px,9vw,76px);
+  font-weight:300;
+  margin-top:12px;
+}
+
+.unit{
+  font-size:clamp(16px,3vw,25px);
+  color:#a8b5bf;
+  font-weight:300;
+}
+
+/* MÉTÉO EXTÉRIEURE */
+
+.outdoor-panel{
+  background:#1b2934;
+  border:1px solid #293946;
+  border-radius:18px;
+  padding:clamp(18px,4vw,32px);
+  text-align:center;
+  margin-top:15px;
 }
 
 #weatherIcon{
-  font-size:38px;
+  font-size:clamp(35px,7vw,60px);
+  margin-bottom:10px;
+}
+
+#weatherDesc{
+  font-size:clamp(17px,3vw,25px);
   margin-bottom:8px;
 }
 
-#status{
-  font-size:11px;
-  color:#82939f;
-  text-align:center;
-  margin-top:18px;
+.outdoor-panel .value{
+  font-size:clamp(45px,10vw,82px);
 }
 
-@media(max-height:600px){
-  .panel{padding:15px;margin-bottom:8px}
-  h2{margin:12px 0 8px}
-  header{margin-bottom:12px}
-  .clock-footer{margin-top:25px}
+#weatherDetails{
+  margin-top:15px;
+  line-height:1.6;
+}
+
+#status{
+  position:absolute;
+  bottom:15px;
+  left:0;
+  width:100%;
+  font-size:10px;
+  color:#82939f;
+  text-align:center;
+}
+
+/* FORMAT PAYSAGE */
+
+@media (orientation:landscape){
+
+  .clock-frame{
+    padding:15px 22px;
+  }
+
+  #clock{
+    font-size:clamp(65px,18vh,125px);
+  }
+
+  .clock-label{
+    margin-bottom:12px;
+  }
+
+  #date{
+    margin-top:12px;
+  }
+
+  .clock-footer{
+    margin-top:15px;
+  }
+
+  .climate-grid{
+    margin-top:15px;
+  }
+
+  .climate-panel{
+    padding:clamp(15px,3vh,25px);
+  }
+
+  .outdoor-panel{
+    margin-top:10px;
+    padding:15px;
+  }
+
+  .weather-screen header{
+    margin-bottom:12px;
+  }
+
+  .outdoor-panel .value{
+    margin-top:5px;
+  }
+
+  #weatherDetails{
+    margin-top:8px;
+  }
+}
+
+/* FORMAT PORTRAIT */
+
+@media (orientation:portrait){
+
+  .climate-grid{
+    grid-template-columns:1fr;
+    gap:12px;
+  }
+
+  .climate-panel{
+    padding:20px;
+  }
 }
 </style>
 </head>
 
 <body>
 
-<!-- HORLOGE -->
+<!-- ÉCRAN 1 : HORLOGE -->
 
 <section class="screen clock-screen active" id="clockScreen">
+
   <div class="clock-label">LOCAL TIME</div>
 
   <div class="clock-frame">
@@ -266,61 +353,93 @@ h2{
     <div id="date">Chargement...</div>
   </div>
 
-  <div class="clock-footer">STATION MÉTÉO · NORMANDIE</div>
-</section>
-
-<!-- MÉTÉO -->
-
-<section class="screen weather-screen" id="weatherScreen">
-<main>
-
-<header>
-  <h1>STATION MÉTÉO</h1>
-  <div class="weather-date" id="weatherDate"></div>
-</header>
-
-<h2>À l'intérieur · Salon</h2>
-
-<div class="grid">
-  <section class="panel">
-    <div class="label">Température</div>
-    <span class="value" id="temp">--</span>
-    <span class="unit">°C</span>
-  </section>
-
-  <section class="panel">
-    <div class="label">Humidité relative</div>
-    <span class="value" id="humidity">--</span>
-    <span class="unit">%</span>
-  </section>
-</div>
-
-<h2>À l'extérieur</h2>
-
-<section class="panel">
-  <div id="weatherIcon">🌤️</div>
-  <div id="weatherDesc">Chargement de la météo...</div>
-
-  <div class="value">
-    <span id="outsideTemp">--</span>
-    <span class="unit">°C</span>
+  <div class="clock-footer">
+    STATION MÉTÉO · NORMANDIE
   </div>
 
-  <div class="label" id="weatherDetails">
-    Conditions extérieures
+</section>
+
+
+<!-- ÉCRAN 2 : CLIMAT INTÉRIEUR -->
+
+<section class="screen weather-screen" id="indoorScreen">
+
+  <main class="dashboard">
+
+    <header>
+      <h1>CLIMAT INTÉRIEUR</h1>
+      <div class="weather-date" id="indoorDate"></div>
+      <div class="subtitle">SALON</div>
+    </header>
+
+    <div class="climate-grid">
+
+      <div class="climate-panel">
+        <div class="label">TEMPÉRATURE</div>
+        <div class="value">
+          <span id="temp">--</span><span class="unit"> °C</span>
+        </div>
+      </div>
+
+      <div class="climate-panel">
+        <div class="label">HUMIDITÉ RELATIVE</div>
+        <div class="value">
+          <span id="humidity">--</span><span class="unit"> %</span>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+</section>
+
+
+<!-- ÉCRAN 3 : MÉTÉO EXTÉRIEURE -->
+
+<section class="screen weather-screen" id="outdoorScreen">
+
+  <main class="dashboard">
+
+    <header>
+      <h1>MÉTÉO EXTÉRIEURE</h1>
+      <div class="weather-date" id="outdoorDate"></div>
+      <div class="subtitle">NORMANDIE</div>
+    </header>
+
+    <div class="outdoor-panel">
+
+      <div id="weatherIcon">🌤️</div>
+
+      <div id="weatherDesc">
+        Chargement de la météo...
+      </div>
+
+      <div class="value">
+        <span id="outsideTemp">--</span>
+        <span class="unit"> °C</span>
+      </div>
+
+      <div class="label" id="weatherDetails">
+        Conditions extérieures
+      </div>
+
+    </div>
+
+  </main>
+
+  <div id="status">
+    Station météo · Chargement
   </div>
+
 </section>
 
-<div id="status">Station météo · Chargement</div>
-
-</main>
-</section>
 
 <script>
 
 /* HORLOGE LCD À 7 SEGMENTS */
 
-const digitSegments = {
+const digitSegments={
   "0":"abcdef",
   "1":"bc",
   "2":"abdeg",
@@ -334,22 +453,26 @@ const digitSegments = {
 };
 
 function renderClock(time){
+
   const clock=document.getElementById("clock");
   clock.innerHTML="";
 
   for(const char of time){
 
     if(char===":"){
+
       const colon=document.createElement("div");
       colon.className="colon";
       clock.appendChild(colon);
       continue;
+
     }
 
     const digit=document.createElement("div");
     digit.className="digit";
 
     for(const segment of "abcdefg"){
+
       const el=document.createElement("div");
       el.className="seg";
 
@@ -359,13 +482,17 @@ function renderClock(time){
 
       el.classList.add(segment);
       digit.appendChild(el);
+
     }
 
     clock.appendChild(digit);
+
   }
+
 }
 
 function updateClock(){
+
   const now=new Date();
 
   const time=now.toLocaleTimeString("fr-FR",{
@@ -382,44 +509,43 @@ function updateClock(){
   });
 
   document.getElementById("date").textContent=date;
-  document.getElementById("weatherDate").textContent=date;
+  document.getElementById("indoorDate").textContent=date;
+  document.getElementById("outdoorDate").textContent=date;
+
 }
 
 updateClock();
 setInterval(updateClock,1000);
 
 
-/* ALTERNANCE AUTOMATIQUE */
+/* ALTERNANCE DES TROIS ÉCRANS */
 
-const clockScreen=document.getElementById("clockScreen");
-const weatherScreen=document.getElementById("weatherScreen");
+const screens=[
+  document.getElementById("clockScreen"),
+  document.getElementById("indoorScreen"),
+  document.getElementById("outdoorScreen")
+];
 
-const SCREEN_DURATION=20*1000;
-const CYCLE_DURATION=SCREEN_DURATION*2;
+const SCREEN_DURATION=5000;
 
-let cycleStart=Date.now();
-let currentScreen="clock";
+let currentScreen=0;
 
-function updateScreens(){
-  const elapsed=(Date.now()-cycleStart)%CYCLE_DURATION;
+function showScreen(index){
 
-  const nextScreen=
-    elapsed<SCREEN_DURATION ? "clock" : "weather";
+  screens.forEach((screen,i)=>{
+    screen.classList.toggle("active",i===index);
+  });
 
-  if(nextScreen!==currentScreen){
-    currentScreen=nextScreen;
-
-    clockScreen.classList.toggle(
-      "active",currentScreen==="clock"
-    );
-
-    weatherScreen.classList.toggle(
-      "active",currentScreen==="weather"
-    );
-  }
 }
 
-setInterval(updateScreens,500);
+showScreen(0);
+
+setInterval(()=>{
+
+  currentScreen=(currentScreen+1)%screens.length;
+  showScreen(currentScreen);
+
+},SCREEN_DURATION);
 
 
 /* DONNÉES TADO° */
@@ -427,31 +553,37 @@ setInterval(updateScreens,500);
 const params=new URLSearchParams(window.location.search);
 
 function readNumber(value){
+
   if(value===null || value.trim()==="") return null;
 
-  const normalized=value.trim().replace(",",".");
-  const number=Number(normalized);
+  const number=Number(value.trim().replace(",","."));
 
-  return Number.isFinite(number) ? number : null;
+  return Number.isFinite(number)?number:null;
+
 }
 
 const temp=readNumber(params.get("temp"));
 const humidity=readNumber(params.get("humidite"));
 
 if(temp!==null){
+
   document.getElementById("temp").textContent=
     temp.toFixed(1).replace(".",",");
+
 }
 
 if(humidity!==null && humidity>=0 && humidity<=100){
+
   document.getElementById("humidity").textContent=
     Math.round(humidity);
+
 }
 
 
 /* MÉTÉO EXTÉRIEURE */
 
 const descriptions={
+
   0:["Ciel dégagé","☀️"],
   1:["Principalement dégagé","🌤️"],
   2:["Partiellement nuageux","⛅"],
@@ -473,13 +605,16 @@ const descriptions={
   95:["Orage","⛈️"],
   96:["Orage et grêle","⛈️"],
   99:["Orage violent","⛈️"]
+
 };
 
 async function loadWeather(lat,lon){
+
   const url=
     `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m&timezone=auto`;
 
   try{
+
     const response=await fetch(url);
 
     if(!response.ok){
@@ -494,6 +629,7 @@ async function loadWeather(lat,lon){
       ["Conditions variables","🌤️"];
 
     document.getElementById("weatherIcon").textContent=info[1];
+
     document.getElementById("weatherDesc").textContent=info[0];
 
     document.getElementById("outsideTemp").textContent=
@@ -510,24 +646,40 @@ async function loadWeather(lat,lon){
       });
 
   }catch(e){
+
     document.getElementById("weatherDesc").textContent=
       "Météo momentanément indisponible";
+
   }
+
 }
 
 
 /* LOCALISATION ET ACTUALISATION */
 
 function refreshWeather(){
+
   if(navigator.geolocation){
+
     navigator.geolocation.getCurrentPosition(
-      p=>loadWeather(p.coords.latitude,p.coords.longitude),
+
+      p=>loadWeather(
+        p.coords.latitude,
+        p.coords.longitude
+      ),
+
       ()=>loadWeather(49.08,-1.10),
+
       {timeout:8000}
+
     );
+
   }else{
+
     loadWeather(49.08,-1.10);
+
   }
+
 }
 
 refreshWeather();
