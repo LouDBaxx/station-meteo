@@ -169,7 +169,7 @@ body {
     background 1.8s ease;
 }
 
-/* Les couches atmosphériques restent derrière les informations */
+/* COUCHES ATMOSPHÉRIQUES */
 
 .outdoor-screen::before,
 .outdoor-screen::after {
@@ -196,7 +196,6 @@ body {
 .sky-clear-day::before {
   background:
     radial-gradient(ellipse at 78% 12%, rgba(255,239,190,0.42) 0%, rgba(255,220,150,0.12) 20%, transparent 43%);
-  opacity: 1;
 }
 
 .sky-clear-day::after {
@@ -251,7 +250,6 @@ body {
 .sky-fog-day::before {
   background:
     radial-gradient(ellipse at 50% 35%, rgba(255,255,255,0.48), transparent 55%);
-  opacity: 0.9;
 }
 
 .sky-fog-day::after {
@@ -396,7 +394,7 @@ body {
     linear-gradient(180deg, transparent 20%, rgba(0,0,0,0.24) 100%);
 }
 
-/* CONTENU MÉTÉO */
+/* EN-TÊTE MÉTÉO */
 
 .outdoor-heading {
   width: 100%;
@@ -422,23 +420,34 @@ body {
   color: rgba(255,255,255,0.65);
 }
 
+/* TEMPÉRATURE ET ICÔNE */
+
 .outdoor-center {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   flex: 1;
-  gap: 0.5vh;
+  gap: 2vh;
   text-align: center;
   width: 100%;
 }
 
+.weather-main {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2.5vw;
+  width: 100%;
+}
+
 .weather-icon {
-  font-size: clamp(42px, 8vw, 82px);
-  line-height: 1.1;
+  font-size: clamp(85px, 13vw, 145px);
+  line-height: 1;
   font-weight: 300;
-  color: rgba(255,255,255,0.94);
-  text-shadow: 0 2px 20px rgba(0,0,0,0.12);
+  color: rgba(255,255,255,0.98);
+  text-shadow: 0 3px 25px rgba(0,0,0,0.18);
+  flex-shrink: 0;
 }
 
 .outdoor-temperature {
@@ -469,6 +478,8 @@ body {
   margin-top: 1vh;
   text-transform: capitalize;
 }
+
+/* INDICATEURS MÉTÉO */
 
 .outdoor-divider {
   width: 70%;
@@ -509,6 +520,102 @@ body {
   color: rgba(255,255,255,0.68);
 }
 
+/* PRÉVISIONS HORAIRES */
+
+#hourlyScreen {
+  justify-content: space-between;
+  padding: 4vh 3vw 5vh;
+  background:
+    radial-gradient(ellipse at 50% 0%, #263d50 0%, #172a3a 48%, #101820 100%);
+}
+
+.hourly-heading {
+  width: 100%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7vh;
+}
+
+.hourly-title {
+  font-size: clamp(22px, 3.2vw, 32px);
+  font-weight: 300;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.95);
+}
+
+.hourly-location {
+  font-size: clamp(15px, 2vw, 21px);
+  font-weight: 300;
+  letter-spacing: 0.08em;
+  color: rgba(255,255,255,0.60);
+}
+
+.hourly-grid {
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  grid-template-rows: repeat(2, minmax(0, 1fr));
+  gap: 8px 6px;
+  margin-top: 2vh;
+}
+
+.hour-cell {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1.2vh;
+  background: rgba(255,255,255,0.055);
+  border: 1px solid rgba(255,255,255,0.055);
+  border-radius: 9px;
+  padding: 7px 2px;
+}
+
+.hour-cell.current-hour {
+  background: rgba(150,196,222,0.17);
+  border-color: rgba(190,222,240,0.35);
+}
+
+.hour-time {
+  font-size: clamp(12px, 1.8vw, 18px);
+  font-weight: 400;
+  color: rgba(255,255,255,0.78);
+  white-space: nowrap;
+}
+
+.hour-cell.current-hour .hour-time {
+  color: #ffffff;
+}
+
+.hour-icon {
+  font-size: clamp(20px, 3.2vw, 32px);
+  line-height: 1.1;
+  white-space: nowrap;
+}
+
+.hour-temp {
+  font-size: clamp(17px, 2.6vw, 27px);
+  font-weight: 300;
+  font-variant-numeric: tabular-nums;
+  color: #ffffff;
+  white-space: nowrap;
+}
+
+.hourly-footer {
+  width: 100%;
+  text-align: center;
+  font-size: clamp(11px, 1.5vw, 15px);
+  font-weight: 300;
+  letter-spacing: 0.06em;
+  color: rgba(255,255,255,0.42);
+  margin-top: 1.5vh;
+}
+
 /* MODE PORTRAIT */
 
 @media (orientation: portrait) {
@@ -524,12 +631,44 @@ body {
     padding: 5vh 5vw;
   }
 
+  .weather-main {
+    gap: 3vw;
+  }
+
+  .weather-icon {
+    font-size: clamp(65px, 15vw, 110px);
+  }
+
   .outdoor-temperature {
-    font-size: min(28vw, 30vh);
+    font-size: min(24vw, 30vh);
   }
 
   .outdoor-bottom {
     gap: 1vw;
+  }
+
+  #hourlyScreen {
+    padding: 3vh 2vw;
+  }
+
+  .hourly-grid {
+    gap: 5px 3px;
+  }
+
+  .hour-cell {
+    gap: 0.8vh;
+  }
+
+  .hour-time {
+    font-size: clamp(9px, 2.5vw, 14px);
+  }
+
+  .hour-icon {
+    font-size: clamp(15px, 4vw, 23px);
+  }
+
+  .hour-temp {
+    font-size: clamp(12px, 3vw, 19px);
   }
 }
 
@@ -548,14 +687,14 @@ body {
 
 <body>
 
-<!-- HORLOGE -->
+<!-- PAGE 1 : HORLOGE -->
 
 <section id="clockScreen" class="screen active">
   <div id="clock">00<span class="clock-separator">:</span>00</div>
   <div id="date"></div>
 </section>
 
-<!-- CLIMAT INTÉRIEUR -->
+<!-- PAGE 2 : CLIMAT INTÉRIEUR -->
 
 <section id="indoorScreen" class="screen">
   <div class="section-title">Climat intérieur</div>
@@ -573,7 +712,7 @@ body {
   </div>
 </section>
 
-<!-- MÉTÉO EXTÉRIEURE -->
+<!-- PAGE 3 : MÉTÉO EXTÉRIEURE -->
 
 <section id="outdoorScreen" class="screen outdoor-screen sky-clear-day">
 
@@ -583,16 +722,20 @@ body {
   </div>
 
   <div class="outdoor-center">
-    <div id="weatherIcon" class="weather-icon">☀</div>
 
-    <div class="outdoor-temperature">
-      <span id="outsideTemp">--</span>
-      <span class="degree">°</span>
+    <div class="weather-main">
+      <div id="weatherIcon" class="weather-icon">☀</div>
+
+      <div class="outdoor-temperature">
+        <span id="outsideTemp">--</span>
+        <span class="degree">°</span>
+      </div>
     </div>
 
     <div id="weatherDesc" class="outdoor-description">
       Chargement...
     </div>
+
   </div>
 
   <div class="outdoor-divider"></div>
@@ -624,7 +767,33 @@ body {
 
 </section>
 
+<!-- PAGE 4 : PRÉVISIONS HORAIRES -->
+
+<section id="hourlyScreen" class="screen">
+
+  <div class="hourly-heading">
+    <div class="hourly-title">Prévisions horaires</div>
+    <div class="hourly-location">Normandie · 24 prochaines heures</div>
+  </div>
+
+  <div id="hourlyGrid" class="hourly-grid">
+
+    <div class="hour-cell">
+      <div class="hour-time">--</div>
+      <div class="hour-icon">☁</div>
+      <div class="hour-temp">--°</div>
+    </div>
+
+  </div>
+
+  <div class="hourly-footer">
+    Prévisions actualisées automatiquement
+  </div>
+
+</section>
+
 <script>
+
 /* CONFIGURATION */
 
 const SCREEN_DURATION = 10000;
@@ -662,12 +831,13 @@ function updateClock() {
 updateClock();
 setInterval(updateClock, 1000);
 
-/* ALTERNANCE DES ÉCRANS */
+/* ALTERNANCE DES QUATRE ÉCRANS */
 
 const screens = [
   document.getElementById("clockScreen"),
   document.getElementById("indoorScreen"),
-  document.getElementById("outdoorScreen")
+  document.getElementById("outdoorScreen"),
+  document.getElementById("hourlyScreen")
 ];
 
 let currentScreen = 0;
@@ -682,7 +852,7 @@ function showNextScreen() {
 
 setInterval(showNextScreen, SCREEN_DURATION);
 
-/* TEMPÉRATURE ET HUMIDITÉ INTÉRIEURES */
+/* DONNÉES INTÉRIEURES TADO° */
 
 function refreshIndoorData() {
   const callbackName = "tadoCallback_" + Date.now();
@@ -760,7 +930,7 @@ function getWeatherDescription(code) {
   return descriptions[code] || "Conditions variables";
 }
 
-/* ICÔNE MÉTÉO */
+/* ICÔNES MÉTÉO */
 
 function getWeatherIcon(code, isDay) {
   if ([45, 48].includes(code)) return "≋";
@@ -784,7 +954,7 @@ function getWeatherIcon(code, isDay) {
   return "☁";
 }
 
-/* FOND DU CIEL SELON LA MÉTÉO */
+/* FOND MÉTÉO DYNAMIQUE */
 
 function getSkyClass(code, isDay) {
   const night = Number(isDay) === 0;
@@ -816,9 +986,7 @@ function getSkyClass(code, isDay) {
 function updateSkyBackground(code, isDay) {
   const screen = document.getElementById("outdoorScreen");
 
-  const oldClasses = Array.from(screen.classList);
-
-  oldClasses.forEach(function(className) {
+  Array.from(screen.classList).forEach(function(className) {
     if (className.startsWith("sky-")) {
       screen.classList.remove(className);
     }
@@ -827,7 +995,60 @@ function updateSkyBackground(code, isDay) {
   screen.classList.add(getSkyClass(code, isDay));
 }
 
-/* MÉTÉO EXTÉRIEURE */
+/* PRÉVISIONS HORAIRES */
+
+function updateHourlyForecast(hourly, currentTime) {
+  const grid = document.getElementById("hourlyGrid");
+
+  let startIndex = hourly.time.indexOf(currentTime);
+
+  if (startIndex === -1) {
+    startIndex = hourly.time.findIndex(function(time) {
+      return time >= currentTime;
+    });
+  }
+
+  if (startIndex === -1) {
+    console.error("Impossible de trouver l'heure actuelle dans les prévisions.");
+    return;
+  }
+
+  const forecast = hourly.time.slice(startIndex, startIndex + 24);
+
+  if (forecast.length < 24) {
+    console.error("Les prévisions horaires sont incomplètes.");
+    return;
+  }
+
+  let html = "";
+
+  for (let i = 0; i < 24; i++) {
+    const index = startIndex + i;
+
+    const time = hourly.time[index];
+    const temperature = Math.round(hourly.temperature_2m[index]);
+    const code = Number(hourly.weather_code[index]);
+    const isDay = Number(hourly.is_day[index]);
+
+    const hour = time.substring(11, 16);
+
+    const label = i === 0 ? "Maint." : hour.substring(0, 2) + "h";
+
+    const icon = getWeatherIcon(code, isDay);
+
+    html += `
+      <div class="hour-cell ${i === 0 ? "current-hour" : ""}">
+        <div class="hour-time">${label}</div>
+        <div class="hour-icon">${icon}</div>
+        <div class="hour-temp">${temperature}°</div>
+      </div>
+    `;
+  }
+
+  grid.innerHTML = html;
+}
+
+/* MÉTÉO EXTÉRIEURE ET PRÉVISIONS */
 
 async function refreshWeather() {
   const url =
@@ -835,8 +1056,10 @@ async function refreshWeather() {
     "?latitude=" + LATITUDE +
     "&longitude=" + LONGITUDE +
     "&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m,is_day" +
+    "&hourly=temperature_2m,weather_code,is_day" +
     "&wind_speed_unit=kmh" +
-    "&timezone=Europe%2FParis";
+    "&timezone=Europe%2FParis" +
+    "&forecast_days=2";
 
   try {
     const response = await fetch(url);
@@ -847,6 +1070,8 @@ async function refreshWeather() {
 
     const data = await response.json();
     const current = data.current;
+
+    /* MÉTÉO ACTUELLE */
 
     const temperature = Math.round(current.temperature_2m);
     const feelsLike = Math.round(current.apparent_temperature);
@@ -867,6 +1092,10 @@ async function refreshWeather() {
       getWeatherIcon(code, isDay);
 
     updateSkyBackground(code, isDay);
+
+    /* PRÉVISIONS DES 24 PROCHAINES HEURES */
+
+    updateHourlyForecast(data.hourly, current.time);
 
   } catch (error) {
     console.error("Erreur météo :", error);
