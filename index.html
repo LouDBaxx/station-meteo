@@ -100,7 +100,7 @@ body {
 #indoorScreen {
   background:
     radial-gradient(ellipse at 50% 35%, #243746 0%, #172631 45%, #101820 100%);
-  gap: 3vh;
+  gap: 7vh;
 }
 
 .section-title {
@@ -111,48 +111,56 @@ body {
   text-transform: uppercase;
 }
 
-.indoor-main {
+.indoor-data {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5vw;
+}
+
+.indoor-item {
+  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1vh;
+  justify-content: center;
+  gap: 2.5vh;
+  min-width: 0;
 }
 
-.indoor-temperature {
-  font-size: min(25vw, 43vh);
+.indoor-value {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  white-space: nowrap;
+  font-size: min(19vw, 38vh);
   line-height: 1;
   font-weight: 200;
   letter-spacing: -0.045em;
   font-variant-numeric: tabular-nums;
+  color: #ffffff;
 }
 
-.indoor-temperature .degree {
-  font-size: 0.48em;
-  vertical-align: top;
-  margin-left: 0.04em;
+.indoor-unit {
+  font-size: 0.42em;
   font-weight: 300;
+  margin: 0.12em 0 0 0.06em;
+  letter-spacing: 0;
 }
 
 .indoor-label {
-  font-size: clamp(18px, 2.8vw, 27px);
+  font-size: clamp(17px, 2.5vw, 25px);
   color: #aebbc5;
   font-weight: 300;
   letter-spacing: 0.08em;
 }
 
-.indoor-humidity {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  margin-top: 4vh;
-  font-size: clamp(26px, 4vw, 42px);
-  font-weight: 300;
-  color: #e2eaf0;
-}
-
-.humidity-symbol {
-  font-size: 0.8em;
-  color: #8ebbd0;
+.indoor-separator {
+  width: 1px;
+  height: 16vh;
+  background: rgba(255,255,255,0.22);
+  flex-shrink: 0;
 }
 
 /* MÉTÉO EXTÉRIEURE */
@@ -168,8 +176,6 @@ body {
     visibility 1.5s ease,
     background 1.8s ease;
 }
-
-/* COUCHES ATMOSPHÉRIQUES */
 
 .outdoor-screen::before,
 .outdoor-screen::after {
@@ -623,8 +629,20 @@ body {
     font-size: min(24vw, 24vh);
   }
 
-  .indoor-temperature {
-    font-size: min(30vw, 30vh);
+  .indoor-value {
+    font-size: min(19vw, 25vh);
+  }
+
+  .indoor-data {
+    gap: 3vw;
+  }
+
+  .indoor-separator {
+    height: 12vh;
+  }
+
+  .indoor-label {
+    font-size: clamp(13px, 3vw, 20px);
   }
 
   .outdoor-screen {
@@ -697,19 +715,31 @@ body {
 <!-- PAGE 2 : CLIMAT INTÉRIEUR -->
 
 <section id="indoorScreen" class="screen">
+
   <div class="section-title">Climat intérieur</div>
 
-  <div class="indoor-main">
-    <div class="indoor-temperature">
-      <span id="temp">--</span><span class="degree">°</span>
+  <div class="indoor-data">
+
+    <div class="indoor-item">
+      <div class="indoor-value">
+        <span id="temp">--</span>
+        <span class="indoor-unit">°</span>
+      </div>
+      <div class="indoor-label">Température</div>
     </div>
-    <div class="indoor-label">Température intérieure</div>
+
+    <div class="indoor-separator"></div>
+
+    <div class="indoor-item">
+      <div class="indoor-value">
+        <span id="humidity">--</span>
+        <span class="indoor-unit">%</span>
+      </div>
+      <div class="indoor-label">Humidité</div>
+    </div>
+
   </div>
 
-  <div class="indoor-humidity">
-    <span class="humidity-symbol">◌</span>
-    <span id="humidity">--</span> %
-  </div>
 </section>
 
 <!-- PAGE 3 : MÉTÉO EXTÉRIEURE -->
