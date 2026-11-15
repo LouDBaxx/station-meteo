@@ -26,7 +26,8 @@ html, body {
   overflow: hidden;
   background: #101820;
   color: #ffffff;
-  font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont,
+               "Helvetica Neue", Arial, sans-serif;
 }
 
 body {
@@ -38,6 +39,10 @@ body {
     env(safe-area-inset-bottom)
     env(safe-area-inset-left);
 }
+
+/* --------------------------------------------------
+   STRUCTURE GÉNÉRALE
+-------------------------------------------------- */
 
 .screen {
   position: absolute;
@@ -57,7 +62,9 @@ body {
   visibility: visible;
 }
 
-/* HORLOGE */
+/* --------------------------------------------------
+   ÉCRAN HORLOGE
+-------------------------------------------------- */
 
 .clock-screen {
   gap: 20px;
@@ -74,7 +81,6 @@ body {
   line-height: 1;
   color: #ffffff;
   font-variant-numeric: tabular-nums;
-  text-shadow: none;
 }
 
 .clock-separator {
@@ -93,7 +99,9 @@ body {
   text-transform: capitalize;
 }
 
-/* CLIMAT INTÉRIEUR ET MÉTÉO */
+/* --------------------------------------------------
+   ÉCRAN CLIMAT INTÉRIEUR
+-------------------------------------------------- */
 
 .weather-screen {
   gap: 24px;
@@ -158,38 +166,153 @@ body {
   background: rgba(255,255,255,0.18);
 }
 
-.weather-description {
-  font-size: clamp(18px, 3vw, 26px);
-  font-weight: 300;
-  color: #cbd2d9;
-}
-
-.weather-icon {
-  font-size: clamp(42px, 8vw, 70px);
-  line-height: 1;
-}
-
-/* ÉCRAN MÉTÉO EXTÉRIEURE */
+/* --------------------------------------------------
+   NOUVEL ÉCRAN MÉTÉO PREMIUM
+-------------------------------------------------- */
 
 .outdoor-screen {
-  gap: 16px;
+  padding: 26px 6%;
+  background:
+    radial-gradient(
+      ellipse at 50% 42%,
+      rgba(67, 91, 111, 0.22) 0%,
+      rgba(16, 24, 32, 0) 65%
+    ),
+    #101820;
+  gap: 0;
+  justify-content: space-between;
 }
 
-.outdoor-screen .main-value {
-  font-size: min(22vw, 35vh);
+.outdoor-heading {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.outdoor-screen .secondary-values {
-  margin-top: 8px;
+.outdoor-title {
+  font-size: clamp(12px, 1.8vw, 16px);
+  font-weight: 400;
+  letter-spacing: 0.24em;
+  color: #8797a5;
+  text-transform: uppercase;
+}
+
+.outdoor-location {
+  font-size: clamp(11px, 1.6vw, 14px);
+  font-weight: 300;
+  letter-spacing: 0.12em;
+  color: #667887;
+  text-transform: uppercase;
+}
+
+.outdoor-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+  padding: 8px 0;
+}
+
+.outdoor-icon {
+  font-size: clamp(36px, 7vh, 58px);
+  line-height: 1;
+  margin-bottom: 7px;
+  filter: saturate(0.65);
+}
+
+.outdoor-temperature {
+  font-size: min(25vw, 34vh);
+  font-weight: 200;
+  line-height: 0.95;
+  letter-spacing: -0.065em;
+  font-variant-numeric: tabular-nums;
+  color: #f5f7f9;
+}
+
+.outdoor-temperature .degree {
+  font-size: 0.48em;
+  vertical-align: top;
+  margin-left: 0.06em;
+  color: #c4ced6;
+  font-weight: 300;
+}
+
+.outdoor-description {
+  margin-top: 10px;
+  font-size: clamp(16px, 2.8vw, 23px);
+  font-weight: 300;
+  letter-spacing: 0.04em;
+  color: #c1ccd5;
+}
+
+.outdoor-divider {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(183, 200, 214, 0.22),
+    transparent
+  );
+  flex-shrink: 0;
+}
+
+.outdoor-bottom {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  align-items: center;
+  padding-top: 16px;
+  padding-bottom: 3px;
+}
+
+.outdoor-metric {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  min-width: 0;
+}
+
+.outdoor-metric + .outdoor-metric {
+  border-left: 1px solid rgba(183, 200, 214, 0.15);
+}
+
+.metric-value {
+  font-size: clamp(23px, 5vw, 38px);
+  font-weight: 300;
+  line-height: 1;
+  color: #e8edf1;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.metric-unit {
+  font-size: 0.55em;
+  color: #9eacb8;
+  margin-left: 2px;
+}
+
+.metric-label {
+  font-size: clamp(10px, 1.7vw, 13px);
+  font-weight: 400;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: #8494a2;
 }
 
 #status {
-  font-size: 12px;
-  color: #687783;
-  font-weight: 300;
+  display: none;
 }
 
-/* ADAPTATION PORTRAIT */
+/* --------------------------------------------------
+   ADAPTATION PORTRAIT
+-------------------------------------------------- */
 
 @media (orientation: portrait) {
   #clock {
@@ -200,10 +323,6 @@ body {
     font-size: min(35vw, 30vh);
   }
 
-  .outdoor-screen .main-value {
-    font-size: min(30vw, 27vh);
-  }
-
   .weather-screen {
     gap: 18px;
   }
@@ -211,20 +330,47 @@ body {
   .secondary-values {
     gap: 22px;
   }
+
+  .outdoor-screen {
+    padding: 30px 5%;
+  }
+
+  .outdoor-temperature {
+    font-size: min(38vw, 25vh);
+  }
+
+  .outdoor-center {
+    gap: 5px;
+  }
+
+  .outdoor-bottom {
+    padding-top: 18px;
+  }
+
+  .metric-value {
+    font-size: clamp(25px, 7vw, 36px);
+  }
 }
 </style>
 </head>
 
 <body>
 
-<!-- ÉCRAN 1 : HORLOGE -->
+<!-- --------------------------------------------------
+     ÉCRAN 1 : HORLOGE
+-------------------------------------------------- -->
+
 <section id="clockScreen" class="screen clock-screen active">
   <div id="clock"></div>
   <div id="date"></div>
 </section>
 
-<!-- ÉCRAN 2 : CLIMAT INTÉRIEUR -->
+<!-- --------------------------------------------------
+     ÉCRAN 2 : CLIMAT INTÉRIEUR
+-------------------------------------------------- -->
+
 <section id="indoorScreen" class="screen weather-screen">
+
   <div class="screen-title">Température intérieure</div>
 
   <div class="main-value">
@@ -233,56 +379,81 @@ body {
 
   <div class="secondary-values">
     <div class="value-item">
-      <div class="value-number"><span id="humidity">--</span><span class="unit">%</span></div>
+      <div class="value-number">
+        <span id="humidity">--</span><span class="unit">%</span>
+      </div>
       <div class="value-label">Humidité</div>
     </div>
   </div>
+
 </section>
 
-<!-- ÉCRAN 3 : MÉTÉO EXTÉRIEURE -->
-<section id="outdoorScreen" class="screen weather-screen outdoor-screen">
-  <div class="screen-title">Météo extérieure</div>
+<!-- --------------------------------------------------
+     ÉCRAN 3 : MÉTÉO EXTÉRIEURE PREMIUM
+-------------------------------------------------- -->
 
-  <div id="weatherIcon" class="weather-icon">🌤️</div>
-  <div id="weatherDesc" class="weather-description">Chargement...</div>
+<section id="outdoorScreen" class="screen outdoor-screen">
 
-  <div class="main-value">
-    <span id="outsideTemp">--</span><span class="unit">°</span>
+  <div class="outdoor-heading">
+    <div class="outdoor-title">Météo extérieure</div>
+    <div class="outdoor-location">Normandie</div>
   </div>
 
-  <div class="secondary-values">
-    <div class="value-item">
-      <div class="value-number"><span id="feelsLike">--</span><span class="unit">°</span></div>
-      <div class="value-label">Ressenti</div>
+  <div class="outdoor-center">
+
+    <div id="weatherIcon" class="outdoor-icon">🌤️</div>
+
+    <div class="outdoor-temperature">
+      <span id="outsideTemp">--</span><span class="degree">°</span>
     </div>
 
-    <div class="separator"></div>
-
-    <div class="value-item">
-      <div class="value-number"><span id="outsideHumidity">--</span><span class="unit">%</span></div>
-      <div class="value-label">Humidité</div>
+    <div id="weatherDesc" class="outdoor-description">
+      Chargement...
     </div>
 
-    <div class="separator"></div>
+  </div>
 
-    <div class="value-item">
-      <div class="value-number"><span id="wind">--</span></div>
-      <div class="value-label">Vent km/h</div>
+  <div class="outdoor-divider"></div>
+
+  <div class="outdoor-bottom">
+
+    <div class="outdoor-metric">
+      <div class="metric-value">
+        <span id="feelsLike">--</span><span class="metric-unit">°</span>
+      </div>
+      <div class="metric-label">Ressenti</div>
     </div>
+
+    <div class="outdoor-metric">
+      <div class="metric-value">
+        <span id="outsideHumidity">--</span><span class="metric-unit">%</span>
+      </div>
+      <div class="metric-label">Humidité</div>
+    </div>
+
+    <div class="outdoor-metric">
+      <div class="metric-value">
+        <span id="wind">--</span>
+      </div>
+      <div class="metric-label">Vent km/h</div>
+    </div>
+
   </div>
 
   <div id="status"></div>
+
 </section>
 
+
 <script>
+
 /* --------------------------------------------------
    PARAMÈTRES GÉNÉRAUX
 -------------------------------------------------- */
 
-const SCREEN_DURATION = 10000; // 10 secondes
-const FADE_DURATION = 1500;    // 1,5 seconde
-const INDOOR_REFRESH = 15000;  // Lecture du serveur toutes les 15 secondes
-const WEATHER_REFRESH = 1800000; // Météo toutes les 30 minutes
+const SCREEN_DURATION = 10000;
+const INDOOR_REFRESH = 15000;
+const WEATHER_REFRESH = 1800000;
 
 const APPS_SCRIPT_URL =
 "https://script.google.com/macros/s/AKfycbyOFvPcB_zDX5uiR0lLCQ2DjzTFFi5l9hFCOTazwZRJRSyZkTOzqumUqNbjeCCD-o67fg/exec";
@@ -345,6 +516,7 @@ setInterval(showNextScreen, SCREEN_DURATION);
 -------------------------------------------------- */
 
 function displayIndoorData(temp, humidity) {
+
   if (temp !== undefined && temp !== null && temp !== "") {
     document.getElementById("temp").textContent =
       Number(temp).toFixed(1).replace(".", ",");
@@ -357,10 +529,12 @@ function displayIndoorData(temp, humidity) {
 }
 
 function refreshIndoorReadings() {
+
   const callbackName = "tadoCallback_" + Date.now();
   const script = document.createElement("script");
 
   window[callbackName] = function(data) {
+
     if (data) {
       displayIndoorData(data.temp, data.humidity);
     }
@@ -391,6 +565,7 @@ setInterval(refreshIndoorReadings, INDOOR_REFRESH);
 -------------------------------------------------- */
 
 function getWeatherDescription(code) {
+
   const descriptions = {
     0: ["Ciel dégagé", "☀️"],
     1: ["Principalement dégagé", "🌤️"],
@@ -418,7 +593,9 @@ function getWeatherDescription(code) {
   return descriptions[code] || ["Conditions variables", "🌤️"];
 }
 
+
 async function refreshWeather() {
+
   const url =
     "https://api.open-meteo.com/v1/forecast" +
     "?latitude=" + LATITUDE +
@@ -428,8 +605,12 @@ async function refreshWeather() {
     "&timezone=Europe%2FParis";
 
   try {
+
     const response = await fetch(url);
-    if (!response.ok) throw new Error("Erreur météo");
+
+    if (!response.ok) {
+      throw new Error("Erreur météo");
+    }
 
     const data = await response.json();
     const current = data.current;
@@ -448,8 +629,11 @@ async function refreshWeather() {
 
     const weather = getWeatherDescription(current.weather_code);
 
-    document.getElementById("weatherDesc").textContent = weather[0];
-    document.getElementById("weatherIcon").textContent = weather[1];
+    document.getElementById("weatherDesc").textContent =
+      weather[0];
+
+    document.getElementById("weatherIcon").textContent =
+      weather[1];
 
     document.getElementById("status").textContent =
       "Mis à jour à " +
@@ -459,8 +643,10 @@ async function refreshWeather() {
       });
 
   } catch (error) {
+
     document.getElementById("status").textContent =
       "Météo momentanément indisponible";
+
   }
 }
 
