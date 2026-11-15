@@ -3,9 +3,16 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#101820">
+
 <title>Station météo</title>
+
+<!-- Installation sur l'écran d'accueil iOS -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Station météo">
+<meta name="mobile-web-app-capable" content="yes">
 
 <style>
 * {
@@ -18,34 +25,31 @@ html, body {
   height: 100%;
   overflow: hidden;
   background: #101820;
-  color: #f4f6f8;
+  color: #ffffff;
   font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
 }
 
 body {
-  position: relative;
-  -webkit-user-select: none;
-  user-select: none;
+  position: fixed;
+  inset: 0;
+  padding:
+    env(safe-area-inset-top)
+    env(safe-area-inset-right)
+    env(safe-area-inset-bottom)
+    env(safe-area-inset-left);
 }
-
-/* ÉCRANS ET TRANSITION */
 
 .screen {
   position: absolute;
   inset: 0;
-  width: 100%;
-  height: 100%;
-  padding: env(safe-area-inset-top) env(safe-area-inset-right)
-           env(safe-area-inset-bottom) env(safe-area-inset-left);
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  text-align: center;
+  padding: 24px;
   opacity: 0;
   visibility: hidden;
   transition: opacity 1.5s ease;
-  background: #101820;
 }
 
 .screen.active {
@@ -56,9 +60,7 @@ body {
 /* HORLOGE */
 
 .clock-screen {
-  justify-content: center;
-  gap: 3vh;
-  padding: 0 2vw;
+  gap: 20px;
 }
 
 #clock {
@@ -67,7 +69,7 @@ body {
   text-align: center;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: min(34vw, 61vh);
-  font-weight: 600;
+  font-weight: 300;
   letter-spacing: -0.035em;
   line-height: 1;
   color: #ffffff;
@@ -83,135 +85,131 @@ body {
   color: #cbd2d9;
 }
 
-.date {
-  color: #8795a3;
-  font-size: clamp(15px, 2.5vw, 23px);
-  font-weight: 400;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+#date {
+  font-size: clamp(16px, 3vw, 25px);
+  font-weight: 300;
+  letter-spacing: 0.08em;
+  color: #aab5bf;
+  text-transform: capitalize;
 }
 
-/* ÉCRANS MÉTÉO */
+/* CLIMAT INTÉRIEUR ET MÉTÉO */
 
 .weather-screen {
-  gap: 2vh;
-  padding: 4vh 6vw;
+  gap: 24px;
+  text-align: center;
 }
 
-.weather-title {
-  color: #8c9aa8;
-  font-size: clamp(15px, 2.4vw, 22px);
-  font-weight: 500;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-}
-
-.weather-main {
-  font-size: clamp(90px, 19vw, 150px);
+.screen-title {
+  font-size: clamp(17px, 3vw, 25px);
   font-weight: 300;
-  letter-spacing: -0.06em;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #aab5bf;
+}
+
+.main-value {
+  font-size: min(25vw, 42vh);
+  font-weight: 300;
   line-height: 1;
+  letter-spacing: -0.045em;
   font-variant-numeric: tabular-nums;
 }
 
-.weather-unit {
+.unit {
   font-size: 0.45em;
   vertical-align: top;
-  margin-left: 5px;
-  font-weight: 300;
+  margin-left: 0.08em;
+  color: #cbd2d9;
 }
 
-.weather-icon {
-  font-size: clamp(48px, 9vw, 76px);
-  line-height: 1;
-}
-
-.weather-description {
-  color: #c2cbd3;
-  font-size: clamp(19px, 3.2vw, 28px);
-  font-weight: 400;
-}
-
-.weather-details {
+.secondary-values {
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-wrap: wrap;
-  gap: 5vw;
-  margin-top: 2vh;
-  color: #aebbc6;
-  font-size: clamp(16px, 2.6vw, 23px);
+  gap: clamp(28px, 7vw, 75px);
+  margin-top: 12px;
 }
 
-.detail {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-}
-
-.detail strong {
-  color: #f4f6f8;
-  font-weight: 500;
-}
-
-/* ÉCRAN INTÉRIEUR */
-
-.indoor-values {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10vw;
-  width: 100%;
-}
-
-.indoor-block {
+.value-item {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2vh;
+  gap: 8px;
 }
 
-.indoor-label {
-  color: #8c9aa8;
-  font-size: clamp(15px, 2.5vw, 22px);
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-}
-
-.indoor-value {
-  font-size: clamp(70px, 14vw, 115px);
-  font-weight: 400;
-  letter-spacing: -0.055em;
-  line-height: 1;
+.value-number {
+  font-size: clamp(25px, 5vw, 43px);
+  font-weight: 300;
   font-variant-numeric: tabular-nums;
 }
 
-.indoor-unit {
-  font-size: 0.42em;
-  vertical-align: top;
-  margin-left: 4px;
+.value-label {
+  font-size: clamp(12px, 2vw, 16px);
+  font-weight: 300;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #8f9ca8;
+}
+
+.separator {
+  width: 1px;
+  height: 55px;
+  background: rgba(255,255,255,0.18);
+}
+
+.weather-description {
+  font-size: clamp(18px, 3vw, 26px);
+  font-weight: 300;
+  color: #cbd2d9;
+}
+
+.weather-icon {
+  font-size: clamp(42px, 8vw, 70px);
+  line-height: 1;
+}
+
+/* ÉCRAN MÉTÉO EXTÉRIEURE */
+
+.outdoor-screen {
+  gap: 16px;
+}
+
+.outdoor-screen .main-value {
+  font-size: min(22vw, 35vh);
+}
+
+.outdoor-screen .secondary-values {
+  margin-top: 8px;
+}
+
+#status {
+  font-size: 12px;
+  color: #687783;
   font-weight: 300;
 }
 
-/* MODE PORTRAIT */
+/* ADAPTATION PORTRAIT */
 
 @media (orientation: portrait) {
   #clock {
-    font-size: min(23vw, 25vh);
+    font-size: min(25vw, 28vh);
   }
 
-  .indoor-values {
-    flex-direction: column;
-    gap: 5vh;
+  .main-value {
+    font-size: min(35vw, 30vh);
   }
 
-  .weather-details {
-    flex-direction: column;
-    gap: 2vh;
+  .outdoor-screen .main-value {
+    font-size: min(30vw, 27vh);
   }
 
   .weather-screen {
-    padding: 4vh 4vw;
+    gap: 18px;
+  }
+
+  .secondary-values {
+    gap: 22px;
   }
 }
 </style>
@@ -220,72 +218,71 @@ body {
 <body>
 
 <!-- ÉCRAN 1 : HORLOGE -->
-
 <section id="clockScreen" class="screen clock-screen active">
-  <div id="clock">00<span class="clock-separator">:</span>00</div>
-  <div id="date" class="date"></div>
+  <div id="clock"></div>
+  <div id="date"></div>
 </section>
 
-<!-- ÉCRAN 2 : TEMPÉRATURE INTÉRIEURE -->
-
+<!-- ÉCRAN 2 : CLIMAT INTÉRIEUR -->
 <section id="indoorScreen" class="screen weather-screen">
-  <div class="weather-title">Ambiance intérieure</div>
+  <div class="screen-title">Température intérieure</div>
 
-  <div class="indoor-values">
-    <div class="indoor-block">
-      <div class="indoor-label">Température</div>
-      <div class="indoor-value">
-        <span id="temp">--</span><span class="indoor-unit">°C</span>
-      </div>
-    </div>
+  <div class="main-value">
+    <span id="temp">--</span><span class="unit">°</span>
+  </div>
 
-    <div class="indoor-block">
-      <div class="indoor-label">Humidité</div>
-      <div class="indoor-value">
-        <span id="humidity">--</span><span class="indoor-unit">%</span>
-      </div>
+  <div class="secondary-values">
+    <div class="value-item">
+      <div class="value-number"><span id="humidity">--</span><span class="unit">%</span></div>
+      <div class="value-label">Humidité</div>
     </div>
   </div>
 </section>
 
 <!-- ÉCRAN 3 : MÉTÉO EXTÉRIEURE -->
-
-<section id="outdoorScreen" class="screen weather-screen">
-  <div class="weather-title">Météo extérieure</div>
+<section id="outdoorScreen" class="screen weather-screen outdoor-screen">
+  <div class="screen-title">Météo extérieure</div>
 
   <div id="weatherIcon" class="weather-icon">🌤️</div>
+  <div id="weatherDesc" class="weather-description">Chargement...</div>
 
-  <div class="weather-main">
-    <span id="outsideTemp">--</span><span class="weather-unit">°C</span>
+  <div class="main-value">
+    <span id="outsideTemp">--</span><span class="unit">°</span>
   </div>
 
-  <div id="weatherDesc" class="weather-description">
-    Chargement de la météo…
+  <div class="secondary-values">
+    <div class="value-item">
+      <div class="value-number"><span id="feelsLike">--</span><span class="unit">°</span></div>
+      <div class="value-label">Ressenti</div>
+    </div>
+
+    <div class="separator"></div>
+
+    <div class="value-item">
+      <div class="value-number"><span id="outsideHumidity">--</span><span class="unit">%</span></div>
+      <div class="value-label">Humidité</div>
+    </div>
+
+    <div class="separator"></div>
+
+    <div class="value-item">
+      <div class="value-number"><span id="wind">--</span></div>
+      <div class="value-label">Vent km/h</div>
+    </div>
   </div>
 
-  <div class="weather-details">
-    <div class="detail">
-      <span>Ressenti</span>
-      <strong id="feelsLike">--°</strong>
-    </div>
-
-    <div class="detail">
-      <span>Humidité</span>
-      <strong id="outsideHumidity">-- %</strong>
-    </div>
-
-    <div class="detail">
-      <span>Vent</span>
-      <strong id="wind">-- km/h</strong>
-    </div>
-  </div>
-
-  <div id="status" style="font-size:12px;color:#657482;margin-top:8px;"></div>
+  <div id="status"></div>
 </section>
 
 <script>
+/* --------------------------------------------------
+   PARAMÈTRES GÉNÉRAUX
+-------------------------------------------------- */
 
-/* CONFIGURATION */
+const SCREEN_DURATION = 10000; // 10 secondes
+const FADE_DURATION = 1500;    // 1,5 seconde
+const INDOOR_REFRESH = 15000;  // Lecture du serveur toutes les 15 secondes
+const WEATHER_REFRESH = 1800000; // Météo toutes les 30 minutes
 
 const APPS_SCRIPT_URL =
 "https://script.google.com/macros/s/AKfycbyOFvPcB_zDX5uiR0lLCQ2DjzTFFi5l9hFCOTazwZRJRSyZkTOzqumUqNbjeCCD-o67fg/exec";
@@ -293,30 +290,25 @@ const APPS_SCRIPT_URL =
 const LATITUDE = 49.08;
 const LONGITUDE = -1.10;
 
-const SCREEN_DURATION = 10000;
-const WEATHER_REFRESH = 30 * 60 * 1000;
-const INDOOR_REFRESH = 15000;
 
-
-/* HORLOGE ET DATE */
+/* --------------------------------------------------
+   HORLOGE
+-------------------------------------------------- */
 
 function updateClock() {
   const now = new Date();
 
-  const time = now.toLocaleTimeString("fr-FR", {
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: false
-  });
+  const hours = String(now.getHours()).padStart(2, "0");
+  const minutes = String(now.getMinutes()).padStart(2, "0");
+
+  document.getElementById("clock").innerHTML =
+    hours + '<span class="clock-separator">:</span>' + minutes;
 
   const date = now.toLocaleDateString("fr-FR", {
     weekday: "long",
     day: "numeric",
     month: "long"
-  }).toUpperCase();
-
-  document.getElementById("clock").innerHTML =
-    time.replace(":", '<span class="clock-separator">:</span>');
+  });
 
   document.getElementById("date").textContent = date;
 }
@@ -325,7 +317,9 @@ updateClock();
 setInterval(updateClock, 1000);
 
 
-/* ALTERNANCE DES TROIS ÉCRANS */
+/* --------------------------------------------------
+   ALTERNANCE DES TROIS ÉCRANS
+-------------------------------------------------- */
 
 const screens = [
   document.getElementById("clockScreen"),
@@ -337,48 +331,30 @@ let currentScreen = 0;
 
 function showNextScreen() {
   screens[currentScreen].classList.remove("active");
+
   currentScreen = (currentScreen + 1) % screens.length;
+
   screens[currentScreen].classList.add("active");
 }
 
 setInterval(showNextScreen, SCREEN_DURATION);
 
 
-/* TEMPÉRATURE ET HUMIDITÉ TADO° */
+/* --------------------------------------------------
+   TEMPÉRATURE ET HUMIDITÉ INTÉRIEURES
+-------------------------------------------------- */
 
 function displayIndoorData(temp, humidity) {
-  const temperature = Number(temp);
-  const humidite = Number(humidity);
-
-  if (temp !== null && temp !== "" && Number.isFinite(temperature)) {
+  if (temp !== undefined && temp !== null && temp !== "") {
     document.getElementById("temp").textContent =
-      temperature.toFixed(1).replace(".", ",");
+      Number(temp).toFixed(1).replace(".", ",");
   }
 
-  if (
-    humidity !== null &&
-    humidity !== "" &&
-    Number.isFinite(humidite) &&
-    humidite >= 0 &&
-    humidite <= 100
-  ) {
+  if (humidity !== undefined && humidity !== null && humidity !== "") {
     document.getElementById("humidity").textContent =
-      Math.round(humidite);
+      Math.round(Number(humidity));
   }
 }
-
-// Lecture initiale des paramètres URL
-
-const params = new URLSearchParams(window.location.search);
-
-const initialTemp = params.get("temp");
-const initialHumidity = params.get("humidite");
-
-if (initialTemp !== null || initialHumidity !== null) {
-  displayIndoorData(initialTemp, initialHumidity);
-}
-
-// Lecture périodique depuis Apps Script
 
 function refreshIndoorReadings() {
   const callbackName = "tadoCallback_" + Date.now();
@@ -410,9 +386,11 @@ refreshIndoorReadings();
 setInterval(refreshIndoorReadings, INDOOR_REFRESH);
 
 
-/* MÉTÉO EXTÉRIEURE OPEN-METEO */
+/* --------------------------------------------------
+   MÉTÉO EXTÉRIEURE : OPEN-METEO
+-------------------------------------------------- */
 
-function weatherDescription(code) {
+function getWeatherDescription(code) {
   const descriptions = {
     0: ["Ciel dégagé", "☀️"],
     1: ["Principalement dégagé", "🌤️"],
@@ -423,22 +401,15 @@ function weatherDescription(code) {
     51: ["Bruine légère", "🌦️"],
     53: ["Bruine modérée", "🌦️"],
     55: ["Bruine dense", "🌧️"],
-    56: ["Bruine verglaçante", "🌧️"],
-    57: ["Bruine verglaçante", "🌧️"],
     61: ["Pluie faible", "🌧️"],
     63: ["Pluie modérée", "🌧️"],
     65: ["Pluie forte", "🌧️"],
-    66: ["Pluie verglaçante", "🌧️"],
-    67: ["Pluie verglaçante", "🌧️"],
     71: ["Neige faible", "🌨️"],
     73: ["Neige modérée", "🌨️"],
     75: ["Neige forte", "❄️"],
-    77: ["Grains de neige", "❄️"],
     80: ["Averses faibles", "🌦️"],
     81: ["Averses modérées", "🌧️"],
-    82: ["Averses fortes", "⛈️"],
-    85: ["Averses de neige", "🌨️"],
-    86: ["Averses de neige fortes", "❄️"],
+    82: ["Averses violentes", "🌧️"],
     95: ["Orage", "⛈️"],
     96: ["Orage et grêle", "⛈️"],
     99: ["Orage et forte grêle", "⛈️"]
@@ -447,56 +418,56 @@ function weatherDescription(code) {
   return descriptions[code] || ["Conditions variables", "🌤️"];
 }
 
-function updateWeather() {
+async function refreshWeather() {
   const url =
     "https://api.open-meteo.com/v1/forecast" +
     "?latitude=" + LATITUDE +
     "&longitude=" + LONGITUDE +
     "&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m" +
+    "&wind_speed_unit=kmh" +
     "&timezone=Europe%2FParis";
 
-  fetch(url)
-    .then(response => {
-      if (!response.ok) {
-        throw new Error("Erreur météo");
-      }
-      return response.json();
-    })
-    .then(data => {
-      const current = data.current;
+  try {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error("Erreur météo");
 
-      document.getElementById("outsideTemp").textContent =
-        Math.round(current.temperature_2m);
+    const data = await response.json();
+    const current = data.current;
 
-      document.getElementById("feelsLike").textContent =
-        Math.round(current.apparent_temperature) + "°";
+    document.getElementById("outsideTemp").textContent =
+      Math.round(current.temperature_2m);
 
-      document.getElementById("outsideHumidity").textContent =
-        Math.round(current.relative_humidity_2m) + " %";
+    document.getElementById("feelsLike").textContent =
+      Math.round(current.apparent_temperature);
 
-      document.getElementById("wind").textContent =
-        Math.round(current.wind_speed_10m) + " km/h";
+    document.getElementById("outsideHumidity").textContent =
+      Math.round(current.relative_humidity_2m);
 
-      const description = weatherDescription(current.weather_code);
+    document.getElementById("wind").textContent =
+      Math.round(current.wind_speed_10m);
 
-      document.getElementById("weatherDesc").textContent =
-        description[0];
+    const weather = getWeatherDescription(current.weather_code);
 
-      document.getElementById("weatherIcon").textContent =
-        description[1];
+    document.getElementById("weatherDesc").textContent = weather[0];
+    document.getElementById("weatherIcon").textContent = weather[1];
 
-      document.getElementById("status").textContent =
-        "Données actualisées";
-    })
-    .catch(error => {
-      document.getElementById("status").textContent =
-        "Météo momentanément indisponible";
-    });
+    document.getElementById("status").textContent =
+      "Mis à jour à " +
+      new Date().toLocaleTimeString("fr-FR", {
+        hour: "2-digit",
+        minute: "2-digit"
+      });
+
+  } catch (error) {
+    document.getElementById("status").textContent =
+      "Météo momentanément indisponible";
+  }
 }
 
-updateWeather();
-setInterval(updateWeather, WEATHER_REFRESH);
+refreshWeather();
+setInterval(refreshWeather, WEATHER_REFRESH);
 
 </script>
+
 </body>
 </html>
