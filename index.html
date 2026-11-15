@@ -36,15 +36,15 @@ body{
   pointer-events:auto;
 }
 
-/* HORLOGE RÉTRO */
+/* HORLOGE LCD */
 
 .clock-screen{
   flex-direction:column;
-  background:radial-gradient(ellipse at center,#14242a 0%,#05090c 75%);
+  background:radial-gradient(ellipse at center,#14191e 0%,#05090c 75%);
 }
 
 .clock-label{
-  color:#63858a;
+  color:#777f86;
   font-size:12px;
   letter-spacing:5px;
   text-transform:uppercase;
@@ -52,31 +52,100 @@ body{
 }
 
 .clock-frame{
-  border:1px solid #24434a;
+  border:1px solid #30383e;
   border-radius:14px;
   padding:35px 22px;
   width:100%;
   max-width:650px;
   text-align:center;
-  background:rgba(8,20,24,.75);
-  box-shadow:0 0 35px rgba(0,255,200,.06),
-             inset 0 0 35px rgba(0,255,200,.03);
+  background:rgba(12,15,19,.85);
+  box-shadow:0 0 30px rgba(255,255,255,.015),
+             inset 0 0 30px rgba(255,255,255,.015);
 }
 
+/* AFFICHAGE À 7 SEGMENTS */
+
 #clock{
-  font-family:"Courier New",monospace;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:.09em;
+  height:1.15em;
   font-size:clamp(75px,21vw,145px);
-  font-weight:bold;
-  letter-spacing:-5px;
-  color:#8fffe0;
-  text-shadow:0 0 8px rgba(90,255,215,.8),
-              0 0 25px rgba(90,255,215,.4);
-  font-variant-numeric:tabular-nums;
+  color:#e8edf0;
+  filter:none;
 }
+
+.digit{
+  position:relative;
+  width:.62em;
+  height:1em;
+  flex-shrink:0;
+}
+
+.seg{
+  position:absolute;
+  background:#e8edf0;
+  opacity:.09;
+  border-radius:3px;
+  transition:opacity .15s;
+}
+
+.seg.on{
+  opacity:1;
+  box-shadow:0 0 2px rgba(255,255,255,.35);
+}
+
+/* Segments horizontaux */
+
+.seg.a,.seg.d,.seg.g{
+  width:60%;
+  height:7%;
+  left:20%;
+}
+
+.seg.a{top:0}
+.seg.g{top:46.5%}
+.seg.d{bottom:0}
+
+/* Segments verticaux */
+
+.seg.b,.seg.c,.seg.e,.seg.f{
+  width:8%;
+  height:35%;
+}
+
+.seg.b{right:10%;top:7%}
+.seg.c{right:10%;bottom:7%}
+.seg.e{left:10%;bottom:7%}
+.seg.f{left:10%;top:7%}
+
+/* Deux points de séparation */
+
+.colon{
+  position:relative;
+  width:.16em;
+  height:1em;
+  flex-shrink:0;
+}
+
+.colon::before,.colon::after{
+  content:"";
+  position:absolute;
+  left:20%;
+  width:55%;
+  height:7%;
+  background:#e8edf0;
+  border-radius:50%;
+  box-shadow:0 0 2px rgba(255,255,255,.3);
+}
+
+.colon::before{top:30%}
+.colon::after{top:63%}
 
 #date{
   margin-top:25px;
-  color:#8ba6a8;
+  color:#929ba2;
   font-size:16px;
   letter-spacing:3px;
   text-transform:uppercase;
@@ -84,7 +153,7 @@ body{
 
 .clock-footer{
   margin-top:55px;
-  color:#456269;
+  color:#626c74;
   font-size:10px;
   letter-spacing:4px;
 }
@@ -247,30 +316,71 @@ h2{
 
 <script>
 
-/* HORLOGE */
+/* HORLOGE LCD À 7 SEGMENTS */
+
+const digitSegments = {
+  "0":"abcdef",
+  "1":"bc",
+  "2":"abdeg",
+  "3":"abcdg",
+  "4":"bcfg",
+  "5":"acdfg",
+  "6":"acdefg",
+  "7":"abc",
+  "8":"abcdefg",
+  "9":"abcdfg"
+};
+
+function renderClock(time){
+  const clock=document.getElementById("clock");
+  clock.innerHTML="";
+
+  for(const char of time){
+
+    if(char===":"){
+      const colon=document.createElement("div");
+      colon.className="colon";
+      clock.appendChild(colon);
+      continue;
+    }
+
+    const digit=document.createElement("div");
+    digit.className="digit";
+
+    for(const segment of "abcdefg"){
+      const el=document.createElement("div");
+      el.className="seg";
+
+      if(digitSegments[char].includes(segment)){
+        el.classList.add("on");
+      }
+
+      el.classList.add(segment);
+      digit.appendChild(el);
+    }
+
+    clock.appendChild(digit);
+  }
+}
 
 function updateClock(){
   const now=new Date();
 
-  document.getElementById("clock").textContent=
-    now.toLocaleTimeString("fr-FR",{
-      hour:"2-digit",
-      minute:"2-digit"
-    });
+  const time=now.toLocaleTimeString("fr-FR",{
+    hour:"2-digit",
+    minute:"2-digit"
+  });
 
-  document.getElementById("date").textContent=
-    now.toLocaleDateString("fr-FR",{
-      weekday:"long",
-      day:"numeric",
-      month:"long"
-    });
+  renderClock(time);
 
-  document.getElementById("weatherDate").textContent=
-    now.toLocaleDateString("fr-FR",{
-      weekday:"long",
-      day:"numeric",
-      month:"long"
-    });
+  const date=now.toLocaleDateString("fr-FR",{
+    weekday:"long",
+    day:"numeric",
+    month:"long"
+  });
+
+  document.getElementById("date").textContent=date;
+  document.getElementById("weatherDate").textContent=date;
 }
 
 updateClock();
