@@ -67,13 +67,20 @@ body {
   text-align: center;
   font-family: -apple-system, BlinkMacSystemFont,
                "Helvetica Neue", Arial, sans-serif;
-  font-size: min(27vw, 48vh);
-  font-weight: 750;
-  letter-spacing: -0.075em;
+  font-size: min(34vw, 61vh);
+  font-weight: 500;
+  letter-spacing: -0.055em;
   line-height: 1;
   color: #ffffff;
   font-variant-numeric: tabular-nums;
-  text-shadow: 0 3px 22px rgba(255,255,255,0.08);
+  text-shadow: 0 2px 15px rgba(255,255,255,0.05);
+}
+
+.clock-separator {
+  display: inline-block;
+  margin: 0 0.12em;
+  font-weight: 400;
+  letter-spacing: 0;
 }
 
 .date {
@@ -194,7 +201,7 @@ body {
   margin-top: 4vh;
 }
 
-/* MODE PORTRAIT : adaptation de secours */
+/* MODE PORTRAIT */
 
 @media (orientation: portrait) {
   #clock {
@@ -223,7 +230,7 @@ body {
 <!-- ÉCRAN 1 : HORLOGE -->
 
 <section id="clockScreen" class="screen clock-screen active">
-  <div id="clock">00:00</div>
+  <div id="clock">00<span class="clock-separator">:</span>00</div>
   <div id="date" class="date"></div>
 </section>
 
@@ -288,31 +295,21 @@ body {
 </section>
 
 <script>
-/* --------------------------------------------------
-   CONFIGURATION
--------------------------------------------------- */
 
-// Adresse de ton Apps Script
+/* CONFIGURATION */
+
 const APPS_SCRIPT_URL =
 "https://script.google.com/macros/s/AKfycbyOFvPcB_zDX5uiR0lLCQ2DjzTFFi5l9hFCOTazwZRJRSyZkTOzqumUqNbjeCCD-o67fg/exec";
 
-// Coordonnées météo de référence
 const LATITUDE = 49.08;
 const LONGITUDE = -1.10;
 
-// Durée d'affichage de chaque écran
-const SCREEN_DURATION = 20000;
-
-// Actualisation des données météo : 30 minutes
+const SCREEN_DURATION = 5000;
 const WEATHER_REFRESH = 30 * 60 * 1000;
-
-// Actualisation des données tado° : 15 secondes
 const INDOOR_REFRESH = 15000;
 
 
-/* --------------------------------------------------
-   HORLOGE ET DATE
--------------------------------------------------- */
+/* HORLOGE ET DATE */
 
 function updateClock() {
   const now = new Date();
@@ -327,24 +324,21 @@ function updateClock() {
     weekday: "long",
     day: "numeric",
     month: "long"
-  });
+  }).toUpperCase();
 
-  document.getElementById("clock").textContent = time;
+  document.getElementById("clock").innerHTML =
+    time.replace(":", '<span class="clock-separator">:</span>');
 
-  const formattedDate = date.toLocaleUpperCase("fr-FR");
-
-  document.getElementById("date").textContent = formattedDate;
-  document.getElementById("indoorDate").textContent = formattedDate;
-  document.getElementById("outdoorDate").textContent = formattedDate;
+  document.getElementById("date").textContent = date;
+  document.getElementById("indoorDate").textContent = date;
+  document.getElementById("outdoorDate").textContent = date;
 }
 
 updateClock();
 setInterval(updateClock, 1000);
 
 
-/* --------------------------------------------------
-   ALTERNANCE DES TROIS ÉCRANS
--------------------------------------------------- */
+/* ALTERNANCE DES TROIS ÉCRANS */
 
 const screens = [
   document.getElementById("clockScreen"),
@@ -356,18 +350,14 @@ let currentScreen = 0;
 
 function showNextScreen() {
   screens[currentScreen].classList.remove("active");
-
   currentScreen = (currentScreen + 1) % screens.length;
-
   screens[currentScreen].classList.add("active");
 }
 
 setInterval(showNextScreen, SCREEN_DURATION);
 
 
-/* --------------------------------------------------
-   TEMPÉRATURE ET HUMIDITÉ TADO°
--------------------------------------------------- */
+/* TEMPÉRATURE ET HUMIDITÉ TADO° */
 
 function displayIndoorData(temp, humidity) {
   const temperature = Number(temp);
@@ -391,6 +381,7 @@ function displayIndoorData(temp, humidity) {
 }
 
 // Lecture initiale des paramètres URL
+
 const params = new URLSearchParams(window.location.search);
 
 const initialTemp = params.get("temp");
@@ -401,8 +392,10 @@ if (initialTemp !== null || initialHumidity !== null) {
 }
 
 // Lecture périodique depuis Apps Script
+
 function refreshIndoorReadings() {
   const callbackName = "tadoCallback_" + Date.now();
+  const script = document.createElement("script");
 
   window[callbackName] = function(data) {
     if (data) {
@@ -412,8 +405,6 @@ function refreshIndoorReadings() {
     delete window[callbackName];
     script.remove();
   };
-
-  const script = document.createElement("script");
 
   script.src =
     APPS_SCRIPT_URL +
@@ -432,9 +423,7 @@ refreshIndoorReadings();
 setInterval(refreshIndoorReadings, INDOOR_REFRESH);
 
 
-/* --------------------------------------------------
-   MÉTÉO EXTÉRIEURE OPEN-METEO
--------------------------------------------------- */
+/* MÉTÉO EXTÉRIEURE OPEN-METEO */
 
 function weatherDescription(code) {
   const descriptions = {
