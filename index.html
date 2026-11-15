@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -468,7 +469,8 @@ body{position:fixed;inset:0}
 <script>
 /* CONFIGURATION */
 
-const SCREEN_DURATION=10000;
+const CLOCK_DURATION=30000;
+const OTHER_SCREEN_DURATION=7000;
 const INDOOR_REFRESH=15000;
 const WEATHER_REFRESH=1800000;
 
@@ -496,10 +498,20 @@ function showScreen(index){
   });
 }
 
-setInterval(()=>{
+function nextScreen(){
   currentScreen=(currentScreen+1)%screens.length;
   showScreen(currentScreen);
-},SCREEN_DURATION);
+
+  const duration=currentScreen===0
+    ? CLOCK_DURATION
+    : OTHER_SCREEN_DURATION;
+
+  setTimeout(nextScreen,duration);
+}
+
+/* L'horloge reste affichée 30 secondes au démarrage */
+
+setTimeout(nextScreen,CLOCK_DURATION);
 
 /* HORLOGE ANALOGIQUE */
 
@@ -1143,8 +1155,6 @@ function updateRainForecast(data,current){
 const SYNODIC_MONTH=29.530588853;
 const KNOWN_NEW_MOON=Date.UTC(2000,0,6,18,14);
 
-/* Calcul de la phase lunaire */
-
 function getMoonData(date){
   const elapsed=(date.getTime()-KNOWN_NEW_MOON)/86400000;
   const age=((elapsed%SYNODIC_MONTH)+SYNODIC_MONTH)%SYNODIC_MONTH;
@@ -1164,11 +1174,7 @@ function getMoonData(date){
   return {age,phase,illumination,name};
 }
 
-/*
-  TEXTURE LUNAIRE
-  Les cratères sont générés une seule fois.
-  Leur position et leur relief restent fixes pendant les changements de phase.
-*/
+/* TEXTURE LUNAIRE */
 
 const moonCanvas=document.getElementById("moonCanvas");
 const moonContext=moonCanvas.getContext("2d");
@@ -1203,8 +1209,6 @@ function createMoonTexture(){
 
   const craters=[];
 
-  /* Grands cratères */
-
   for(let i=0;i<48;i++){
     const angle=random()*Math.PI*2;
     const distance=Math.sqrt(random())*.86;
@@ -1219,8 +1223,6 @@ function createMoonTexture(){
     });
   }
 
-  /* Petits impacts */
-
   for(let i=0;i<125;i++){
     const angle=random()*Math.PI*2;
     const distance=Math.sqrt(random())*.93;
@@ -1233,8 +1235,6 @@ function createMoonTexture(){
       type:random()
     });
   }
-
-  /* Texture de surface et relief */
 
   const maria=[
     {x:-.35,y:-.18,r:.28,v:-.13},
@@ -1260,8 +1260,6 @@ function createMoonTexture(){
         .018*Math.cos(x*.31+y*.22)+
         .012*Math.sin(x*.51-y*.37);
 
-      /* Grandes mers lunaires */
-
       for(const sea of maria){
         const dx=nx-sea.x;
         const dy=ny-sea.y;
@@ -1269,8 +1267,6 @@ function createMoonTexture(){
         const influence=Math.exp(-(dist*dist)/(sea.r*sea.r*.42));
         surface+=sea.v*influence;
       }
-
-      /* Relief des cratères */
 
       for(const crater of craters){
         const dx=x-crater.x;
@@ -1281,21 +1277,15 @@ function createMoonTexture(){
 
         let relief=0;
 
-        /* Bord relevé */
-
         if(dist>.78&&dist<1.08){
           const rim=Math.exp(-Math.pow((dist-.92)/.12,2));
           relief+=rim*.22*crater.depth;
         }
 
-        /* Fond du cratère */
-
         if(dist<.82){
           const floor=Math.exp(-Math.pow(dist/.72,2));
           relief-=floor*.15*crater.depth;
         }
-
-        /* Paroi interne */
 
         if(dist>=.55&&dist<=.95){
           const wall=Math.exp(-Math.pow((dist-.75)/.12,2));
@@ -1306,8 +1296,6 @@ function createMoonTexture(){
       }
 
       surface=Math.max(.18,Math.min(.82,surface));
-
-      /* Grain fin de la surface */
 
       const grain=
         Math.sin(x*1.7+y*.9)*.009+
@@ -1325,11 +1313,6 @@ function createMoonTexture(){
   }
 
   tctx.putImageData(image,0,0);
-
-  /*
-    Ajout de reliefs dessinés sur la texture :
-    bord clair et ombre intérieure pour donner du volume.
-  */
 
   craters.forEach(crater=>{
     const x=crater.x;
@@ -1353,14 +1336,10 @@ function createMoonTexture(){
     tctx.arc(x,y,r*1.15,0,Math.PI*2);
     tctx.fill();
 
-    /* Ombre sur la paroi */
-
     tctx.beginPath();
     tctx.arc(x+r*.08,y+r*.08,r*.72,0,Math.PI*2);
     tctx.fillStyle="rgba(48,45,40,.14)";
     tctx.fill();
-
-    /* Petit pic central sur certains cratères */
 
     if(r>9&&crater.type>.55){
       const peak=tctx.createRadialGradient(
@@ -1383,8 +1362,6 @@ function createMoonTexture(){
   moonBaseImage=tctx.getImageData(0,0,size,size);
 }
 
-/* Rendu de la Lune en fonction de son éclairage */
-
 function drawMoon(phase){
   if(!moonBaseImage)createMoonTexture();
 
@@ -1395,14 +1372,6 @@ function drawMoon(phase){
   const source=moonBaseImage.data;
   const output=moonContext.createImageData(size,size);
   const target=output.data;
-
-  /*
-    Direction de la lumière solaire.
-    Nouvelle lune : face visible sombre.
-    Premier quartier : moitié droite éclairée.
-    Pleine lune : disque entièrement éclairé.
-    Dernier quartier : moitié gauche éclairée.
-  */
 
   const angle=2*Math.PI*phase;
   const lightX=Math.sin(angle);
@@ -1418,13 +1387,8 @@ function drawMoon(phase){
       if(distance>1)continue;
 
       const nz=Math.sqrt(1-distance);
-
-      /* Lumière sur la sphère */
-
       const light=nx*lightX+nz*lightZ;
       const illumination=Math.max(0,light);
-
-      /* Transition douce sur le terminateur */
 
       const edge=.035;
       const lit=Math.max(0,Math.min(1,(light+edge)/(2*edge)));
@@ -1433,11 +1397,8 @@ function drawMoon(phase){
       const baseG=source[index+1];
       const baseB=source[index+2];
 
-      /* Relief légèrement accentué par la lumière */
-
       const textureFactor=.88+illumination*.16;
       const ambient=.075;
-
       const brightness=ambient+lit*(.92+illumination*.08);
 
       const edgeFactor=
@@ -1453,8 +1414,6 @@ function drawMoon(phase){
   moonContext.clearRect(0,0,size,size);
   moonContext.putImageData(output,0,0);
 
-  /* Liseré atmosphérique discret */
-
   moonContext.save();
   moonContext.beginPath();
   moonContext.arc(center,center,radius,0,Math.PI*2);
@@ -1463,8 +1422,6 @@ function drawMoon(phase){
   moonContext.stroke();
   moonContext.restore();
 }
-
-/* Dates des prochaines phases */
 
 function formatMoonDate(date){
   return date.toLocaleDateString("fr-FR",{
