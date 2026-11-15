@@ -3,338 +3,216 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="theme-color" content="#05090c">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#101820">
 <title>Station météo</title>
 
 <style>
-*{
-  box-sizing:border-box;
+* {
+  box-sizing: border-box;
 }
 
-html,body{
-  margin:0;
-  width:100%;
-  height:100%;
-  overflow:hidden;
+html, body {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #101820;
+  color: #f4f6f8;
+  font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
 }
 
-body{
-  background:#05090c;
-  color:#e9f5f4;
-  font-family:-apple-system,BlinkMacSystemFont,sans-serif;
+body {
+  position: relative;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
-/* GESTION DES ÉCRANS */
+/* ÉCRANS ET TRANSITION */
 
-.screen{
-  position:fixed;
-  inset:0;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:clamp(12px,3vw,28px);
-  opacity:0;
-  pointer-events:none;
-  transition:opacity 1.5s ease-in-out;
+.screen {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  padding: env(safe-area-inset-top) env(safe-area-inset-right)
+           env(safe-area-inset-bottom) env(safe-area-inset-left);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 1.5s ease;
+  background: #101820;
 }
 
-.screen.active{
-  opacity:1;
-  pointer-events:auto;
+.screen.active {
+  opacity: 1;
+  visibility: visible;
 }
 
-/* HORLOGE LCD */
+/* HORLOGE */
 
-.clock-screen{
-  flex-direction:column;
-  background:radial-gradient(ellipse at center,#14191e 0%,#05090c 75%);
+.clock-screen {
+  justify-content: center;
+  gap: 3vh;
+  padding: 0 2vw;
 }
 
-.clock-label{
-  color:#777f86;
-  font-size:clamp(9px,1.7vw,12px);
-  letter-spacing:5px;
-  text-transform:uppercase;
-  margin-bottom:clamp(12px,3vh,30px);
+#clock {
+  width: 100%;
+  white-space: nowrap;
+  text-align: center;
+  font-family: -apple-system, BlinkMacSystemFont,
+               "Helvetica Neue", Arial, sans-serif;
+  font-size: min(27vw, 48vh);
+  font-weight: 750;
+  letter-spacing: -0.075em;
+  line-height: 1;
+  color: #ffffff;
+  font-variant-numeric: tabular-nums;
+  text-shadow: 0 3px 22px rgba(255,255,255,0.08);
 }
 
-.clock-frame{
-  border:1px solid #30383e;
-  border-radius:14px;
-  padding:clamp(15px,4vh,35px) 22px;
-  width:100%;
-  max-width:850px;
-  text-align:center;
-  background:rgba(12,15,19,.85);
-  box-shadow:
-    0 0 30px rgba(255,255,255,.015),
-    inset 0 0 30px rgba(255,255,255,.015);
+.date {
+  color: #8795a3;
+  font-size: clamp(15px, 2.5vw, 23px);
+  font-weight: 400;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
 }
 
-/* AFFICHAGE 7 SEGMENTS */
+/* ÉCRANS MÉTÉO */
 
-#clock{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:.09em;
-  height:1.15em;
-  font-size:clamp(65px,18vw,145px);
-  color:#e8edf0;
+.weather-screen {
+  gap: 2vh;
+  padding: 4vh 6vw;
 }
 
-.digit{
-  position:relative;
-  width:.62em;
-  height:1em;
-  flex-shrink:0;
+.weather-title {
+  color: #8c9aa8;
+  font-size: clamp(15px, 2.4vw, 22px);
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
 }
 
-.seg{
-  position:absolute;
-  background:#e8edf0;
-  opacity:.09;
-  border-radius:3px;
-  transition:opacity .15s;
+.weather-main {
+  font-size: clamp(90px, 19vw, 150px);
+  font-weight: 300;
+  letter-spacing: -0.06em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
 }
 
-.seg.on{
-  opacity:1;
-  box-shadow:0 0 2px rgba(255,255,255,.35);
+.weather-unit {
+  font-size: 0.45em;
+  vertical-align: top;
+  margin-left: 5px;
+  font-weight: 300;
 }
 
-.seg.a,.seg.d,.seg.g{
-  width:60%;
-  height:7%;
-  left:20%;
+.weather-icon {
+  font-size: clamp(48px, 9vw, 76px);
+  line-height: 1;
 }
 
-.seg.a{top:0}
-.seg.g{top:46.5%}
-.seg.d{bottom:0}
-
-.seg.b,.seg.c,.seg.e,.seg.f{
-  width:8%;
-  height:35%;
+.weather-description {
+  color: #c2cbd3;
+  font-size: clamp(19px, 3.2vw, 28px);
+  font-weight: 400;
 }
 
-.seg.b{right:10%;top:7%}
-.seg.c{right:10%;bottom:7%}
-.seg.e{left:10%;bottom:7%}
-.seg.f{left:10%;top:7%}
-
-.colon{
-  position:relative;
-  width:.16em;
-  height:1em;
-  flex-shrink:0;
+.weather-details {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 5vw;
+  margin-top: 2vh;
+  color: #aebbc6;
+  font-size: clamp(16px, 2.6vw, 23px);
 }
 
-.colon::before,.colon::after{
-  content:"";
-  position:absolute;
-  left:20%;
-  width:55%;
-  height:7%;
-  background:#e8edf0;
-  border-radius:50%;
-  box-shadow:0 0 2px rgba(255,255,255,.3);
+.detail {
+  display: flex;
+  align-items: center;
+  gap: 9px;
 }
 
-.colon::before{top:30%}
-.colon::after{top:63%}
-
-#date{
-  margin-top:clamp(12px,3vh,25px);
-  color:#929ba2;
-  font-size:clamp(12px,2.5vw,16px);
-  letter-spacing:3px;
-  text-transform:uppercase;
+.detail strong {
+  color: #f4f6f8;
+  font-weight: 500;
 }
 
-.clock-footer{
-  margin-top:clamp(15px,4vh,40px);
-  color:#626c74;
-  font-size:10px;
-  letter-spacing:4px;
+.weather-date {
+  margin-top: 2vh;
 }
 
-/* HABILLAGE COMMUN DES ÉCRANS MÉTÉO */
+/* ÉCRAN INTÉRIEUR */
 
-.weather-screen{
-  background:#101820;
+.indoor-values {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10vw;
+  width: 100%;
 }
 
-.dashboard{
-  width:100%;
-  max-width:900px;
-  margin:auto;
+.indoor-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2vh;
 }
 
-header{
-  text-align:center;
-  margin-bottom:clamp(15px,3vh,30px);
+.indoor-label {
+  color: #8c9aa8;
+  font-size: clamp(15px, 2.5vw, 22px);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
 }
 
-h1{
-  font-size:clamp(12px,2vw,16px);
-  color:#91a2af;
-  letter-spacing:4px;
-  font-weight:500;
-  margin:0 0 8px;
+.indoor-value {
+  font-size: clamp(70px, 14vw, 115px);
+  font-weight: 400;
+  letter-spacing: -0.055em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
 }
 
-.weather-date{
-  color:#71838e;
-  font-size:clamp(11px,1.8vw,14px);
+.indoor-unit {
+  font-size: 0.42em;
+  vertical-align: top;
+  margin-left: 4px;
+  font-weight: 300;
 }
 
-.subtitle{
-  color:#71838e;
-  font-size:11px;
-  letter-spacing:4px;
-  margin-top:10px;
+.indoor-date {
+  margin-top: 4vh;
 }
 
-/* CLIMAT INTÉRIEUR */
+/* MODE PORTRAIT : adaptation de secours */
 
-.climate-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:clamp(12px,3vw,24px);
-  margin-top:25px;
-}
-
-.climate-panel{
-  background:#1b2934;
-  border:1px solid #293946;
-  border-radius:18px;
-  padding:clamp(18px,4vw,35px);
-  text-align:center;
-}
-
-.label{
-  font-size:clamp(11px,1.8vw,14px);
-  color:#a8b5bf;
-  letter-spacing:1px;
-}
-
-.value{
-  font-size:clamp(38px,9vw,76px);
-  font-weight:300;
-  margin-top:12px;
-}
-
-.unit{
-  font-size:clamp(16px,3vw,25px);
-  color:#a8b5bf;
-  font-weight:300;
-}
-
-/* MÉTÉO EXTÉRIEURE */
-
-.outdoor-panel{
-  background:#1b2934;
-  border:1px solid #293946;
-  border-radius:18px;
-  padding:clamp(18px,4vw,32px);
-  text-align:center;
-  margin-top:15px;
-}
-
-#weatherIcon{
-  font-size:clamp(35px,7vw,60px);
-  margin-bottom:10px;
-}
-
-#weatherDesc{
-  font-size:clamp(17px,3vw,25px);
-  margin-bottom:8px;
-}
-
-.outdoor-panel .value{
-  font-size:clamp(45px,10vw,82px);
-}
-
-#weatherDetails{
-  margin-top:15px;
-  line-height:1.6;
-}
-
-#status{
-  position:absolute;
-  bottom:15px;
-  left:0;
-  width:100%;
-  font-size:10px;
-  color:#82939f;
-  text-align:center;
-}
-
-/* FORMAT PAYSAGE */
-
-@media (orientation:landscape){
-
-  .clock-frame{
-    padding:15px 22px;
+@media (orientation: portrait) {
+  #clock {
+    font-size: min(23vw, 25vh);
   }
 
-  #clock{
-    font-size:clamp(65px,18vh,125px);
+  .indoor-values {
+    flex-direction: column;
+    gap: 5vh;
   }
 
-  .clock-label{
-    margin-bottom:12px;
+  .weather-details {
+    flex-direction: column;
+    gap: 2vh;
   }
 
-  #date{
-    margin-top:12px;
-  }
-
-  .clock-footer{
-    margin-top:15px;
-  }
-
-  .climate-grid{
-    margin-top:15px;
-  }
-
-  .climate-panel{
-    padding:clamp(15px,3vh,25px);
-  }
-
-  .outdoor-panel{
-    margin-top:10px;
-    padding:15px;
-  }
-
-  .weather-screen header{
-    margin-bottom:12px;
-  }
-
-  .outdoor-panel .value{
-    margin-top:5px;
-  }
-
-  #weatherDetails{
-    margin-top:8px;
-  }
-}
-
-/* FORMAT PORTRAIT */
-
-@media (orientation:portrait){
-
-  .climate-grid{
-    grid-template-columns:1fr;
-    gap:12px;
-  }
-
-  .climate-panel{
-    padding:20px;
+  .weather-screen {
+    padding: 4vh 4vw;
   }
 }
 </style>
@@ -344,348 +222,305 @@ h1{
 
 <!-- ÉCRAN 1 : HORLOGE -->
 
-<section class="screen clock-screen active" id="clockScreen">
-
-  <div class="clock-label">LOCAL TIME</div>
-
-  <div class="clock-frame">
-    <div id="clock">--:--</div>
-    <div id="date">Chargement...</div>
-  </div>
-
-  <div class="clock-footer">
-    STATION MÉTÉO · NORMANDIE
-  </div>
-
+<section id="clockScreen" class="screen clock-screen active">
+  <div id="clock">00:00</div>
+  <div id="date" class="date"></div>
 </section>
 
+<!-- ÉCRAN 2 : TEMPÉRATURE INTÉRIEURE -->
 
-<!-- ÉCRAN 2 : CLIMAT INTÉRIEUR -->
+<section id="indoorScreen" class="screen weather-screen">
+  <div class="weather-title">Ambiance intérieure</div>
 
-<section class="screen weather-screen" id="indoorScreen">
-
-  <main class="dashboard">
-
-    <header>
-      <h1>CLIMAT INTÉRIEUR</h1>
-      <div class="weather-date" id="indoorDate"></div>
-      <div class="subtitle">SALON</div>
-    </header>
-
-    <div class="climate-grid">
-
-      <div class="climate-panel">
-        <div class="label">TEMPÉRATURE</div>
-        <div class="value">
-          <span id="temp">--</span><span class="unit"> °C</span>
-        </div>
+  <div class="indoor-values">
+    <div class="indoor-block">
+      <div class="indoor-label">Température</div>
+      <div class="indoor-value">
+        <span id="temp">--</span><span class="indoor-unit">°C</span>
       </div>
-
-      <div class="climate-panel">
-        <div class="label">HUMIDITÉ RELATIVE</div>
-        <div class="value">
-          <span id="humidity">--</span><span class="unit"> %</span>
-        </div>
-      </div>
-
     </div>
 
-  </main>
+    <div class="indoor-block">
+      <div class="indoor-label">Humidité</div>
+      <div class="indoor-value">
+        <span id="humidity">--</span><span class="indoor-unit">%</span>
+      </div>
+    </div>
+  </div>
 
+  <div id="indoorDate" class="date indoor-date"></div>
 </section>
-
 
 <!-- ÉCRAN 3 : MÉTÉO EXTÉRIEURE -->
 
-<section class="screen weather-screen" id="outdoorScreen">
+<section id="outdoorScreen" class="screen weather-screen">
+  <div class="weather-title">Météo extérieure</div>
 
-  <main class="dashboard">
+  <div id="weatherIcon" class="weather-icon">🌤️</div>
 
-    <header>
-      <h1>MÉTÉO EXTÉRIEURE</h1>
-      <div class="weather-date" id="outdoorDate"></div>
-      <div class="subtitle">NORMANDIE</div>
-    </header>
-
-    <div class="outdoor-panel">
-
-      <div id="weatherIcon">🌤️</div>
-
-      <div id="weatherDesc">
-        Chargement de la météo...
-      </div>
-
-      <div class="value">
-        <span id="outsideTemp">--</span>
-        <span class="unit"> °C</span>
-      </div>
-
-      <div class="label" id="weatherDetails">
-        Conditions extérieures
-      </div>
-
-    </div>
-
-  </main>
-
-  <div id="status">
-    Station météo · Chargement
+  <div class="weather-main">
+    <span id="outsideTemp">--</span><span class="weather-unit">°C</span>
   </div>
 
+  <div id="weatherDesc" class="weather-description">
+    Chargement de la météo…
+  </div>
+
+  <div class="weather-details">
+    <div class="detail">
+      <span>Ressenti</span>
+      <strong id="feelsLike">--°</strong>
+    </div>
+
+    <div class="detail">
+      <span>Humidité</span>
+      <strong id="outsideHumidity">-- %</strong>
+    </div>
+
+    <div class="detail">
+      <span>Vent</span>
+      <strong id="wind">-- km/h</strong>
+    </div>
+  </div>
+
+  <div id="outdoorDate" class="date weather-date"></div>
+  <div id="status" style="font-size:12px;color:#657482;margin-top:8px;"></div>
 </section>
 
-
 <script>
+/* --------------------------------------------------
+   CONFIGURATION
+-------------------------------------------------- */
 
-/* HORLOGE LCD À 7 SEGMENTS */
+// Adresse de ton Apps Script
+const APPS_SCRIPT_URL =
+"https://script.google.com/macros/s/AKfycbyOFvPcB_zDX5uiR0lLCQ2DjzTFFi5l9hFCOTazwZRJRSyZkTOzqumUqNbjeCCD-o67fg/exec";
 
-const digitSegments={
-  "0":"abcdef",
-  "1":"bc",
-  "2":"abdeg",
-  "3":"abcdg",
-  "4":"bcfg",
-  "5":"acdfg",
-  "6":"acdefg",
-  "7":"abc",
-  "8":"abcdefg",
-  "9":"abcdfg"
-};
+// Coordonnées météo de référence
+const LATITUDE = 49.08;
+const LONGITUDE = -1.10;
 
-function renderClock(time){
+// Durée d'affichage de chaque écran
+const SCREEN_DURATION = 20000;
 
-  const clock=document.getElementById("clock");
-  clock.innerHTML="";
+// Actualisation des données météo : 30 minutes
+const WEATHER_REFRESH = 30 * 60 * 1000;
 
-  for(const char of time){
+// Actualisation des données tado° : 15 secondes
+const INDOOR_REFRESH = 15000;
 
-    if(char===":"){
 
-      const colon=document.createElement("div");
-      colon.className="colon";
-      clock.appendChild(colon);
-      continue;
+/* --------------------------------------------------
+   HORLOGE ET DATE
+-------------------------------------------------- */
 
-    }
+function updateClock() {
+  const now = new Date();
 
-    const digit=document.createElement("div");
-    digit.className="digit";
-
-    for(const segment of "abcdefg"){
-
-      const el=document.createElement("div");
-      el.className="seg";
-
-      if(digitSegments[char].includes(segment)){
-        el.classList.add("on");
-      }
-
-      el.classList.add(segment);
-      digit.appendChild(el);
-
-    }
-
-    clock.appendChild(digit);
-
-  }
-
-}
-
-function updateClock(){
-
-  const now=new Date();
-
-  const time=now.toLocaleTimeString("fr-FR",{
-    hour:"2-digit",
-    minute:"2-digit"
+  const time = now.toLocaleTimeString("fr-FR", {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false
   });
 
-  renderClock(time);
-
-  const date=now.toLocaleDateString("fr-FR",{
-    weekday:"long",
-    day:"numeric",
-    month:"long"
+  const date = now.toLocaleDateString("fr-FR", {
+    weekday: "long",
+    day: "numeric",
+    month: "long"
   });
 
-  document.getElementById("date").textContent=date;
-  document.getElementById("indoorDate").textContent=date;
-  document.getElementById("outdoorDate").textContent=date;
+  document.getElementById("clock").textContent = time;
 
+  const formattedDate = date.toLocaleUpperCase("fr-FR");
+
+  document.getElementById("date").textContent = formattedDate;
+  document.getElementById("indoorDate").textContent = formattedDate;
+  document.getElementById("outdoorDate").textContent = formattedDate;
 }
 
 updateClock();
-setInterval(updateClock,1000);
+setInterval(updateClock, 1000);
 
 
-/* ALTERNANCE DES TROIS ÉCRANS */
+/* --------------------------------------------------
+   ALTERNANCE DES TROIS ÉCRANS
+-------------------------------------------------- */
 
-const screens=[
+const screens = [
   document.getElementById("clockScreen"),
   document.getElementById("indoorScreen"),
   document.getElementById("outdoorScreen")
 ];
 
-const SCREEN_DURATION=5000;
+let currentScreen = 0;
 
-let currentScreen=0;
+function showNextScreen() {
+  screens[currentScreen].classList.remove("active");
 
-function showScreen(index){
+  currentScreen = (currentScreen + 1) % screens.length;
 
-  screens.forEach((screen,i)=>{
-    screen.classList.toggle("active",i===index);
-  });
-
+  screens[currentScreen].classList.add("active");
 }
 
-showScreen(0);
-
-setInterval(()=>{
-
-  currentScreen=(currentScreen+1)%screens.length;
-  showScreen(currentScreen);
-
-},SCREEN_DURATION);
+setInterval(showNextScreen, SCREEN_DURATION);
 
 
-/* DONNÉES TADO° */
+/* --------------------------------------------------
+   TEMPÉRATURE ET HUMIDITÉ TADO°
+-------------------------------------------------- */
 
-const params=new URLSearchParams(window.location.search);
+function displayIndoorData(temp, humidity) {
+  const temperature = Number(temp);
+  const humidite = Number(humidity);
 
-function readNumber(value){
+  if (temp !== null && temp !== "" && Number.isFinite(temperature)) {
+    document.getElementById("temp").textContent =
+      temperature.toFixed(1).replace(".", ",");
+  }
 
-  if(value===null || value.trim()==="") return null;
-
-  const number=Number(value.trim().replace(",","."));
-
-  return Number.isFinite(number)?number:null;
-
+  if (
+    humidity !== null &&
+    humidity !== "" &&
+    Number.isFinite(humidite) &&
+    humidite >= 0 &&
+    humidite <= 100
+  ) {
+    document.getElementById("humidity").textContent =
+      Math.round(humidite);
+  }
 }
 
-const temp=readNumber(params.get("temp"));
-const humidity=readNumber(params.get("humidite"));
+// Lecture initiale des paramètres URL
+const params = new URLSearchParams(window.location.search);
 
-if(temp!==null){
+const initialTemp = params.get("temp");
+const initialHumidity = params.get("humidite");
 
-  document.getElementById("temp").textContent=
-    temp.toFixed(1).replace(".",",");
-
+if (initialTemp !== null || initialHumidity !== null) {
+  displayIndoorData(initialTemp, initialHumidity);
 }
 
-if(humidity!==null && humidity>=0 && humidity<=100){
+// Lecture périodique depuis Apps Script
+function refreshIndoorReadings() {
+  const callbackName = "tadoCallback_" + Date.now();
 
-  document.getElementById("humidity").textContent=
-    Math.round(humidity);
-
-}
-
-
-/* MÉTÉO EXTÉRIEURE */
-
-const descriptions={
-
-  0:["Ciel dégagé","☀️"],
-  1:["Principalement dégagé","🌤️"],
-  2:["Partiellement nuageux","⛅"],
-  3:["Couvert","☁️"],
-  45:["Brouillard","🌫️"],
-  48:["Brouillard givrant","🌫️"],
-  51:["Bruine légère","🌦️"],
-  53:["Bruine","🌦️"],
-  55:["Bruine forte","🌧️"],
-  61:["Pluie faible","🌦️"],
-  63:["Pluie modérée","🌧️"],
-  65:["Pluie forte","🌧️"],
-  71:["Neige faible","🌨️"],
-  73:["Neige","🌨️"],
-  75:["Neige forte","❄️"],
-  80:["Averses faibles","🌦️"],
-  81:["Averses","🌧️"],
-  82:["Fortes averses","⛈️"],
-  95:["Orage","⛈️"],
-  96:["Orage et grêle","⛈️"],
-  99:["Orage violent","⛈️"]
-
-};
-
-async function loadWeather(lat,lon){
-
-  const url=
-    `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m&timezone=auto`;
-
-  try{
-
-    const response=await fetch(url);
-
-    if(!response.ok){
-      throw new Error("Erreur météo");
+  window[callbackName] = function(data) {
+    if (data) {
+      displayIndoorData(data.temp, data.humidity);
     }
 
-    const data=await response.json();
-    const c=data.current;
+    delete window[callbackName];
+    script.remove();
+  };
 
-    const info=
-      descriptions[c.weather_code]||
-      ["Conditions variables","🌤️"];
+  const script = document.createElement("script");
 
-    document.getElementById("weatherIcon").textContent=info[1];
+  script.src =
+    APPS_SCRIPT_URL +
+    "?callback=" + callbackName +
+    "&_=" + Date.now();
 
-    document.getElementById("weatherDesc").textContent=info[0];
+  script.onerror = function() {
+    delete window[callbackName];
+    script.remove();
+  };
 
-    document.getElementById("outsideTemp").textContent=
-      Math.round(c.temperature_2m);
-
-    document.getElementById("weatherDetails").textContent=
-      `Ressenti ${Math.round(c.apparent_temperature)} °C · Humidité ${c.relative_humidity_2m} % · Vent ${Math.round(c.wind_speed_10m)} km/h`;
-
-    document.getElementById("status").textContent=
-      "Météo actualisée · "+
-      new Date().toLocaleTimeString("fr-FR",{
-        hour:"2-digit",
-        minute:"2-digit"
-      });
-
-  }catch(e){
-
-    document.getElementById("weatherDesc").textContent=
-      "Météo momentanément indisponible";
-
-  }
-
+  document.body.appendChild(script);
 }
 
+refreshIndoorReadings();
+setInterval(refreshIndoorReadings, INDOOR_REFRESH);
 
-/* LOCALISATION ET ACTUALISATION */
 
-function refreshWeather(){
+/* --------------------------------------------------
+   MÉTÉO EXTÉRIEURE OPEN-METEO
+-------------------------------------------------- */
 
-  if(navigator.geolocation){
+function weatherDescription(code) {
+  const descriptions = {
+    0: ["Ciel dégagé", "☀️"],
+    1: ["Principalement dégagé", "🌤️"],
+    2: ["Partiellement nuageux", "⛅"],
+    3: ["Couvert", "☁️"],
+    45: ["Brouillard", "🌫️"],
+    48: ["Brouillard givrant", "🌫️"],
+    51: ["Bruine légère", "🌦️"],
+    53: ["Bruine modérée", "🌦️"],
+    55: ["Bruine dense", "🌧️"],
+    56: ["Bruine verglaçante", "🌧️"],
+    57: ["Bruine verglaçante", "🌧️"],
+    61: ["Pluie faible", "🌧️"],
+    63: ["Pluie modérée", "🌧️"],
+    65: ["Pluie forte", "🌧️"],
+    66: ["Pluie verglaçante", "🌧️"],
+    67: ["Pluie verglaçante", "🌧️"],
+    71: ["Neige faible", "🌨️"],
+    73: ["Neige modérée", "🌨️"],
+    75: ["Neige forte", "❄️"],
+    77: ["Grains de neige", "❄️"],
+    80: ["Averses faibles", "🌦️"],
+    81: ["Averses modérées", "🌧️"],
+    82: ["Averses fortes", "⛈️"],
+    85: ["Averses de neige", "🌨️"],
+    86: ["Averses de neige fortes", "❄️"],
+    95: ["Orage", "⛈️"],
+    96: ["Orage et grêle", "⛈️"],
+    99: ["Orage et forte grêle", "⛈️"]
+  };
 
-    navigator.geolocation.getCurrentPosition(
-
-      p=>loadWeather(
-        p.coords.latitude,
-        p.coords.longitude
-      ),
-
-      ()=>loadWeather(49.08,-1.10),
-
-      {timeout:8000}
-
-    );
-
-  }else{
-
-    loadWeather(49.08,-1.10);
-
-  }
-
+  return descriptions[code] || ["Conditions variables", "🌤️"];
 }
 
-refreshWeather();
-setInterval(refreshWeather,30*60*1000);
+function updateWeather() {
+  const url =
+    "https://api.open-meteo.com/v1/forecast" +
+    "?latitude=" + LATITUDE +
+    "&longitude=" + LONGITUDE +
+    "&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m" +
+    "&timezone=Europe%2FParis";
+
+  fetch(url)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error("Erreur météo");
+      }
+      return response.json();
+    })
+    .then(data => {
+      const current = data.current;
+
+      document.getElementById("outsideTemp").textContent =
+        Math.round(current.temperature_2m);
+
+      document.getElementById("feelsLike").textContent =
+        Math.round(current.apparent_temperature) + "°";
+
+      document.getElementById("outsideHumidity").textContent =
+        Math.round(current.relative_humidity_2m) + " %";
+
+      document.getElementById("wind").textContent =
+        Math.round(current.wind_speed_10m) + " km/h";
+
+      const description = weatherDescription(current.weather_code);
+
+      document.getElementById("weatherDesc").textContent =
+        description[0];
+
+      document.getElementById("weatherIcon").textContent =
+        description[1];
+
+      document.getElementById("status").textContent =
+        "Données actualisées";
+    })
+    .catch(error => {
+      document.getElementById("status").textContent =
+        "Météo momentanément indisponible";
+    });
+}
+
+updateWeather();
+setInterval(updateWeather, WEATHER_REFRESH);
 
 </script>
-
 </body>
 </html>
