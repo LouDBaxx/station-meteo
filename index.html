@@ -3,14 +3,11 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#101820">
-
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Station météo">
-<meta name="mobile-web-app-capable" content="yes">
-
+<meta name="apple-mobile-web-app-title" content="Météo">
 <title>Station météo</title>
 
 <style>
@@ -22,1127 +19,592 @@ html,body{
   height:100%;
   overflow:hidden;
   background:#101820;
-  color:#fff;
-  font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;
+  color:#f4f6f8;
+  font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;
+  -webkit-user-select:none;
+  user-select:none;
 }
 
-body{position:relative}
+body{
+  position:fixed;
+  inset:0;
+}
 
 .screen{
   position:absolute;
   inset:0;
   width:100%;
   height:100%;
-  min-height:100vh;
-  min-height:100dvh;
+  padding:30px 5vw;
   display:flex;
-  flex-direction:column;
   align-items:center;
   justify-content:center;
-  padding:4vh 5vw;
   opacity:0;
   visibility:hidden;
-  pointer-events:none;
-  transition:opacity 1.5s ease,visibility 1.5s ease;
+  transition:opacity 1.5s ease,visibility 1.5s;
+  overflow:hidden;
 }
 
 .screen.active{
   opacity:1;
   visibility:visible;
-  pointer-events:auto;
 }
 
-/* ==================================================
-   PAGE 1 : HORLOGE NUMÉRIQUE + ANALOGIQUE
-   ================================================== */
+/* HORLOGE */
 
 #clockScreen{
-  background:#101820;
-  overflow:hidden;
-}
-
-.clock-layout{
-  position:absolute;
-  inset:0;
-  display:grid;
-  grid-template-columns:1.2fr .8fr;
-  align-items:center;
-  justify-items:center;
-  gap:2vw;
-  padding:0 5vw 5vh;
+  flex-direction:row;
+  gap:6vw;
+  background:radial-gradient(ellipse at center,#1c2a38 0%,#101820 72%);
 }
 
 .clock-digital{
   display:flex;
   align-items:center;
   justify-content:center;
-  width:100%;
-}
-
-#clock{
-  width:100%;
   white-space:nowrap;
-  text-align:center;
-  font-size:clamp(65px,15vw,180px);
+  font-size:clamp(90px,18vw,220px);
   font-weight:300;
-  letter-spacing:-.045em;
+  letter-spacing:-.055em;
   line-height:1;
   font-variant-numeric:tabular-nums;
-  color:#fff;
 }
 
 .clock-separator{
   display:inline-block;
   margin:0 .10em;
-  font-weight:300;
-  color:#cbd2d9;
+  opacity:.75;
+  font-weight:200;
 }
 
-.clock-analog{
+.clock-date{
+  margin-top:22px;
+  text-align:center;
+  font-size:clamp(18px,2.4vw,30px);
+  font-weight:300;
+  letter-spacing:.08em;
+  color:#aebdca;
+  text-transform:capitalize;
+}
+
+.clock-left{
   display:flex;
+  flex-direction:column;
   align-items:center;
   justify-content:center;
-  width:100%;
 }
 
-.clock-face{
-  width:min(53vh,38vw);
-  height:min(53vh,38vw);
-  max-width:320px;
-  max-height:320px;
+.analog-clock{
+  width:min(38vw,48vh);
+  height:min(38vw,48vh);
+  max-width:360px;
+  max-height:360px;
+  flex-shrink:0;
+}
+
+.analog-clock svg{
+  width:100%;
+  height:100%;
   overflow:visible;
 }
 
-.clock-ring{
-  fill:none;
-  stroke:rgba(210,225,237,.23);
-  stroke-width:1.2;
-}
-
-.clock-inner-ring{
-  fill:none;
-  stroke:rgba(210,225,237,.10);
-  stroke-width:1;
-}
-
 .clock-number{
-  fill:#e8edf2;
-  font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;
-  font-size:11px;
+  fill:#e9eef2;
+  font-size:19px;
   font-weight:300;
   text-anchor:middle;
   dominant-baseline:middle;
 }
 
-.clock-mark{
-  stroke:rgba(220,232,240,.55);
-  stroke-width:1.4;
-  stroke-linecap:round;
+.clock-tick{
+  stroke:#748596;
+  stroke-width:1;
+  opacity:.6;
 }
 
-.clock-mark.major{
-  stroke:#e5edf3;
-  stroke-width:2.2;
+.clock-tick.major{
+  stroke:#dce5ec;
+  stroke-width:2;
+  opacity:.9;
 }
 
 .clock-hand{
-  fill:none;
   stroke-linecap:round;
+  transform-origin:100px 100px;
 }
 
-.hour-hand{stroke:#fff;stroke-width:3.5}
-.minute-hand{stroke:#dce6ed;stroke-width:2.2}
-.second-hand{stroke:#9eb9ca;stroke-width:1}
+.hour-hand{stroke:#f5f7f9;stroke-width:4.5}
+.minute-hand{stroke:#c8d3dc;stroke-width:3}
+.second-hand{stroke:#8eb8d6;stroke-width:1.3}
 
-.clock-center{fill:#fff}
-
-#date{
-  position:absolute;
-  bottom:5vh;
-  left:0;
-  width:100%;
-  text-align:center;
-  font-size:clamp(15px,2.2vw,23px);
-  font-weight:300;
-  letter-spacing:.12em;
-  color:#aebbc5;
-  text-transform:capitalize;
+.clock-center{
+  fill:#f5f7f9;
 }
 
-/* ==================================================
-   PAGE 2 : CLIMAT INTÉRIEUR
-   ================================================== */
+/* CLIMAT INTERIEUR */
 
 #indoorScreen{
-  background:radial-gradient(
-    ellipse at 50% 35%,
-    #243746 0%,
-    #172631 45%,
-    #101820 100%
-  );
-  gap:7vh;
+  background:radial-gradient(ellipse at 50% 45%,#263747 0%,#172633 48%,#101820 100%);
+  flex-direction:column;
 }
 
-.section-title{
-  font-size:clamp(22px,3.5vw,34px);
-  font-weight:300;
-  letter-spacing:.12em;
-  color:#b9c7d1;
+.indoor-title{
+  position:absolute;
+  top:8%;
+  left:0;
+  right:0;
+  text-align:center;
+  color:#aebdca;
+  font-size:clamp(15px,2vw,23px);
+  font-weight:400;
+  letter-spacing:.18em;
   text-transform:uppercase;
 }
 
-.indoor-data{
+.indoor-values{
   width:100%;
-  display:flex;
+  display:grid;
+  grid-template-columns:1fr 1fr;
   align-items:center;
-  justify-content:center;
-  gap:5vw;
-}
-
-.indoor-item{
-  flex:1;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  gap:2.5vh;
-  min-width:0;
+  max-width:1000px;
 }
 
 .indoor-value{
-  display:flex;
-  align-items:flex-start;
-  justify-content:center;
-  white-space:nowrap;
-  font-size:min(19vw,38vh);
-  line-height:1;
+  text-align:center;
+  padding:10px;
+}
+
+.indoor-value + .indoor-value{
+  border-left:1px solid rgba(255,255,255,.13);
+}
+
+.indoor-number{
+  font-size:clamp(75px,13vw,160px);
   font-weight:200;
-  letter-spacing:-.045em;
+  line-height:1;
+  letter-spacing:-.06em;
   font-variant-numeric:tabular-nums;
-  color:#fff;
+  white-space:nowrap;
 }
 
 .indoor-unit{
   font-size:.42em;
+  vertical-align:top;
+  margin-left:5px;
+  color:#b9c8d3;
   font-weight:300;
-  margin:.12em 0 0 .06em;
 }
 
 .indoor-label{
-  font-size:clamp(17px,2.5vw,25px);
-  color:#aebbc5;
+  margin-top:22px;
+  font-size:clamp(16px,2.2vw,25px);
+  color:#aebdca;
   font-weight:300;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+}
+
+.indoor-status{
+  position:absolute;
+  bottom:7%;
+  color:#8294a3;
+  font-size:13px;
   letter-spacing:.08em;
 }
 
-.indoor-separator{
-  width:1px;
-  height:16vh;
-  background:rgba(255,255,255,.22);
-  flex-shrink:0;
-}
+/* METEO EXTERIEURE */
 
-/* ==================================================
-   PAGE 3 : MÉTÉO EXTÉRIEURE
-   ================================================== */
-
-.outdoor-screen{
+#outdoorScreen{
+  position:absolute;
+  background:#172737;
   isolation:isolate;
-  overflow:hidden;
-  justify-content:space-between;
-  padding:6vh 7vw 7vh;
-  background:#172a3a;
 }
 
-.outdoor-screen::before,
-.outdoor-screen::after{
+#outdoorScreen::before{
   content:"";
   position:absolute;
-  inset:-5%;
-  z-index:0;
-  pointer-events:none;
-  transition:opacity 1.8s ease,background 1.8s ease;
+  inset:0;
+  z-index:-2;
+  background:linear-gradient(160deg,#345a78 0%,#243e56 50%,#172737 100%);
+  transition:background 2s ease;
 }
 
-.outdoor-screen>*{
+#outdoorScreen::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:-1;
+  background:linear-gradient(180deg,rgba(5,12,20,.05),rgba(5,12,20,.48));
+  pointer-events:none;
+}
+
+#outdoorScreen.sky-clear.day::before{
+  background:linear-gradient(150deg,#477da5 0%,#315e83 48%,#1b354d 100%);
+}
+
+#outdoorScreen.sky-clear.night::before{
+  background:linear-gradient(150deg,#101d36 0%,#182a43 55%,#101820 100%);
+}
+
+#outdoorScreen.sky-partly.day::before{
+  background:linear-gradient(150deg,#527c9c 0%,#3b5d78 50%,#20394f 100%);
+}
+
+#outdoorScreen.sky-partly.night::before{
+  background:linear-gradient(150deg,#17283f 0%,#25364b 55%,#101820 100%);
+}
+
+#outdoorScreen.sky-cloudy::before{
+  background:linear-gradient(150deg,#596b7a 0%,#3d4e5d 55%,#202e3b 100%);
+}
+
+#outdoorScreen.sky-fog::before{
+  background:linear-gradient(150deg,#87949b 0%,#657681 55%,#344653 100%);
+}
+
+#outdoorScreen.sky-rain::before,
+#outdoorScreen.sky-drizzle::before,
+#outdoorScreen.sky-showers::before{
+  background:linear-gradient(150deg,#435b70 0%,#293f53 55%,#172633 100%);
+}
+
+#outdoorScreen.sky-snow::before{
+  background:linear-gradient(150deg,#71899b 0%,#526b7e 55%,#2c4051 100%);
+}
+
+#outdoorScreen.sky-storm::before{
+  background:linear-gradient(150deg,#30394b 0%,#202b3b 55%,#101820 100%);
+}
+
+#outdoorScreen>*{
   position:relative;
   z-index:1;
 }
 
-/* CIEL DÉGAGÉ JOUR */
-
-.sky-clear-day{
-  background:linear-gradient(
-    155deg,#2476a8 0%,#18547e 48%,#102d48 100%
-  );
-}
-
-.sky-clear-day::before{
-  background:radial-gradient(
-    ellipse at 78% 12%,
-    rgba(255,239,190,.42),
-    rgba(255,220,150,.12) 20%,
-    transparent 43%
-  );
-}
-
-.sky-clear-day::after{
-  background:linear-gradient(
-    180deg,transparent 55%,rgba(5,20,35,.25)
-  );
-}
-
-/* CIEL PARTIELLEMENT NUAGEUX */
-
-.sky-partly-day{
-  background:linear-gradient(
-    150deg,#387fa7 0%,#386e91 48%,#193d59 100%
-  );
-}
-
-.sky-partly-day::before{
-  background:
-    radial-gradient(ellipse at 75% 15%,rgba(255,255,255,.24),transparent 35%),
-    radial-gradient(ellipse at 15% 50%,rgba(255,255,255,.12),transparent 36%);
-}
-
-.sky-partly-day::after{
-  background:
-    radial-gradient(ellipse at 78% 38%,rgba(230,239,243,.19),transparent 35%),
-    radial-gradient(ellipse at 12% 65%,rgba(220,232,238,.13),transparent 33%);
-}
-
-/* CIEL COUVERT */
-
-.sky-cloudy-day{
-  background:linear-gradient(
-    155deg,#667d8c 0%,#425b6c 48%,#263c4d 100%
-  );
-}
-
-.sky-cloudy-day::before{
-  background:
-    radial-gradient(ellipse at 20% 15%,rgba(225,234,239,.24),transparent 42%),
-    radial-gradient(ellipse at 80% 35%,rgba(220,229,234,.18),transparent 40%);
-}
-
-.sky-cloudy-day::after{
-  background:radial-gradient(
-    ellipse at 45% 70%,rgba(10,25,38,.24),transparent 55%
-  );
-}
-
-/* BROUILLARD */
-
-.sky-fog-day{
-  background:linear-gradient(
-    155deg,#9baab0 0%,#758992 45%,#4a626e 100%
-  );
-}
-
-.sky-fog-day::before{
-  background:radial-gradient(
-    ellipse at 50% 35%,rgba(255,255,255,.48),transparent 55%
-  );
-}
-
-.sky-fog-day::after{
-  background:
-    linear-gradient(175deg,transparent 15%,rgba(231,238,240,.23) 42%,transparent 65%),
-    linear-gradient(5deg,transparent 35%,rgba(238,242,243,.15) 60%,transparent 80%);
-}
-
-/* PLUIE */
-
-.sky-rain-day{
-  background:linear-gradient(
-    155deg,#455e70 0%,#2b4051 48%,#172a3b 100%
-  );
-}
-
-.sky-rain-day::before{
-  background:
-    radial-gradient(ellipse at 30% 15%,rgba(190,207,216,.22),transparent 45%),
-    radial-gradient(ellipse at 80% 35%,rgba(160,182,196,.17),transparent 40%);
-}
-
-.sky-rain-day::after{
-  background:repeating-linear-gradient(
-    108deg,
-    transparent 0 17px,
-    rgba(220,237,245,.10) 18px,
-    transparent 19px 29px
-  );
-  opacity:.55;
-  animation:rain 1.4s linear infinite;
-}
-
-@keyframes rain{
-  from{transform:translateY(-12px)}
-  to{transform:translateY(12px)}
-}
-
-/* NEIGE */
-
-.sky-snow-day{
-  background:linear-gradient(
-    155deg,#829ba9 0%,#526f80 48%,#293f51 100%
-  );
-}
-
-.sky-snow-day::before{
-  background:radial-gradient(
-    ellipse at 50% 20%,rgba(255,255,255,.30),transparent 50%
-  );
-}
-
-.sky-snow-day::after{
-  background:
-    radial-gradient(circle at 15% 25%,rgba(255,255,255,.30) 0 2px,transparent 3px),
-    radial-gradient(circle at 70% 60%,rgba(255,255,255,.25) 0 2px,transparent 3px),
-    radial-gradient(circle at 40% 80%,rgba(255,255,255,.20) 0 2px,transparent 3px);
-}
-
-/* ORAGE */
-
-.sky-storm-day{
-  background:linear-gradient(
-    155deg,#394454 0%,#222e40 48%,#111d2c 100%
-  );
-}
-
-.sky-storm-day::before{
-  background:
-    radial-gradient(ellipse at 45% 10%,rgba(180,190,204,.20),transparent 45%),
-    radial-gradient(ellipse at 85% 55%,rgba(100,120,145,.16),transparent 40%);
-}
-
-.sky-storm-day::after{
-  background:linear-gradient(
-    180deg,transparent 30%,rgba(5,12,24,.25)
-  );
-}
-
-/* AMBIANCES NOCTURNES */
-
-.sky-clear-night,
-.sky-partly-night,
-.sky-cloudy-night,
-.sky-fog-night,
-.sky-rain-night,
-.sky-snow-night,
-.sky-storm-night{
-  background:linear-gradient(
-    155deg,#172b45 0%,#101d32 50%,#090f1c 100%
-  );
-}
-
-.sky-clear-night::before,
-.sky-partly-night::before{
-  background:
-    radial-gradient(ellipse at 78% 15%,rgba(190,207,235,.19),transparent 35%),
-    radial-gradient(ellipse at 15% 65%,rgba(85,115,155,.10),transparent 40%);
-}
-
-.sky-cloudy-night::before{
-  background:
-    radial-gradient(ellipse at 25% 25%,rgba(140,158,177,.13),transparent 45%),
-    radial-gradient(ellipse at 80% 60%,rgba(100,120,145,.12),transparent 40%);
-}
-
-.sky-fog-night::before{
-  background:radial-gradient(
-    ellipse at 50% 40%,rgba(190,204,213,.16),transparent 55%
-  );
-}
-
-.sky-rain-night::before,
-.sky-storm-night::before{
-  background:radial-gradient(
-    ellipse at 40% 20%,rgba(120,145,175,.15),transparent 45%
-  );
-}
-
-.sky-rain-night::after{
-  background:repeating-linear-gradient(
-    108deg,
-    transparent 0 17px,
-    rgba(205,225,240,.09) 18px,
-    transparent 19px 29px
-  );
-  opacity:.5;
-  animation:rain 1.4s linear infinite;
-}
-
-.sky-snow-night::before{
-  background:radial-gradient(
-    ellipse at 50% 20%,rgba(210,225,240,.17),transparent 50%
-  );
-}
-
-.sky-snow-night::after{
-  background:
-    radial-gradient(circle at 15% 25%,rgba(255,255,255,.25) 0 2px,transparent 3px),
-    radial-gradient(circle at 70% 60%,rgba(255,255,255,.20) 0 2px,transparent 3px);
-}
-
-.sky-storm-night::after{
-  background:linear-gradient(
-    180deg,transparent 20%,rgba(0,0,0,.24)
-  );
-}
-
-/* EN-TÊTE MÉTÉO */
-
-.outdoor-heading{
+#weatherEffects{
+  position:absolute!important;
+  inset:0;
   width:100%;
+  height:100%;
+  z-index:0!important;
+  pointer-events:none;
+}
+
+.outdoor-content{
+  width:100%;
+  height:100%;
   display:flex;
   flex-direction:column;
+  justify-content:center;
   align-items:center;
-  gap:1vh;
   text-align:center;
-}
-
-.outdoor-title{
-  font-size:clamp(22px,3.4vw,34px);
-  font-weight:300;
-  letter-spacing:.13em;
-  text-transform:uppercase;
-  color:rgba(255,255,255,.90);
+  padding:3vh 3vw;
 }
 
 .outdoor-location{
-  font-size:clamp(16px,2.3vw,23px);
-  font-weight:300;
-  letter-spacing:.08em;
-  color:rgba(255,255,255,.65);
+  position:absolute!important;
+  top:7%;
+  left:0;
+  right:0;
+  color:rgba(255,255,255,.72);
+  font-size:clamp(14px,2vw,22px);
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  font-weight:400;
 }
 
-.outdoor-center{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  flex:1;
-  gap:2vh;
-  text-align:center;
-  width:100%;
-}
-
-.weather-main{
+.outdoor-main{
   display:flex;
   align-items:center;
   justify-content:center;
-  gap:2.5vw;
-  width:100%;
+  gap:2vw;
+  margin-top:1vh;
 }
 
-.weather-icon{
-  font-size:clamp(85px,13vw,145px);
+.outdoor-icon{
+  font-size:clamp(75px,13vw,150px);
   line-height:1;
-  font-weight:300;
-  color:rgba(255,255,255,.98);
-  text-shadow:0 3px 25px rgba(0,0,0,.18);
-  flex-shrink:0;
+  filter:drop-shadow(0 8px 15px rgba(0,0,0,.15));
 }
 
 .outdoor-temperature{
-  display:flex;
-  align-items:flex-start;
-  justify-content:center;
-  line-height:1;
-  white-space:nowrap;
-  font-size:min(24vw,39vh);
+  font-size:clamp(100px,20vw,230px);
   font-weight:200;
-  letter-spacing:-.055em;
+  line-height:.95;
+  letter-spacing:-.07em;
   font-variant-numeric:tabular-nums;
-  color:#fff;
-  text-shadow:0 3px 25px rgba(0,0,0,.10);
-}
-
-.outdoor-temperature .degree{
-  font-size:.43em;
-  font-weight:300;
-  margin:.10em 0 0 .05em;
 }
 
 .outdoor-description{
-  font-size:clamp(20px,3.2vw,32px);
+  margin-top:2vh;
+  font-size:clamp(20px,3vw,34px);
   font-weight:300;
-  letter-spacing:.04em;
-  color:rgba(255,255,255,.90);
-  margin-top:1vh;
+  color:rgba(255,255,255,.9);
   text-transform:capitalize;
 }
 
-.outdoor-divider{
-  width:70%;
-  height:1px;
-  background:rgba(255,255,255,.25);
-  margin:1vh 0 2vh;
-}
-
-.outdoor-bottom{
-  width:100%;
+.outdoor-details{
   display:flex;
-  justify-content:space-around;
-  align-items:center;
-  gap:2vw;
+  justify-content:center;
+  gap:clamp(20px,5vw,70px);
+  margin-top:5vh;
+  flex-wrap:wrap;
 }
 
-.outdoor-metric{
-  flex:1;
+.outdoor-detail{
   display:flex;
   flex-direction:column;
-  align-items:center;
-  gap:1vh;
-  text-align:center;
+  gap:8px;
+  color:rgba(255,255,255,.72);
+  font-size:clamp(12px,1.6vw,17px);
+  letter-spacing:.05em;
 }
 
-.metric-value{
-  font-size:clamp(25px,4.5vw,44px);
-  font-weight:300;
-  font-variant-numeric:tabular-nums;
-  white-space:nowrap;
-  color:#fff;
+.outdoor-detail strong{
+  color:white;
+  font-size:clamp(19px,2.7vw,30px);
+  font-weight:400;
+  letter-spacing:0;
 }
 
-.metric-label{
-  font-size:clamp(13px,1.9vw,19px);
-  font-weight:300;
-  letter-spacing:.07em;
-  color:rgba(255,255,255,.68);
+.outdoor-updated{
+  position:absolute!important;
+  bottom:4%;
+  color:rgba(255,255,255,.45);
+  font-size:11px;
 }
 
-/* ==================================================
-   PAGE 4 : PRÉVISIONS DES 4 PROCHAINES HEURES
-   ================================================== */
+/* PREVISIONS HORAIRES */
 
 #hourlyScreen{
-  justify-content:space-between;
-  padding:5vh 5vw;
-  background:radial-gradient(
-    ellipse at 50% 0%,
-    #263d50 0%,
-    #172a3a 48%,
-    #101820 100%
-  );
-}
-
-.hourly-heading{
-  width:100%;
-  text-align:center;
-  display:flex;
+  background:radial-gradient(ellipse at center,#263b4d 0%,#172633 60%,#101820 100%);
   flex-direction:column;
-  gap:1vh;
 }
 
 .hourly-title{
-  font-size:clamp(24px,3.5vw,36px);
-  font-weight:300;
-  letter-spacing:.12em;
+  position:absolute;
+  top:9%;
+  left:0;
+  right:0;
+  text-align:center;
+  font-size:clamp(16px,2vw,23px);
+  font-weight:400;
+  letter-spacing:.16em;
   text-transform:uppercase;
-  color:rgba(255,255,255,.95);
+  color:#b9c7d1;
 }
 
-.hourly-location{
-  font-size:clamp(15px,2vw,21px);
-  font-weight:300;
-  letter-spacing:.08em;
-  color:rgba(255,255,255,.60);
-}
-
-.hourly-grid{
+.hourly-list{
   width:100%;
-  flex:1;
-  min-height:0;
   display:grid;
-  grid-template-columns:repeat(4,minmax(0,1fr));
+  grid-template-columns:repeat(4,1fr);
   gap:2vw;
-  align-items:stretch;
-  margin-top:3vh;
-  margin-bottom:2vh;
+  max-width:1100px;
+  align-items:center;
+  margin-top:4vh;
 }
 
-.hour-cell{
-  min-width:0;
+.hourly-item{
   display:flex;
   flex-direction:column;
-  justify-content:center;
   align-items:center;
-  gap:2.5vh;
-  background:linear-gradient(
-    160deg,rgba(255,255,255,.105),rgba(255,255,255,.035)
-  );
-  border:1px solid rgba(255,255,255,.12);
-  border-radius:20px;
-  padding:2vh 1vw;
-  box-shadow:0 8px 25px rgba(0,0,0,.12);
+  justify-content:center;
+  gap:clamp(12px,2.5vh,25px);
+  min-width:0;
 }
 
-.hour-cell.near-hour{
-  background:linear-gradient(
-    160deg,rgba(150,196,222,.23),rgba(150,196,222,.08)
-  );
-  border-color:rgba(190,222,240,.38);
-}
-
-.hour-time{
-  font-size:clamp(20px,3vw,30px);
+.hourly-time{
+  color:#b9c7d1;
+  font-size:clamp(16px,2.3vw,25px);
   font-weight:400;
-  color:rgba(255,255,255,.82);
-  white-space:nowrap;
 }
 
-.hour-cell.near-hour .hour-time{color:#fff}
-
-.hour-icon{
-  font-size:clamp(55px,9vw,100px);
-  line-height:1.1;
-  white-space:nowrap;
-  filter:drop-shadow(0 5px 12px rgba(0,0,0,.15));
+.hourly-icon{
+  font-size:clamp(35px,6vw,68px);
+  line-height:1;
 }
 
-.hour-temp{
-  font-size:clamp(32px,5vw,54px);
+.hourly-temp{
+  font-size:clamp(35px,6vw,65px);
   font-weight:300;
+  letter-spacing:-.04em;
   font-variant-numeric:tabular-nums;
-  color:#fff;
-  white-space:nowrap;
 }
 
-.hourly-footer{
-  width:100%;
-  text-align:center;
-  font-size:clamp(11px,1.5vw,15px);
-  font-weight:300;
-  letter-spacing:.06em;
-  color:rgba(255,255,255,.42);
+.hourly-rain{
+  font-size:clamp(12px,1.5vw,16px);
+  color:#9dc9e4;
 }
 
-/* ==================================================
-   ADAPTATION PORTRAIT
-   ================================================== */
+/* PETITS ECRANS */
 
 @media (orientation:portrait){
-
-  .clock-layout{
-    grid-template-columns:1fr;
-    grid-template-rows:1fr 1fr;
-    gap:0;
-    padding:2vh 5vw 7vh;
-  }
-
-  #clock{
-    font-size:clamp(65px,19vw,120px);
-  }
-
-  .clock-face{
-    width:min(34vh,60vw);
-    height:min(34vh,60vw);
-  }
-
-  #date{
-    bottom:3vh;
-    font-size:16px;
-  }
-
-  .indoor-value{
-    font-size:min(19vw,25vh);
-  }
-
-  .indoor-data{gap:3vw}
-
-  .indoor-separator{height:12vh}
-
-  .indoor-label{
-    font-size:clamp(13px,3vw,20px);
-  }
-
-  .outdoor-screen{padding:5vh 5vw}
-
-  .weather-main{gap:3vw}
-
-  .weather-icon{
-    font-size:clamp(65px,15vw,110px);
-  }
-
-  .outdoor-temperature{
-    font-size:min(24vw,30vh);
-  }
-
-  .outdoor-bottom{gap:1vw}
-
-  #hourlyScreen{padding:4vh 3vw}
-
-  .hourly-grid{gap:2vw}
-
-  .hour-cell{
-    gap:2vh;
-    border-radius:13px;
-    padding:1vh 1vw;
-  }
-
-  .hour-time{
-    font-size:clamp(14px,3.5vw,21px);
-  }
-
-  .hour-icon{
-    font-size:clamp(35px,9vw,65px);
-  }
-
-  .hour-temp{
-    font-size:clamp(23px,5vw,36px);
-  }
+  .screen{padding:20px}
+  #clockScreen{flex-direction:column;gap:5vh}
+  .analog-clock{width:48vw;height:48vw}
+  .clock-digital{font-size:21vw}
+  .indoor-number{font-size:18vw}
+  .outdoor-temperature{font-size:27vw}
+  .outdoor-main{gap:1vw}
+  .outdoor-icon{font-size:18vw}
+  .outdoor-details{gap:18px;margin-top:4vh}
+  .hourly-list{gap:1vw}
+  .hourly-icon{font-size:9vw}
+  .hourly-temp{font-size:8vw}
 }
 
-/* PETITS ÉCRANS EN PAYSAGE */
-
-@media (max-height:400px) and (orientation:landscape){
-
-  .clock-face{
-    width:min(65vh,38vw);
-    height:min(65vh,38vw);
-  }
-
-  #date{bottom:3vh}
-
-  #hourlyScreen{padding:3vh 4vw}
-
-  .hourly-grid{
-    margin-top:1vh;
-    margin-bottom:1vh;
-    gap:1.5vw;
-  }
-
-  .hour-cell{
-    gap:1vh;
-    padding:1vh;
-  }
-
-  .hour-icon{
-    font-size:clamp(42px,10vh,70px);
-  }
-
-  .hour-temp{
-    font-size:clamp(27px,7vh,42px);
-  }
-}
-
-/* ACCESSIBILITÉ */
-
-@media (prefers-reduced-motion:reduce){
-  *,*::before,*::after{
-    animation:none!important;
-    transition-duration:.01ms!important;
-  }
+@media (max-height:420px) and (orientation:landscape){
+  .screen{padding:12px 4vw}
+  #clockScreen{gap:5vw}
+  .clock-digital{font-size:20vh}
+  .analog-clock{width:38vh;height:38vh}
+  .clock-date{margin-top:10px;font-size:4vh}
+  .indoor-title{top:5%}
+  .indoor-number{font-size:20vh}
+  .indoor-label{margin-top:10px;font-size:4vh}
+  .outdoor-icon{font-size:18vh}
+  .outdoor-temperature{font-size:25vh}
+  .outdoor-description{margin-top:1vh;font-size:5vh}
+  .outdoor-details{margin-top:3vh}
+  .outdoor-detail strong{font-size:5vh}
+  .hourly-title{top:5%}
+  .hourly-list{margin-top:5vh}
+  .hourly-item{gap:1.5vh}
 }
 </style>
 </head>
 
 <body>
 
-<!-- PAGE 1 : HORLOGE NUMÉRIQUE ET ANALOGIQUE -->
-
+<!-- ECRAN 1 : HORLOGE -->
 <section id="clockScreen" class="screen active">
-
-  <div class="clock-layout">
-
-    <div class="clock-digital">
-      <div id="clock">
-        00<span class="clock-separator">:</span>00
-      </div>
-    </div>
-
-    <div class="clock-analog">
-
-      <svg class="clock-face" viewBox="0 0 200 200"
-           aria-label="Horloge analogique">
-
-        <circle class="clock-ring" cx="100" cy="100" r="91"/>
-        <circle class="clock-inner-ring" cx="100" cy="100" r="82"/>
-
-        <g id="clockMarks"></g>
-        <g id="clockNumbers"></g>
-
-        <line id="hourHand" class="clock-hand hour-hand"
-          x1="100" y1="105" x2="100" y2="55"/>
-
-        <line id="minuteHand" class="clock-hand minute-hand"
-          x1="100" y1="108" x2="100" y2="28"/>
-
-        <line id="secondHand" class="clock-hand second-hand"
-          x1="100" y1="115" x2="100" y2="19"/>
-
-        <circle class="clock-center" cx="100" cy="100" r="3.5"/>
-
-      </svg>
-
-    </div>
-
+  <div class="clock-left">
+    <div id="digitalClock" class="clock-digital">--:--</div>
+    <div id="clockDate" class="clock-date">Chargement...</div>
   </div>
 
-  <div id="date"></div>
-
+  <div class="analog-clock">
+    <svg viewBox="0 0 200 200" aria-label="Horloge analogique">
+      <circle cx="100" cy="100" r="94" fill="none" stroke="rgba(255,255,255,.16)" stroke-width="1"/>
+      <g id="clockTicks"></g>
+      <g id="clockNumbers"></g>
+      <line id="hourHand" class="clock-hand hour-hand" x1="100" y1="100" x2="100" y2="55"/>
+      <line id="minuteHand" class="clock-hand minute-hand" x1="100" y1="100" x2="100" y2="35"/>
+      <line id="secondHand" class="clock-hand second-hand" x1="100" y1="108" x2="100" y2="27"/>
+      <circle class="clock-center" cx="100" cy="100" r="3.5"/>
+    </svg>
+  </div>
 </section>
 
-<!-- PAGE 2 : CLIMAT INTÉRIEUR -->
-
+<!-- ECRAN 2 : CLIMAT INTERIEUR -->
 <section id="indoorScreen" class="screen">
+  <div class="indoor-title">Climat intérieur · Salon</div>
 
-  <div class="section-title">Climat intérieur</div>
-
-  <div class="indoor-data">
-
-    <div class="indoor-item">
-      <div class="indoor-value">
-        <span id="temp">--</span>
-        <span class="indoor-unit">°</span>
+  <div class="indoor-values">
+    <div class="indoor-value">
+      <div class="indoor-number">
+        <span id="indoorTemp">--</span><span class="indoor-unit">°</span>
       </div>
       <div class="indoor-label">Température</div>
     </div>
 
-    <div class="indoor-separator"></div>
-
-    <div class="indoor-item">
-      <div class="indoor-value">
-        <span id="humidity">--</span>
-        <span class="indoor-unit">%</span>
+    <div class="indoor-value">
+      <div class="indoor-number">
+        <span id="indoorHumidity">--</span><span class="indoor-unit">%</span>
       </div>
       <div class="indoor-label">Humidité</div>
     </div>
-
   </div>
 
+  <div id="indoorStatus" class="indoor-status">Connexion au capteur...</div>
 </section>
 
-<!-- PAGE 3 : MÉTÉO EXTÉRIEURE -->
+<!-- ECRAN 3 : METEO EXTERIEURE -->
+<section id="outdoorScreen" class="screen sky-clear day">
+  <canvas id="weatherEffects"></canvas>
 
-<section id="outdoorScreen" class="screen outdoor-screen sky-clear-day">
-
-  <div class="outdoor-heading">
-    <div class="outdoor-title">Météo extérieure</div>
+  <div class="outdoor-content">
     <div class="outdoor-location">Saint-Samson-de-Bonfossé</div>
-  </div>
 
-  <div class="outdoor-center">
+    <div class="outdoor-main">
+      <div id="outdoorIcon" class="outdoor-icon">☀️</div>
+      <div id="outdoorTemp" class="outdoor-temperature">--°</div>
+    </div>
 
-    <div class="weather-main">
+    <div id="outdoorDescription" class="outdoor-description">Chargement...</div>
 
-      <div id="weatherIcon" class="weather-icon">☀</div>
-
-      <div class="outdoor-temperature">
-        <span id="outsideTemp">--</span>
-        <span class="degree">°</span>
+    <div class="outdoor-details">
+      <div class="outdoor-detail">
+        Ressenti
+        <strong id="outdoorFeels">--°</strong>
       </div>
-
+      <div class="outdoor-detail">
+        Humidité
+        <strong id="outdoorHumidity">--%</strong>
+      </div>
+      <div class="outdoor-detail">
+        Vent
+        <strong id="outdoorWind">-- km/h</strong>
+      </div>
     </div>
 
-    <div id="weatherDesc" class="outdoor-description">
-      Chargement...
-    </div>
-
+    <div id="weatherUpdated" class="outdoor-updated">Météo Open-Meteo</div>
   </div>
-
-  <div class="outdoor-divider"></div>
-
-  <div class="outdoor-bottom">
-
-    <div class="outdoor-metric">
-      <div class="metric-value"><span id="feelsLike">--</span>°</div>
-      <div class="metric-label">Ressenti</div>
-    </div>
-
-    <div class="outdoor-metric">
-      <div class="metric-value"><span id="outsideHumidity">--</span>%</div>
-      <div class="metric-label">Humidité</div>
-    </div>
-
-    <div class="outdoor-metric">
-      <div class="metric-value"><span id="wind">--</span></div>
-      <div class="metric-label">Vent km/h</div>
-    </div>
-
-  </div>
-
 </section>
 
-<!-- PAGE 4 : LES 4 PROCHAINES HEURES -->
-
+<!-- ECRAN 4 : PREVISIONS 4 HEURES -->
 <section id="hourlyScreen" class="screen">
+  <div class="hourly-title">Les prochaines heures</div>
 
-  <div class="hourly-heading">
-    <div class="hourly-title">Les prochaines heures</div>
-    <div class="hourly-location">Saint-Samson-de-Bonfossé</div>
+  <div class="hourly-list">
+    <div class="hourly-item">
+      <div id="hourTime0" class="hourly-time">--h</div>
+      <div id="hourIcon0" class="hourly-icon">☁️</div>
+      <div id="hourTemp0" class="hourly-temp">--°</div>
+      <div id="hourRain0" class="hourly-rain"></div>
+    </div>
+
+    <div class="hourly-item">
+      <div id="hourTime1" class="hourly-time">--h</div>
+      <div id="hourIcon1" class="hourly-icon">☁️</div>
+      <div id="hourTemp1" class="hourly-temp">--°</div>
+      <div id="hourRain1" class="hourly-rain"></div>
+    </div>
+
+    <div class="hourly-item">
+      <div id="hourTime2" class="hourly-time">--h</div>
+      <div id="hourIcon2" class="hourly-icon">☁️</div>
+      <div id="hourTemp2" class="hourly-temp">--°</div>
+      <div id="hourRain2" class="hourly-rain"></div>
+    </div>
+
+    <div class="hourly-item">
+      <div id="hourTime3" class="hourly-time">--h</div>
+      <div id="hourIcon3" class="hourly-icon">☁️</div>
+      <div id="hourTemp3" class="hourly-temp">--°</div>
+      <div id="hourRain3" class="hourly-rain"></div>
+    </div>
   </div>
-
-  <div id="hourlyGrid" class="hourly-grid">
-
-    <div class="hour-cell">
-      <div class="hour-time">-- h</div>
-      <div class="hour-icon">☁</div>
-      <div class="hour-temp">--°</div>
-    </div>
-
-    <div class="hour-cell">
-      <div class="hour-time">-- h</div>
-      <div class="hour-icon">☁</div>
-      <div class="hour-temp">--°</div>
-    </div>
-
-    <div class="hour-cell">
-      <div class="hour-time">-- h</div>
-      <div class="hour-icon">☁</div>
-      <div class="hour-temp">--°</div>
-    </div>
-
-    <div class="hour-cell">
-      <div class="hour-time">-- h</div>
-      <div class="hour-icon">☁</div>
-      <div class="hour-temp">--°</div>
-    </div>
-
-  </div>
-
-  <div class="hourly-footer">
-    Prévisions actualisées automatiquement
-  </div>
-
 </section>
 
 <script>
-
-/* ==================================================
+/* =========================================================
    CONFIGURATION
-   ================================================== */
+========================================================= */
 
 const SCREEN_DURATION = 10000;
 const INDOOR_REFRESH = 15000;
 const WEATHER_REFRESH = 1800000;
 
-const APPS_SCRIPT_URL =
-  "https://script.google.com/macros/s/AKfycbyOFvPcB_zDX5uiR0lLCQ2DjzTFFi5l9hFCOTazwZRJRSyZkTOzqumUqNbjeCCD-o67fg/exec";
-
-/* COORDONNÉES DE SAINT-SAMSON-DE-BONFOSSÉ */
-
 const LATITUDE = 49.049;
 const LONGITUDE = -1.128;
 
-/* ==================================================
-   HORLOGE NUMÉRIQUE
-   ================================================== */
+const APPS_SCRIPT_URL =
+"https://script.google.com/macros/s/AKfycbyOFvPcB_zDX5uiR0lLCQ2DjzTFFi5l9hFCOTazwZRJRSyZkTOzqumUqNbjeCCD-o67fg/exec";
 
-function updateClock() {
-
-  const now = new Date();
-
-  const hours = String(now.getHours()).padStart(2,"0");
-  const minutes = String(now.getMinutes()).padStart(2,"0");
-
-  document.getElementById("clock").innerHTML =
-    hours + '<span class="clock-separator">:</span>' + minutes;
-
-  let date = now.toLocaleDateString("fr-FR",{
-    weekday:"long",
-    day:"numeric",
-    month:"long"
-  });
-
-  date = date.charAt(0).toUpperCase() + date.slice(1);
-
-  document.getElementById("date").textContent = date;
-}
-
-/* ==================================================
-   CONSTRUCTION DU CADRAN ANALOGIQUE
-   ================================================== */
-
-function buildClockFace() {
-
-  const marks = document.getElementById("clockMarks");
-  const numbers = document.getElementById("clockNumbers");
-
-  let marksHTML = "";
-  let numbersHTML = "";
-
-  /* 60 INDEX */
-
-  for (let i = 0; i < 60; i++) {
-
-    const angle = i * 6;
-    const major = i % 5 === 0;
-
-    marksHTML += `
-      <line
-        class="clock-mark ${major ? "major" : ""}"
-        x1="100"
-        y1="${major ? 13 : 15}"
-        x2="100"
-        y2="${major ? 21 : 19}"
-        transform="rotate(${angle} 100 100)"
-      />
-    `;
-  }
-
-  /* 12 CHIFFRES */
-
-  for (let i = 1; i <= 12; i++) {
-
-    const angle = (i * 30 - 90) * Math.PI / 180;
-    const radius = 70;
-
-    const x = 100 + Math.cos(angle) * radius;
-    const y = 100 + Math.sin(angle) * radius;
-
-    numbersHTML += `
-      <text class="clock-number" x="${x}" y="${y}">${i}</text>
-    `;
-  }
-
-  marks.innerHTML = marksHTML;
-  numbers.innerHTML = numbersHTML;
-}
-
-/* ==================================================
-   AIGUILLES ANALOGIQUES
-   ================================================== */
-
-function updateAnalogClock() {
-
-  const now = new Date();
-
-  const seconds = now.getSeconds() + now.getMilliseconds() / 1000;
-  const minutes = now.getMinutes() + seconds / 60;
-  const hours = (now.getHours() % 12) + minutes / 60;
-
-  document.getElementById("hourHand").setAttribute(
-    "transform",
-    "rotate(" + (hours * 30) + " 100 100)"
-  );
-
-  document.getElementById("minuteHand").setAttribute(
-    "transform",
-    "rotate(" + (minutes * 6) + " 100 100)"
-  );
-
-  document.getElementById("secondHand").setAttribute(
-    "transform",
-    "rotate(" + (seconds * 6) + " 100 100)"
-  );
-}
-
-/* INITIALISATION DE L'HORLOGE */
-
-buildClockFace();
-updateClock();
-updateAnalogClock();
-
-setInterval(updateClock,1000);
-setInterval(updateAnalogClock,50);
-
-/* ==================================================
-   ALTERNANCE DES QUATRE ÉCRANS
-   ================================================== */
+/* =========================================================
+   GESTION DES ECRANS
+========================================================= */
 
 const screens = [
   document.getElementById("clockScreen"),
@@ -1153,86 +615,183 @@ const screens = [
 
 let currentScreen = 0;
 
-function showNextScreen() {
-
-  screens[currentScreen].classList.remove("active");
-
-  currentScreen = (currentScreen + 1) % screens.length;
-
-  screens[currentScreen].classList.add("active");
+function showScreen(index){
+  screens.forEach((screen,i)=>{
+    screen.classList.toggle("active",i===index);
+  });
 }
 
-setInterval(showNextScreen,SCREEN_DURATION);
+setInterval(()=>{
+  currentScreen = (currentScreen+1)%screens.length;
+  showScreen(currentScreen);
+},SCREEN_DURATION);
 
-/* ==================================================
-   DONNÉES INTÉRIEURES TADO°
-   ================================================== */
+/* =========================================================
+   HORLOGE NUMERIQUE ET ANALOGIQUE
+========================================================= */
 
-function refreshIndoorData() {
+function buildClockFace(){
+  const ticks = document.getElementById("clockTicks");
+  const numbers = document.getElementById("clockNumbers");
 
-  const callbackName = "tadoCallback_" + Date.now();
-  const script = document.createElement("script");
+  for(let i=0;i<60;i++){
+    const angle = i*Math.PI/30;
+    const major = i%5===0;
+    const r1 = major?83:88;
+    const r2 = 93;
 
-  window[callbackName] = function(data) {
+    const x1 = 100+Math.sin(angle)*r1;
+    const y1 = 100-Math.cos(angle)*r1;
+    const x2 = 100+Math.sin(angle)*r2;
+    const y2 = 100-Math.cos(angle)*r2;
 
-    if (data) {
+    const line = document.createElementNS("http://www.w3.org/2000/svg","line");
+    line.setAttribute("x1",x1);
+    line.setAttribute("y1",y1);
+    line.setAttribute("x2",x2);
+    line.setAttribute("y2",y2);
+    line.setAttribute("class",major?"clock-tick major":"clock-tick");
+    ticks.appendChild(line);
+  }
 
-      if (data.temp !== undefined && data.temp !== null) {
+  for(let n=1;n<=12;n++){
+    const angle = n*Math.PI/6;
+    const x = 100+Math.sin(angle)*69;
+    const y = 100-Math.cos(angle)*69;
 
-        document.getElementById("temp").textContent =
-          Number(data.temp).toFixed(1).replace(".",",");
+    const text = document.createElementNS("http://www.w3.org/2000/svg","text");
+    text.setAttribute("x",x);
+    text.setAttribute("y",y);
+    text.setAttribute("class","clock-number");
+    text.textContent=n;
+    numbers.appendChild(text);
+  }
+}
+
+function updateClock(){
+  const now = new Date();
+
+  const time = now.toLocaleTimeString("fr-FR",{
+    hour:"2-digit",
+    minute:"2-digit",
+    hour12:false
+  });
+
+  document.getElementById("digitalClock").innerHTML =
+    time.replace(":",
+      '<span class="clock-separator">:</span>'
+    );
+
+  document.getElementById("clockDate").textContent =
+    now.toLocaleDateString("fr-FR",{
+      weekday:"long",
+      day:"numeric",
+      month:"long"
+    });
+
+  const seconds = now.getSeconds();
+  const minutes = now.getMinutes()+seconds/60;
+  const hours = (now.getHours()%12)+minutes/60;
+
+  document.getElementById("secondHand")
+    .setAttribute("transform",`rotate(${seconds*6} 100 100)`);
+
+  document.getElementById("minuteHand")
+    .setAttribute("transform",`rotate(${minutes*6} 100 100)`);
+
+  document.getElementById("hourHand")
+    .setAttribute("transform",`rotate(${hours*30} 100 100)`);
+}
+
+buildClockFace();
+updateClock();
+setInterval(updateClock,1000);
+
+/* =========================================================
+   CLIMAT INTERIEUR TADO°
+========================================================= */
+
+function displayIndoorData(temp,humidity){
+  const t = Number(temp);
+  const h = Number(humidity);
+
+  if(Number.isFinite(t)){
+    document.getElementById("indoorTemp").textContent =
+      t.toFixed(1).replace(".",",");
+  }
+
+  if(Number.isFinite(h)){
+    document.getElementById("indoorHumidity").textContent =
+      Math.round(h);
+  }
+
+  if(Number.isFinite(t)&&Number.isFinite(h)){
+    document.getElementById("indoorStatus").textContent =
+      "Données actualisées · tado°";
+  }
+}
+
+function refreshIndoorReadings(){
+  if(!APPS_SCRIPT_URL || APPS_SCRIPT_URL.includes("...")) return;
+
+  const callbackName = "tadoCallback_"+Date.now();
+
+  window[callbackName] = function(data){
+    try{
+      if(data && data.temp!==undefined && data.humidity!==undefined){
+        displayIndoorData(data.temp,data.humidity);
       }
-
-      if (data.humidity !== undefined && data.humidity !== null) {
-
-        document.getElementById("humidity").textContent =
-          Math.round(Number(data.humidity));
-      }
+    }catch(error){
+      console.error("Erreur données tado°",error);
     }
 
+    const script = document.getElementById(callbackName);
+    if(script) script.remove();
+
     delete window[callbackName];
-    script.remove();
   };
 
+  const script = document.createElement("script");
+  script.id = callbackName;
   script.src =
-    APPS_SCRIPT_URL +
-    "?callback=" + callbackName +
-    "&_=" + Date.now();
+    APPS_SCRIPT_URL+
+    "?callback="+callbackName+
+    "&_="+Date.now();
 
-  script.onerror = function() {
-
-    delete window[callbackName];
+  script.onerror = function(){
+    document.getElementById("indoorStatus").textContent =
+      "Connexion au capteur indisponible";
     script.remove();
+    delete window[callbackName];
   };
 
-  document.body.appendChild(script);
+  document.head.appendChild(script);
 }
 
-refreshIndoorData();
-setInterval(refreshIndoorData,INDOOR_REFRESH);
+refreshIndoorReadings();
+setInterval(refreshIndoorReadings,INDOOR_REFRESH);
 
-/* ==================================================
-   DESCRIPTION MÉTÉO
-   ================================================== */
+/* =========================================================
+   CODES METEO OPEN-METEO / WMO
+========================================================= */
 
-function getWeatherDescription(code) {
-
+function getWeatherDescription(code){
   const descriptions = {
     0:"Ciel dégagé",
     1:"Majoritairement dégagé",
     2:"Partiellement nuageux",
-    3:"Ciel couvert",
+    3:"Couvert",
     45:"Brouillard",
     48:"Brouillard givrant",
-    51:"Bruine légère",
+    51:"Bruine faible",
     53:"Bruine modérée",
     55:"Bruine dense",
-    56:"Bruine verglaçante",
+    56:"Bruine verglaçante faible",
     57:"Bruine verglaçante dense",
     61:"Pluie faible",
     63:"Pluie modérée",
     65:"Pluie forte",
-    66:"Pluie verglaçante",
+    66:"Pluie verglaçante faible",
     67:"Pluie verglaçante forte",
     71:"Neige faible",
     73:"Neige modérée",
@@ -1240,195 +799,529 @@ function getWeatherDescription(code) {
     77:"Grains de neige",
     80:"Averses faibles",
     81:"Averses modérées",
-    82:"Averses fortes",
-    85:"Averses de neige",
-    86:"Fortes averses de neige",
+    82:"Averses violentes",
+    85:"Averses de neige faibles",
+    86:"Averses de neige fortes",
     95:"Orage",
-    96:"Orage et grêle",
+    96:"Orage avec grêle",
     97:"Orage violent",
-    99:"Orage et forte grêle"
+    99:"Orage violent avec forte grêle"
   };
 
   return descriptions[code] || "Conditions variables";
 }
 
-/* ==================================================
-   ICÔNES MÉTÉO
-   ================================================== */
+function getWeatherIcon(code,isDay=true){
+  if(code===0) return isDay?"☀️":"🌙";
+  if(code===1) return isDay?"🌤️":"🌙";
+  if(code===2) return isDay?"⛅":"☁️";
+  if(code===3) return "☁️";
+  if(code===45||code===48) return "🌫️";
 
-function getWeatherIcon(code,isDay) {
-
-  if ([45,48].includes(code)) return "≋";
-  if ([51,53,55,56,57].includes(code)) return "🌦";
-  if ([61,63,65,66,67,80,81,82].includes(code)) return "🌧";
-  if ([71,73,75,77,85,86].includes(code)) return "❄️";
-  if ([95,96,97,99].includes(code)) return "⛈️";
-  if (code === 3) return "☁️";
-  if (code === 2) return "⛅";
-  if (code === 1) return isDay ? "🌤️" : "☁️";
-  if (code === 0) return isDay ? "☀️" : "🌙";
+  if([51,53,55,56,57].includes(code)) return "🌦️";
+  if([61,63,65,66,67].includes(code)) return "🌧️";
+  if([71,73,75,77].includes(code)) return "❄️";
+  if([80,81,82].includes(code)) return "🌧️";
+  if([85,86].includes(code)) return "🌨️";
+  if([95,96,97,99].includes(code)) return "⛈️";
 
   return "☁️";
 }
 
-/* ==================================================
-   FOND MÉTÉO DYNAMIQUE
-   ================================================== */
+function getSkyClass(code){
+  if(code===0) return "sky-clear";
+  if(code===1||code===2) return "sky-partly";
+  if(code===3) return "sky-cloudy";
+  if(code===45||code===48) return "sky-fog";
 
-function getSkyClass(code,isDay) {
+  if([51,53,55,56,57].includes(code)) return "sky-drizzle";
+  if([61,63,65,66,67].includes(code)) return "sky-rain";
+  if([71,73,75,77,85,86].includes(code)) return "sky-snow";
+  if([80,81,82].includes(code)) return "sky-showers";
+  if([95,96,97,99].includes(code)) return "sky-storm";
 
-  const night = Number(isDay) === 0;
-  let condition = "clear";
-
-  if ([45,48].includes(code)) {
-    condition = "fog";
-  }
-  else if ([51,53,55,56,57,61,63,65,66,67,80,81,82].includes(code)) {
-    condition = "rain";
-  }
-  else if ([71,73,75,77,85,86].includes(code)) {
-    condition = "snow";
-  }
-  else if ([95,96,97,99].includes(code)) {
-    condition = "storm";
-  }
-  else if (code === 3) {
-    condition = "cloudy";
-  }
-  else if (code === 1 || code === 2) {
-    condition = "partly";
-  }
-
-  return "sky-" + condition + "-" + (night ? "night" : "day");
+  return "sky-cloudy";
 }
 
-function updateSkyBackground(code,isDay) {
-
+function updateSkyBackground(code,isDay){
   const screen = document.getElementById("outdoorScreen");
 
-  Array.from(screen.classList).forEach(function(className) {
+  screen.classList.remove(
+    "sky-clear","sky-partly","sky-cloudy","sky-fog",
+    "sky-drizzle","sky-rain","sky-snow","sky-showers","sky-storm",
+    "day","night"
+  );
 
-    if (className.startsWith("sky-")) {
-      screen.classList.remove(className);
-    }
-  });
-
-  screen.classList.add(getSkyClass(code,isDay));
+  screen.classList.add(getSkyClass(code));
+  screen.classList.add(isDay?"day":"night");
 }
 
-/* ==================================================
-   PRÉVISIONS DES QUATRE PROCHAINES HEURES
-   ================================================== */
+/* =========================================================
+   ANIMATIONS METEO SUR CANVAS
+========================================================= */
 
-function updateHourlyForecast(hourly,currentTime) {
+const weatherCanvas = document.getElementById("weatherEffects");
+const ctx = weatherCanvas.getContext("2d");
 
-  const grid = document.getElementById("hourlyGrid");
+let canvasWidth=0;
+let canvasHeight=0;
+let weatherCode=0;
+let weatherIsDay=true;
+let weatherParticles=[];
+let weatherClouds=[];
+let weatherCategory="clear";
+let lightning=0;
+let lightningCooldown=0;
+let lastAnimationFrame=0;
 
-  /*
-    On recherche la première heure strictement
-    postérieure à l'heure actuelle.
-  */
+function resizeWeatherCanvas(){
+  const rect = weatherCanvas.getBoundingClientRect();
+  const dpr = Math.min(window.devicePixelRatio||1,1.5);
 
-  let startIndex = hourly.time.findIndex(function(time) {
-    return time > currentTime;
+  canvasWidth = rect.width;
+  canvasHeight = rect.height;
+
+  weatherCanvas.width = Math.round(canvasWidth*dpr);
+  weatherCanvas.height = Math.round(canvasHeight*dpr);
+
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+
+  createWeatherParticles();
+  createWeatherClouds();
+}
+
+window.addEventListener("resize",resizeWeatherCanvas);
+window.addEventListener("orientationchange",()=>{
+  setTimeout(resizeWeatherCanvas,300);
+});
+
+function getWeatherCategory(code){
+  if(code===0) return "clear";
+  if(code===1||code===2||code===3) return "clouds";
+  if(code===45||code===48) return "fog";
+  if([51,53,55].includes(code)) return "drizzle";
+  if([56,57].includes(code)) return "freezingDrizzle";
+  if([61,63,65].includes(code)) return "rain";
+  if([66,67].includes(code)) return "freezingRain";
+  if([71,73,75,85,86].includes(code)) return "snow";
+  if(code===77) return "snowGrains";
+  if([80,81,82].includes(code)) return "showers";
+  if([95,96,97,99].includes(code)) return "storm";
+  return "clouds";
+}
+
+function createWeatherClouds(){
+  weatherClouds=[];
+
+  const count = weatherCategory==="clear"?1:
+    weatherCategory==="clouds"?5:
+    weatherCategory==="fog"?7:4;
+
+  for(let i=0;i<count;i++){
+    weatherClouds.push({
+      x:Math.random()*canvasWidth,
+      y:canvasHeight*(.08+Math.random()*.38),
+      size:50+Math.random()*100,
+      speed:.08+Math.random()*.22,
+      opacity:.06+Math.random()*.13
+    });
+  }
+}
+
+function createWeatherParticles(){
+  weatherParticles=[];
+
+  let count=0;
+
+  switch(weatherCategory){
+    case "drizzle": count=55; break;
+    case "freezingDrizzle": count=55; break;
+    case "rain": count=100; break;
+    case "freezingRain": count=90; break;
+    case "showers": count=130; break;
+    case "snow": count=65; break;
+    case "snowGrains": count=90; break;
+    case "storm": count=140; break;
+    case "fog": count=45; break;
+  }
+
+  for(let i=0;i<count;i++){
+    weatherParticles.push({
+      x:Math.random()*canvasWidth,
+      y:Math.random()*canvasHeight,
+      size:Math.random()*3+1,
+      speed:Math.random()*2+1,
+      drift:Math.random()*1.5-.75,
+      opacity:.25+Math.random()*.65,
+      angle:Math.random()*Math.PI*2
+    });
+  }
+}
+
+function updateWeatherAnimation(code,isDay){
+  weatherCode=code;
+  weatherIsDay=isDay;
+  weatherCategory=getWeatherCategory(code);
+
+  createWeatherParticles();
+  createWeatherClouds();
+
+  lightning=0;
+  lightningCooldown=0;
+}
+
+function drawClouds(time){
+  weatherClouds.forEach((cloud,i)=>{
+    cloud.x += cloud.speed;
+
+    if(cloud.x-cloud.size>canvasWidth+100){
+      cloud.x=-cloud.size-100;
+    }
+
+    const y=cloud.y+Math.sin(time/5000+i)*5;
+
+    ctx.save();
+    ctx.globalAlpha=cloud.opacity;
+    ctx.fillStyle=weatherIsDay?"#ffffff":"#c3d0e0";
+
+    ctx.beginPath();
+    ctx.ellipse(cloud.x,y,cloud.size,cloud.size*.23,0,0,Math.PI*2);
+    ctx.ellipse(cloud.x-cloud.size*.35,y+5,cloud.size*.38,cloud.size*.19,0,0,Math.PI*2);
+    ctx.ellipse(cloud.x+cloud.size*.35,y+3,cloud.size*.43,cloud.size*.2,0,0,Math.PI*2);
+    ctx.fill();
+    ctx.restore();
+  });
+}
+
+function drawSunAndMoon(time){
+  if(weatherCategory!=="clear"&&weatherCategory!=="clouds") return;
+
+  const x=canvasWidth*.82;
+  const y=canvasHeight*.23;
+  const radius=Math.min(canvasWidth,canvasHeight)*.065;
+
+  ctx.save();
+
+  if(weatherIsDay){
+    const glow=ctx.createRadialGradient(x,y,radius*.2,x,y,radius*3);
+    glow.addColorStop(0,"rgba(255,235,180,.24)");
+    glow.addColorStop(1,"rgba(255,235,180,0)");
+    ctx.fillStyle=glow;
+    ctx.beginPath();
+    ctx.arc(x,y,radius*3,0,Math.PI*2);
+    ctx.fill();
+
+    ctx.fillStyle="rgba(255,235,190,.7)";
+    ctx.beginPath();
+    ctx.arc(x,y,radius,0,Math.PI*2);
+    ctx.fill();
+  }else{
+    ctx.fillStyle="rgba(230,240,255,.7)";
+    ctx.beginPath();
+    ctx.arc(x,y,radius*.75,0,Math.PI*2);
+    ctx.fill();
+
+    ctx.fillStyle="rgba(30,48,70,.9)";
+    ctx.beginPath();
+    ctx.arc(x+radius*.35,y-radius*.18,radius*.68,0,Math.PI*2);
+    ctx.fill();
+  }
+
+  ctx.restore();
+}
+
+function drawRain(){
+  const heavy = weatherCategory==="showers"||weatherCategory==="storm";
+  const speed = heavy?13:weatherCategory==="drizzle"?3:8;
+  const length = heavy?22:weatherCategory==="drizzle"?7:15;
+
+  ctx.save();
+  ctx.lineWidth=weatherCategory==="drizzle"?.8:1.4;
+  ctx.strokeStyle="rgba(210,230,245,.58)";
+
+  weatherParticles.forEach(p=>{
+    p.y+=speed*p.speed*.45;
+    p.x+=p.drift-2;
+
+    if(p.y>canvasHeight+20){
+      p.y=-20;
+      p.x=Math.random()*canvasWidth;
+    }
+    if(p.x<-20) p.x=canvasWidth+20;
+
+    ctx.globalAlpha=p.opacity;
+    ctx.beginPath();
+    ctx.moveTo(p.x,p.y);
+    ctx.lineTo(p.x-4,p.y+length);
+    ctx.stroke();
   });
 
-  if (startIndex === -1 || startIndex + 3 >= hourly.time.length) {
+  ctx.restore();
+}
 
-    console.error("Prévisions horaires indisponibles.");
+function drawSnow(){
+  const heavy=weatherCode===75||weatherCode===86;
+  ctx.save();
+
+  weatherParticles.forEach(p=>{
+    p.y+=(heavy?1.7:1)*p.speed*.45;
+    p.x+=Math.sin(p.angle)*.7+p.drift*.3;
+    p.angle+=.015;
+
+    if(p.y>canvasHeight+10){
+      p.y=-10;
+      p.x=Math.random()*canvasWidth;
+    }
+    if(p.x>canvasWidth+10) p.x=-10;
+    if(p.x<-10) p.x=canvasWidth+10;
+
+    ctx.globalAlpha=p.opacity;
+    ctx.fillStyle="#ffffff";
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,p.size*(heavy?1.2:1),0,Math.PI*2);
+    ctx.fill();
+  });
+
+  ctx.restore();
+}
+
+function drawIceParticles(){
+  ctx.save();
+
+  weatherParticles.forEach(p=>{
+    p.y+=3*p.speed*.4;
+    p.x+=p.drift;
+
+    if(p.y>canvasHeight){
+      p.y=-5;
+      p.x=Math.random()*canvasWidth;
+    }
+
+    ctx.globalAlpha=p.opacity;
+    ctx.fillStyle="#c9efff";
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,1.5+p.size*.4,0,Math.PI*2);
+    ctx.fill();
+  });
+
+  ctx.restore();
+}
+
+function drawFog(time){
+  ctx.save();
+
+  for(let i=0;i<5;i++){
+    const y=canvasHeight*(.35+i*.14)+Math.sin(time/3500+i)*12;
+    const gradient=ctx.createLinearGradient(0,y-30,0,y+40);
+
+    gradient.addColorStop(0,"rgba(225,235,240,0)");
+    gradient.addColorStop(.5,"rgba(225,235,240,.12)");
+    gradient.addColorStop(1,"rgba(225,235,240,0)");
+
+    ctx.fillStyle=gradient;
+    ctx.fillRect(0,y-30,canvasWidth,70);
+  }
+
+  ctx.restore();
+}
+
+function drawLightning(){
+  if(weatherCategory!=="storm") return;
+
+  if(lightningCooldown>0){
+    lightningCooldown--;
+  }else if(Math.random()<.008){
+    lightning=1;
+    lightningCooldown=50+Math.random()*100;
+  }
+
+  if(lightning>0){
+    ctx.save();
+    ctx.fillStyle=`rgba(225,235,255,${lightning*.2})`;
+    ctx.fillRect(0,0,canvasWidth,canvasHeight);
+    ctx.restore();
+    lightning=Math.max(0,lightning-.18);
+  }
+}
+
+function drawWeatherFrame(time){
+  if(document.hidden) return;
+
+  if(time-lastAnimationFrame<32){
+    requestAnimationFrame(drawWeatherFrame);
     return;
   }
 
-  let html = "";
+  lastAnimationFrame=time;
 
-  for (let i = 0; i < 4; i++) {
+  ctx.clearRect(0,0,canvasWidth,canvasHeight);
 
-    const index = startIndex + i;
-
-    const time = hourly.time[index];
-    const temperature = Math.round(hourly.temperature_2m[index]);
-    const code = Number(hourly.weather_code[index]);
-    const isDay = Number(hourly.is_day[index]);
-
-    const hour = time.substring(11,16);
-    const icon = getWeatherIcon(code,isDay);
-
-    html += `
-      <div class="hour-cell ${i === 0 ? "near-hour" : ""}">
-        <div class="hour-time">${hour.substring(0,2)} h</div>
-        <div class="hour-icon">${icon}</div>
-        <div class="hour-temp">${temperature}°</div>
-      </div>
-    `;
+  if(weatherCategory==="clear"||weatherCategory==="clouds"){
+    drawSunAndMoon(time);
   }
 
-  grid.innerHTML = html;
+  if(weatherCategory==="clouds"||
+     weatherCategory==="fog"||
+     weatherCategory==="drizzle"||
+     weatherCategory==="freezingDrizzle"||
+     weatherCategory==="rain"||
+     weatherCategory==="freezingRain"||
+     weatherCategory==="showers"||
+     weatherCategory==="storm"){
+    drawClouds(time);
+  }
+
+  if(weatherCategory==="fog"){
+    drawFog(time);
+  }
+
+  if(["drizzle","rain","showers","storm"].includes(weatherCategory)){
+    drawRain();
+  }
+
+  if(weatherCategory==="freezingDrizzle"||weatherCategory==="freezingRain"){
+    drawRain();
+    drawIceParticles();
+  }
+
+  if(weatherCategory==="snow"||weatherCategory==="snowGrains"){
+    drawSnow();
+  }
+
+  if(weatherCategory==="storm"){
+    drawLightning();
+
+    if(weatherCode===96||weatherCode===99){
+      drawIceParticles();
+    }
+  }
+
+  requestAnimationFrame(drawWeatherFrame);
 }
 
-/* ==================================================
-   MÉTÉO EXTÉRIEURE ET PRÉVISIONS
-   ================================================== */
+resizeWeatherCanvas();
+requestAnimationFrame(drawWeatherFrame);
 
-async function refreshWeather() {
+/* =========================================================
+   PREVISIONS HORAIRES
+========================================================= */
 
-  const url =
-    "https://api.open-meteo.com/v1/forecast" +
-    "?latitude=" + LATITUDE +
-    "&longitude=" + LONGITUDE +
-    "&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m,is_day" +
-    "&hourly=temperature_2m,weather_code,is_day" +
-    "&wind_speed_unit=kmh" +
-    "&timezone=Europe%2FParis" +
-    "&forecast_days=2";
+function updateHourlyForecast(data){
+  if(!data||!data.hourly) return;
 
-  try {
+  const hourly=data.hourly;
+  const times=hourly.time||[];
+  const temperatures=hourly.temperature_2m||[];
+  const codes=hourly.weather_code||[];
+  const rain=hourly.precipitation_probability||[];
 
-    const response = await fetch(url);
+  const now=new Date();
+  let startIndex=times.findIndex(time=>new Date(time)>now);
 
-    if (!response.ok) {
-      throw new Error("Erreur météo");
-    }
+  if(startIndex<0) startIndex=0;
 
-    const data = await response.json();
-    const current = data.current;
+  for(let i=0;i<4;i++){
+    const index=startIndex+i;
+    if(index>=times.length) break;
 
-    /* MÉTÉO ACTUELLE */
+    const date=new Date(times[index]);
+    const hour=date.getHours();
 
-    const temperature = Math.round(current.temperature_2m);
-    const feelsLike = Math.round(current.apparent_temperature);
-    const humidity = Math.round(current.relative_humidity_2m);
-    const wind = Math.round(current.wind_speed_10m);
+    const isDay=hour>=7&&hour<21;
+    const code=Number(codes[index]);
 
-    const code = Number(current.weather_code);
-    const isDay = Number(current.is_day);
+    document.getElementById("hourTime"+i).textContent =
+      String(hour).padStart(2,"0")+"h";
 
-    document.getElementById("outsideTemp").textContent = temperature;
-    document.getElementById("feelsLike").textContent = feelsLike;
-    document.getElementById("outsideHumidity").textContent = humidity;
-    document.getElementById("wind").textContent = wind;
-
-    document.getElementById("weatherDesc").textContent =
-      getWeatherDescription(code);
-
-    document.getElementById("weatherIcon").textContent =
+    document.getElementById("hourIcon"+i).textContent =
       getWeatherIcon(code,isDay);
 
-    updateSkyBackground(code,isDay);
+    document.getElementById("hourTemp"+i).textContent =
+      Math.round(temperatures[index])+"°";
 
-    /* PRÉVISIONS DES QUATRE PROCHAINES HEURES */
-
-    updateHourlyForecast(data.hourly,current.time);
-
+    document.getElementById("hourRain"+i).textContent =
+      rain[index]>0?Math.round(rain[index])+" %":"";
   }
-  catch(error) {
+}
 
+/* =========================================================
+   ACTUALISATION METEO OPEN-METEO
+========================================================= */
+
+async function refreshWeather(){
+  const url =
+    "https://api.open-meteo.com/v1/forecast"+
+    "?latitude="+LATITUDE+
+    "&longitude="+LONGITUDE+
+    "&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,precipitation,weather_code,wind_speed_10m"+
+    "&hourly=temperature_2m,precipitation_probability,weather_code"+
+    "&timezone=Europe%2FParis"+
+    "&forecast_days=2";
+
+  try{
+    const response=await fetch(url,{cache:"no-store"});
+
+    if(!response.ok){
+      throw new Error("Réponse météo indisponible");
+    }
+
+    const data=await response.json();
+    const current=data.current;
+
+    if(!current) throw new Error("Données météo manquantes");
+
+    const code=Number(current.weather_code);
+    const isDay=Number(current.is_day)===1;
+
+    document.getElementById("outdoorTemp").textContent =
+      Math.round(current.temperature_2m)+"°";
+
+    document.getElementById("outdoorIcon").textContent =
+      getWeatherIcon(code,isDay);
+
+    document.getElementById("outdoorDescription").textContent =
+      getWeatherDescription(code);
+
+    document.getElementById("outdoorFeels").textContent =
+      Math.round(current.apparent_temperature)+"°";
+
+    document.getElementById("outdoorHumidity").textContent =
+      Math.round(current.relative_humidity_2m)+"%";
+
+    document.getElementById("outdoorWind").textContent =
+      Math.round(current.wind_speed_10m)+" km/h";
+
+    document.getElementById("weatherUpdated").textContent =
+      "Mis à jour à "+new Date().toLocaleTimeString("fr-FR",{
+        hour:"2-digit",
+        minute:"2-digit"
+      });
+
+    updateSkyBackground(code,isDay);
+    updateWeatherAnimation(code,isDay);
+    updateHourlyForecast(data);
+
+  }catch(error){
     console.error("Erreur météo :",error);
+    document.getElementById("outdoorDescription").textContent =
+      "Météo momentanément indisponible";
   }
 }
 
 refreshWeather();
 setInterval(refreshWeather,WEATHER_REFRESH);
 
+/* =========================================================
+   REPRISE APRES MISE EN VEILLE
+========================================================= */
+
+document.addEventListener("visibilitychange",()=>{
+  if(!document.hidden){
+    updateClock();
+    refreshIndoorReadings();
+    refreshWeather();
+  }
+});
 </script>
 
 </body>
