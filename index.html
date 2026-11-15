@@ -48,7 +48,10 @@ body{position:fixed;inset:0}
 
 #clockScreen{
   flex-direction:row;
-  gap:4vw;
+  justify-content:space-evenly;
+  align-items:center;
+  gap:1vw;
+  padding:1vh 2vw;
   background:radial-gradient(ellipse at center,#1c2a38 0%,#101820 72%);
 }
 
@@ -57,6 +60,7 @@ body{position:fixed;inset:0}
   flex-direction:column;
   align-items:center;
   justify-content:center;
+  flex:1.15;
   min-width:0;
 }
 
@@ -65,7 +69,7 @@ body{position:fixed;inset:0}
   align-items:center;
   justify-content:center;
   white-space:nowrap;
-  font-size:clamp(115px,22vw,270px);
+  font-size:clamp(130px,27vw,300px);
   font-weight:300;
   letter-spacing:-.065em;
   line-height:1;
@@ -80,9 +84,9 @@ body{position:fixed;inset:0}
 }
 
 .clock-date{
-  margin-top:22px;
+  margin-top:2vh;
   text-align:center;
-  font-size:clamp(18px,2.4vw,30px);
+  font-size:clamp(18px,2.5vw,30px);
   font-weight:300;
   letter-spacing:.08em;
   color:#aebdca;
@@ -90,11 +94,11 @@ body{position:fixed;inset:0}
 }
 
 .analog-clock{
-  width:min(38vw,48vh);
-  height:min(38vw,48vh);
-  max-width:360px;
-  max-height:360px;
-  flex-shrink:0;
+  flex:0 0 auto;
+  width:min(49vw,82vh);
+  height:min(49vw,82vh);
+  max-width:none;
+  max-height:none;
 }
 
 .analog-clock svg{
@@ -415,13 +419,29 @@ body{position:fixed;inset:0}
   color:#9dc9e4;
 }
 
-/* PETITS ECRANS */
+/* MODE PORTRAIT */
 
 @media (orientation:portrait){
   .screen{padding:20px}
-  #clockScreen{flex-direction:column;gap:3vh}
-  .analog-clock{width:48vw;height:48vw}
+
+  #clockScreen{
+    flex-direction:column;
+    justify-content:space-evenly;
+    gap:1vh;
+    padding:2vh 2vw;
+  }
+
+  .clock-left{flex:none}
+
   .clock-digital{font-size:24vw}
+
+  .clock-date{margin-top:1vh}
+
+  .analog-clock{
+    width:68vw;
+    height:68vw;
+  }
+
   .indoor-number{font-size:18vw}
   .outdoor-temperature{font-size:27vw}
   .outdoor-main{gap:1vw}
@@ -432,20 +452,43 @@ body{position:fixed;inset:0}
   .hourly-temp{font-size:8vw}
 }
 
-@media (max-height:420px) and (orientation:landscape){
-  .screen{padding:12px 4vw}
-  #clockScreen{gap:4vw}
-  .clock-digital{font-size:25vh}
-  .analog-clock{width:38vh;height:38vh}
-  .clock-date{margin-top:10px;font-size:4vh}
+/* IPHONE 8 ET AUTRES PETITS ECRANS EN PAYSAGE */
+
+@media (orientation:landscape) and (max-height:420px){
+  #clockScreen{
+    padding:1vh 2vw;
+    gap:0;
+  }
+
+  .clock-left{
+    flex:1.15;
+    min-width:0;
+  }
+
+  .clock-digital{
+    font-size:clamp(125px,27vw,190px);
+  }
+
+  .clock-date{
+    margin-top:2vh;
+    font-size:4vh;
+  }
+
+  .analog-clock{
+    width:82vh;
+    height:82vh;
+  }
+
   .indoor-title{top:5%}
   .indoor-number{font-size:20vh}
   .indoor-label{margin-top:10px;font-size:4vh}
+
   .outdoor-icon{font-size:18vh}
   .outdoor-temperature{font-size:25vh}
   .outdoor-description{margin-top:1vh;font-size:5vh}
   .outdoor-details{margin-top:3vh}
   .outdoor-detail strong{font-size:5vh}
+
   .hourly-title{top:5%}
   .hourly-list{margin-top:5vh}
   .hourly-item{gap:1.5vh}
@@ -547,7 +590,7 @@ body{position:fixed;inset:0}
     <div class="hourly-item">
       <div id="hourTime3" class="hourly-time">--h</div>
       <div id="hourIcon3" class="hourly-icon">☁️</div>
-      <div id="hourTemp3" class="hourly-temp">--°</div>
+      <div id="hourTemp3" class="hour-temp">--°</div>
       <div id="hourRain3" class="hourly-rain"></div>
     </div>
   </div>
