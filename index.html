@@ -25,7 +25,8 @@ body{position:fixed;inset:0}
   position:absolute;inset:0;width:100%;height:100%;
   padding:30px 5vw;display:flex;align-items:center;justify-content:center;
   opacity:0;visibility:hidden;
-  transition:opacity 1.5s ease,visibility 1.5s;
+  transition:opacity 1.5s ease,visibility 1.5s,
+    background 2s ease,color 2s ease;
   overflow:hidden;
 }
 .screen.active{opacity:1;visibility:visible}
@@ -105,12 +106,13 @@ body{position:fixed;inset:0}
 #outdoorScreen::before{
   content:"";position:absolute;inset:0;z-index:-2;
   background:linear-gradient(160deg,#345a78 0%,#243e56 50%,#172737 100%);
-  transition:background 2s ease;
+  transition:background 2s ease,filter 2s ease;
 }
 #outdoorScreen::after{
   content:"";position:absolute;inset:0;z-index:-1;
   background:linear-gradient(180deg,rgba(5,12,20,.05),rgba(5,12,20,.48));
   pointer-events:none;
+  transition:background 2s ease;
 }
 #outdoorScreen.sky-clear.day::before{background:linear-gradient(150deg,#477da5 0%,#315e83 48%,#1b354d 100%)}
 #outdoorScreen.sky-clear.night::before{background:linear-gradient(150deg,#101d36 0%,#182a43 55%,#101820 100%)}
@@ -269,6 +271,102 @@ body{position:fixed;inset:0}
 .moon-note{
   position:absolute;bottom:3%;color:#718596;
   font-size:11px;letter-spacing:.04em;text-align:center;
+}
+
+/* MODE NUIT : MIDNIGHT */
+
+body.night-mode{
+  background:#080e18;
+  color:#dce5ef;
+}
+
+body.night-mode #clockScreen{
+  background:radial-gradient(ellipse at center,#111d30 0%,#080e18 76%);
+}
+body.night-mode .clock-digital{color:#dce6f1}
+body.night-mode .clock-date{color:#8496ad}
+body.night-mode .clock-number{fill:#b9c7d8}
+body.night-mode .clock-tick{stroke:#52647b;opacity:.42}
+body.night-mode .clock-tick.major{stroke:#9aacc1;opacity:.65}
+body.night-mode .hour-hand{stroke:#d9e3ef}
+body.night-mode .minute-hand{stroke:#a7b8cb}
+body.night-mode .second-hand{stroke:#6e91b5}
+body.night-mode .clock-center{fill:#d9e3ef}
+
+body.night-mode #indoorScreen{
+  background:radial-gradient(ellipse at 50% 45%,#182438 0%,#101a2a 52%,#080e18 100%);
+}
+body.night-mode .indoor-title,
+body.night-mode .indoor-label{color:#91a5bd}
+body.night-mode .indoor-number{color:#d9e4f0}
+body.night-mode .indoor-unit{color:#849bb5}
+body.night-mode .indoor-value+.indoor-value{border-left-color:rgba(180,200,225,.12)}
+body.night-mode .indoor-status{color:#657b95}
+
+body.night-mode #outdoorScreen::before{
+  filter:brightness(.68) saturate(.72);
+}
+body.night-mode #outdoorScreen::after{
+  background:linear-gradient(180deg,rgba(3,8,17,.28),rgba(3,8,17,.68));
+}
+body.night-mode .outdoor-location{color:rgba(215,228,245,.68)}
+body.night-mode .outdoor-temperature{color:#e0e9f4}
+body.night-mode .outdoor-description{color:rgba(220,232,246,.82)}
+body.night-mode .outdoor-detail{color:rgba(195,211,230,.68)}
+body.night-mode .outdoor-detail strong{color:#e0e9f4}
+body.night-mode .rain-forecast{
+  background:rgba(5,12,24,.42);
+  border-color:rgba(170,195,225,.15);
+  color:#c4d3e5;
+}
+body.night-mode .rain-forecast strong{color:#9fc8ef}
+body.night-mode .outdoor-updated{color:rgba(190,205,225,.4)}
+
+body.night-mode #hourlyScreen{
+  background:radial-gradient(ellipse at center,#172438 0%,#101a2a 60%,#080e18 100%);
+}
+body.night-mode .hourly-title{color:#91a5bd}
+body.night-mode .hourly-time{color:#a9bad0}
+body.night-mode .hourly-temp{color:#dce6f1}
+body.night-mode .hourly-rain{color:#789fc5}
+
+body.night-mode #moonScreen{
+  background:
+    radial-gradient(ellipse at 28% 48%,rgba(53,79,112,.14) 0%,transparent 48%),
+    radial-gradient(ellipse at 80% 50%,#111d30 0%,#0b1422 58%,#080e18 100%);
+}
+body.night-mode .moon-title{color:#91a5bd}
+body.night-mode .moon-phase-name{color:#dce6f1}
+body.night-mode .moon-phase-age{color:#8298b2}
+body.night-mode .moon-info-label{color:#8198b3}
+body.night-mode .moon-info-value{color:#dce6f1}
+body.night-mode .moon-next-value{color:#c2d1e2}
+body.night-mode .moon-note{color:#627992}
+body.night-mode .moon-canvas-wrap::before{
+  background:rgba(108,148,195,.07);
+}
+body.night-mode #moonCanvas{
+  filter:drop-shadow(0 0 14px rgba(130,165,210,.10));
+}
+
+/* TRANSITIONS DOUCES DU MODE NUIT */
+
+.screen,
+.clock-digital,
+.clock-date,
+.indoor-number,
+.indoor-title,
+.indoor-label,
+.hourly-title,
+.hourly-time,
+.hourly-temp,
+.moon-title,
+.moon-phase-name,
+.moon-info-value{
+  transition:
+    color 2s ease,
+    background 2s ease,
+    border-color 2s ease;
 }
 
 /* MODE PORTRAIT */
@@ -479,6 +577,37 @@ const LONGITUDE=-1.128;
 
 const APPS_SCRIPT_URL=
 "https://script.google.com/macros/s/AKfycbyOFvPcB_zDX5uiR0lLCQ2DjzTFFi5l9hFCOTazwZRJRSyZkTOzqumUqNbjeCCD-o67fg/exec";
+
+/* MODE JOUR / NUIT */
+
+let isNightMode=false;
+
+function updateNightMode(){
+  const now=new Date();
+  const minutes=now.getHours()*60+now.getMinutes();
+
+  // Mode nuit de 21 h à 7 h
+  const night=minutes>=21*60||minutes<7*60;
+
+  if(night!==isNightMode){
+    isNightMode=night;
+    document.body.classList.toggle("night-mode",night);
+
+    const themeColor=document.querySelector('meta[name="theme-color"]');
+    if(themeColor){
+      themeColor.setAttribute(
+        "content",
+        night?"#080e18":"#101820"
+      );
+    }
+  }
+}
+
+// Application immédiate au démarrage
+updateNightMode();
+
+// Vérification chaque minute
+setInterval(updateNightMode,60000);
 
 /* GESTION DES ECRANS */
 
@@ -824,13 +953,13 @@ function updateWeatherAnimation(code,isDay){
 
 function drawClouds(time){
   weatherClouds.forEach((cloud,i)=>{
-    cloud.x+=cloud.speed;
+    cloud.x+=cloud.speed*(isNightMode?.45:1);
     if(cloud.x-cloud.size>canvasWidth+100)cloud.x=-cloud.size-100;
 
-    const y=cloud.y+Math.sin(time/5000+i)*5;
+    const y=cloud.y+Math.sin(time/(isNightMode?7500:5000)+i)*5;
 
     ctx.save();
-    ctx.globalAlpha=cloud.opacity;
+    ctx.globalAlpha=cloud.opacity*(isNightMode?.65:1);
     ctx.fillStyle=weatherIsDay?"#ffffff":"#c3d0e0";
     ctx.beginPath();
     ctx.ellipse(cloud.x,y,cloud.size,cloud.size*.23,0,0,Math.PI*2);
@@ -864,7 +993,9 @@ function drawSunAndMoon(time){
     ctx.arc(x,y,radius,0,Math.PI*2);
     ctx.fill();
   }else{
-    ctx.fillStyle="rgba(230,240,255,.7)";
+    ctx.fillStyle=isNightMode
+      ?"rgba(210,225,250,.52)"
+      :"rgba(230,240,255,.7)";
     ctx.beginPath();
     ctx.arc(x,y,radius*.75,0,Math.PI*2);
     ctx.fill();
@@ -880,16 +1011,19 @@ function drawSunAndMoon(time){
 
 function drawRain(){
   const heavy=weatherCategory==="showers"||weatherCategory==="storm";
-  const speed=heavy?13:weatherCategory==="drizzle"?3:8;
+  const nightFactor=isNightMode?.62:1;
+  const speed=(heavy?13:weatherCategory==="drizzle"?3:8)*nightFactor;
   const length=heavy?22:weatherCategory==="drizzle"?7:15;
 
   ctx.save();
   ctx.lineWidth=weatherCategory==="drizzle"?.8:1.4;
-  ctx.strokeStyle="rgba(210,230,245,.58)";
+  ctx.strokeStyle=isNightMode
+    ?"rgba(170,195,225,.38)"
+    :"rgba(210,230,245,.58)";
 
   weatherParticles.forEach(p=>{
     p.y+=speed*p.speed*.45;
-    p.x+=p.drift-2;
+    p.x+=p.drift-2*nightFactor;
 
     if(p.y>canvasHeight+20){
       p.y=-20;
@@ -897,7 +1031,7 @@ function drawRain(){
     }
     if(p.x<-20)p.x=canvasWidth+20;
 
-    ctx.globalAlpha=p.opacity;
+    ctx.globalAlpha=p.opacity*nightFactor;
     ctx.beginPath();
     ctx.moveTo(p.x,p.y);
     ctx.lineTo(p.x-4,p.y+length);
@@ -909,12 +1043,13 @@ function drawRain(){
 
 function drawSnow(){
   const heavy=weatherCode===75||weatherCode===86;
+  const nightFactor=isNightMode?.68:1;
   ctx.save();
 
   weatherParticles.forEach(p=>{
-    p.y+=(heavy?1.7:1)*p.speed*.45;
-    p.x+=Math.sin(p.angle)*.7+p.drift*.3;
-    p.angle+=.015;
+    p.y+=(heavy?1.7:1)*p.speed*.45*nightFactor;
+    p.x+=Math.sin(p.angle)*.7*nightFactor+p.drift*.3;
+    p.angle+=.015*(isNightMode?.65:1);
 
     if(p.y>canvasHeight+10){
       p.y=-10;
@@ -923,7 +1058,7 @@ function drawSnow(){
     if(p.x>canvasWidth+10)p.x=-10;
     if(p.x<-10)p.x=canvasWidth+10;
 
-    ctx.globalAlpha=p.opacity;
+    ctx.globalAlpha=p.opacity*(isNightMode?.72:1);
     ctx.fillStyle="#ffffff";
     ctx.beginPath();
     ctx.arc(p.x,p.y,p.size*(heavy?1.2:1),0,Math.PI*2);
@@ -934,18 +1069,19 @@ function drawSnow(){
 }
 
 function drawIceParticles(){
+  const nightFactor=isNightMode?.65:1;
   ctx.save();
 
   weatherParticles.forEach(p=>{
-    p.y+=3*p.speed*.4;
-    p.x+=p.drift;
+    p.y+=3*p.speed*.4*nightFactor;
+    p.x+=p.drift*nightFactor;
 
     if(p.y>canvasHeight){
       p.y=-5;
       p.x=Math.random()*canvasWidth;
     }
 
-    ctx.globalAlpha=p.opacity;
+    ctx.globalAlpha=p.opacity*nightFactor;
     ctx.fillStyle="#c9efff";
     ctx.beginPath();
     ctx.arc(p.x,p.y,1.5+p.size*.4,0,Math.PI*2);
@@ -959,11 +1095,14 @@ function drawFog(time){
   ctx.save();
 
   for(let i=0;i<5;i++){
-    const y=canvasHeight*(.35+i*.14)+Math.sin(time/3500+i)*12;
+    const y=canvasHeight*(.35+i*.14)+
+      Math.sin(time/(isNightMode?5500:3500)+i)*12;
     const gradient=ctx.createLinearGradient(0,y-30,0,y+40);
 
+    const opacity=isNightMode?".075":".12";
+
     gradient.addColorStop(0,"rgba(225,235,240,0)");
-    gradient.addColorStop(.5,"rgba(225,235,240,.12)");
+    gradient.addColorStop(.5,`rgba(225,235,240,${opacity})`);
     gradient.addColorStop(1,"rgba(225,235,240,0)");
 
     ctx.fillStyle=gradient;
@@ -978,14 +1117,15 @@ function drawLightning(){
 
   if(lightningCooldown>0){
     lightningCooldown--;
-  }else if(Math.random()<.008){
+  }else if(Math.random()<(isNightMode?.004:.008)){
     lightning=1;
     lightningCooldown=50+Math.random()*100;
   }
 
   if(lightning>0){
     ctx.save();
-    ctx.fillStyle=`rgba(225,235,255,${lightning*.2})`;
+    const intensity=isNightMode?.10:.2;
+    ctx.fillStyle=`rgba(225,235,255,${lightning*intensity})`;
     ctx.fillRect(0,0,canvasWidth,canvasHeight);
     ctx.restore();
     lightning=Math.max(0,lightning-.18);
@@ -1525,6 +1665,7 @@ setInterval(refreshWeather,WEATHER_REFRESH);
 
 document.addEventListener("visibilitychange",()=>{
   if(!document.hidden){
+    updateNightMode();
     updateClock();
     refreshIndoorReadings();
     refreshWeather();
