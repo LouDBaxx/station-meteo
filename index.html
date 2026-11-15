@@ -52,6 +52,14 @@ body{position:fixed;inset:0}
   background:radial-gradient(ellipse at center,#1c2a38 0%,#101820 72%);
 }
 
+.clock-left{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  min-width:0;
+}
+
 .clock-digital{
   display:flex;
   align-items:center;
@@ -81,14 +89,6 @@ body{position:fixed;inset:0}
   text-transform:capitalize;
 }
 
-.clock-left{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  min-width:0;
-}
-
 .analog-clock{
   width:min(38vw,48vh);
   height:min(38vw,48vh);
@@ -98,6 +98,7 @@ body{position:fixed;inset:0}
 }
 
 .analog-clock svg{
+  display:block;
   width:100%;
   height:100%;
   overflow:hidden;
@@ -125,13 +126,12 @@ body{position:fixed;inset:0}
 
 .clock-hand{
   stroke-linecap:round;
-  transform-box:view-box;
+  transform:none!important;
 }
 
 .hour-hand{stroke:#f5f7f9;stroke-width:4.5}
 .minute-hand{stroke:#c8d3dc;stroke-width:3}
 .second-hand{stroke:#8eb8d6;stroke-width:1.3}
-
 .clock-center{fill:#f5f7f9}
 
 /* CLIMAT INTERIEUR */
@@ -164,7 +164,7 @@ body{position:fixed;inset:0}
 
 .indoor-value{text-align:center;padding:10px}
 
-.indoor-value + .indoor-value{
+.indoor-value+.indoor-value{
   border-left:1px solid rgba(255,255,255,.13);
 }
 
@@ -231,37 +231,29 @@ body{position:fixed;inset:0}
 #outdoorScreen.sky-clear.day::before{
   background:linear-gradient(150deg,#477da5 0%,#315e83 48%,#1b354d 100%);
 }
-
 #outdoorScreen.sky-clear.night::before{
   background:linear-gradient(150deg,#101d36 0%,#182a43 55%,#101820 100%);
 }
-
 #outdoorScreen.sky-partly.day::before{
   background:linear-gradient(150deg,#527c9c 0%,#3b5d78 50%,#20394f 100%);
 }
-
 #outdoorScreen.sky-partly.night::before{
   background:linear-gradient(150deg,#17283f 0%,#25364b 55%,#101820 100%);
 }
-
 #outdoorScreen.sky-cloudy::before{
   background:linear-gradient(150deg,#596b7a 0%,#3d4e5d 55%,#202e3b 100%);
 }
-
 #outdoorScreen.sky-fog::before{
   background:linear-gradient(150deg,#87949b 0%,#657681 55%,#344653 100%);
 }
-
 #outdoorScreen.sky-rain::before,
 #outdoorScreen.sky-drizzle::before,
 #outdoorScreen.sky-showers::before{
   background:linear-gradient(150deg,#435b70 0%,#293f53 55%,#172633 100%);
 }
-
 #outdoorScreen.sky-snow::before{
   background:linear-gradient(150deg,#71899b 0%,#526b7e 55%,#2c4051 100%);
 }
-
 #outdoorScreen.sky-storm::before{
   background:linear-gradient(150deg,#30394b 0%,#202b3b 55%,#101820 100%);
 }
@@ -443,7 +435,7 @@ body{position:fixed;inset:0}
 @media (max-height:420px) and (orientation:landscape){
   .screen{padding:12px 4vw}
   #clockScreen{gap:4vw}
-  .clock-digital{font-size:24vh}
+  .clock-digital{font-size:25vh}
   .analog-clock{width:38vh;height:38vh}
   .clock-date{margin-top:10px;font-size:4vh}
   .indoor-title{top:5%}
@@ -463,6 +455,7 @@ body{position:fixed;inset:0}
 
 <body>
 
+<!-- HORLOGE -->
 <section id="clockScreen" class="screen active">
   <div class="clock-left">
     <div id="digitalClock" class="clock-digital">--:--</div>
@@ -471,30 +464,26 @@ body{position:fixed;inset:0}
 
   <div class="analog-clock">
     <svg viewBox="0 0 200 200" aria-label="Horloge analogique">
-      <circle cx="100" cy="100" r="94" fill="none" stroke="rgba(255,255,255,.16)" stroke-width="1"/>
+      <circle cx="100" cy="100" r="94"
+        fill="none" stroke="rgba(255,255,255,.16)" stroke-width="1"/>
       <g id="clockTicks"></g>
       <g id="clockNumbers"></g>
 
-      <defs>
-        <clipPath id="clockFaceClip">
-          <circle cx="100" cy="100" r="91"/>
-        </clipPath>
-      </defs>
+      <line id="hourHand" class="clock-hand hour-hand"
+        x1="100" y1="100" x2="100" y2="61"/>
 
-      <g clip-path="url(#clockFaceClip)">
-        <line id="hourHand" class="clock-hand hour-hand"
-              x1="100" y1="100" x2="100" y2="61"/>
-        <line id="minuteHand" class="clock-hand minute-hand"
-              x1="100" y1="100" x2="100" y2="42"/>
-        <line id="secondHand" class="clock-hand second-hand"
-              x1="100" y1="100" x2="100" y2="27"/>
-      </g>
+      <line id="minuteHand" class="clock-hand minute-hand"
+        x1="100" y1="100" x2="100" y2="42"/>
 
-      <circle class="clock-center" cx="100" cy="100" r="3.5"/>
+      <line id="secondHand" class="clock-hand second-hand"
+        x1="100" y1="100" x2="100" y2="27"/>
+
+      <circle class="clock-center" cx="100" cy="100" r="4"/>
     </svg>
   </div>
 </section>
 
+<!-- CLIMAT INTERIEUR -->
 <section id="indoorScreen" class="screen">
   <div class="indoor-title">Climat intérieur · Salon</div>
   <div class="indoor-values">
@@ -514,6 +503,7 @@ body{position:fixed;inset:0}
   <div id="indoorStatus" class="indoor-status">Connexion au capteur...</div>
 </section>
 
+<!-- METEO EXTERIEURE -->
 <section id="outdoorScreen" class="screen sky-clear day">
   <canvas id="weatherEffects"></canvas>
   <div class="outdoor-content">
@@ -532,6 +522,7 @@ body{position:fixed;inset:0}
   </div>
 </section>
 
+<!-- PREVISIONS HORAIRES -->
 <section id="hourlyScreen" class="screen">
   <div class="hourly-title">Les prochaines heures</div>
   <div class="hourly-list">
@@ -597,7 +588,7 @@ setInterval(()=>{
   showScreen(currentScreen);
 },SCREEN_DURATION);
 
-/* HORLOGE */
+/* HORLOGE ANALOGIQUE */
 
 function buildClockFace(){
   const ticks=document.getElementById("clockTicks");
@@ -637,6 +628,21 @@ function buildClockFace(){
   }
 }
 
+/* POSITIONNEMENT DIRECT DES AIGUILLES */
+
+function positionHand(id,angle,length){
+  const radians=angle*Math.PI/180;
+  const x=100+Math.sin(radians)*length;
+  const y=100-Math.cos(radians)*length;
+
+  const hand=document.getElementById(id);
+
+  hand.setAttribute("x1","100");
+  hand.setAttribute("y1","100");
+  hand.setAttribute("x2",x.toFixed(3));
+  hand.setAttribute("y2",y.toFixed(3));
+}
+
 function updateClock(){
   const now=new Date();
 
@@ -662,17 +668,9 @@ function updateClock(){
   const minutes=now.getMinutes()+seconds/60;
   const hours=(now.getHours()%12)+minutes/60;
 
-  document.getElementById("secondHand").setAttribute(
-    "transform",`rotate(${seconds*6} 100 100)`
-  );
-
-  document.getElementById("minuteHand").setAttribute(
-    "transform",`rotate(${minutes*6} 100 100)`
-  );
-
-  document.getElementById("hourHand").setAttribute(
-    "transform",`rotate(${hours*30} 100 100)`
-  );
+  positionHand("hourHand",hours*30,39);
+  positionHand("minuteHand",minutes*6,58);
+  positionHand("secondHand",seconds*6,73);
 }
 
 buildClockFace();
@@ -1191,7 +1189,7 @@ function updateHourlyForecast(data){
   }
 }
 
-/* ACTUALISATION METEO */
+/* ACTUALISATION METEO OPEN-METEO */
 
 async function refreshWeather(){
   const url=
