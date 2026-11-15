@@ -98,8 +98,6 @@ body{position:fixed;inset:0}
   flex:0 0 auto;
   width:min(44vw,76vh);
   height:min(44vw,76vh);
-  max-width:none;
-  max-height:none;
 }
 
 .analog-clock svg{
@@ -129,17 +127,13 @@ body{position:fixed;inset:0}
   opacity:.9;
 }
 
-.clock-hand{
-  stroke-linecap:round;
-  transform:none!important;
-}
-
+.clock-hand{stroke-linecap:round;transform:none!important}
 .hour-hand{stroke:#f5f7f9;stroke-width:4.5}
 .minute-hand{stroke:#c8d3dc;stroke-width:3}
 .second-hand{stroke:#8eb8d6;stroke-width:1.3}
 .clock-center{fill:#f5f7f9}
 
-/* CLIMAT INTERIEUR */
+/* CLIMAT INTERIEUR AGRANDI */
 
 #indoorScreen{
   background:radial-gradient(ellipse at 50% 45%,#263747 0%,#172633 48%,#101820 100%);
@@ -148,14 +142,14 @@ body{position:fixed;inset:0}
 
 .indoor-title{
   position:absolute;
-  top:8%;
+  top:7%;
   left:0;
   right:0;
   text-align:center;
-  color:#aebdca;
-  font-size:clamp(15px,2vw,23px);
+  color:#b9c7d1;
+  font-size:clamp(20px,2.5vw,28px);
   font-weight:400;
-  letter-spacing:.18em;
+  letter-spacing:.16em;
   text-transform:uppercase;
 }
 
@@ -164,44 +158,48 @@ body{position:fixed;inset:0}
   display:grid;
   grid-template-columns:1fr 1fr;
   align-items:center;
-  max-width:1000px;
+  max-width:1200px;
+  gap:2vw;
 }
 
-.indoor-value{text-align:center;padding:10px}
+.indoor-value{
+  text-align:center;
+  padding:10px;
+}
 
 .indoor-value+.indoor-value{
-  border-left:1px solid rgba(255,255,255,.13);
+  border-left:1px solid rgba(255,255,255,.16);
 }
 
 .indoor-number{
-  font-size:clamp(75px,13vw,160px);
+  font-size:clamp(110px,16vw,190px);
   font-weight:200;
   line-height:1;
-  letter-spacing:-.06em;
+  letter-spacing:-.065em;
   font-variant-numeric:tabular-nums;
   white-space:nowrap;
 }
 
 .indoor-unit{
-  font-size:.42em;
+  font-size:.38em;
   vertical-align:top;
-  margin-left:5px;
+  margin-left:8px;
   color:#b9c8d3;
   font-weight:300;
 }
 
 .indoor-label{
-  margin-top:22px;
-  font-size:clamp(16px,2.2vw,25px);
-  color:#aebdca;
+  margin-top:25px;
+  font-size:clamp(20px,2.5vw,28px);
+  color:#b9c7d1;
   font-weight:300;
-  letter-spacing:.12em;
+  letter-spacing:.14em;
   text-transform:uppercase;
 }
 
 .indoor-status{
   position:absolute;
-  bottom:7%;
+  bottom:5%;
   color:#8294a3;
   font-size:13px;
   letter-spacing:.08em;
@@ -263,10 +261,7 @@ body{position:fixed;inset:0}
   background:linear-gradient(150deg,#30394b 0%,#202b3b 55%,#101820 100%);
 }
 
-#outdoorScreen>*{
-  position:relative;
-  z-index:1;
-}
+#outdoorScreen>*{position:relative;z-index:1}
 
 #weatherEffects{
   position:absolute!important;
@@ -481,9 +476,31 @@ body{position:fixed;inset:0}
     height:72vh;
   }
 
-  .indoor-title{top:5%}
-  .indoor-number{font-size:20vh}
-  .indoor-label{margin-top:10px;font-size:4vh}
+  /* CLIMAT INTERIEUR SUR IPHONE EN PAYSAGE */
+
+  .indoor-title{
+    top:5%;
+    font-size:5vh;
+  }
+
+  .indoor-number{
+    font-size:25vh;
+  }
+
+  .indoor-unit{
+    font-size:.35em;
+    margin-left:5px;
+  }
+
+  .indoor-label{
+    margin-top:3vh;
+    font-size:5vh;
+  }
+
+  .indoor-status{
+    bottom:3%;
+    font-size:3vh;
+  }
 
   .outdoor-icon{font-size:18vh}
   .outdoor-temperature{font-size:25vh}
@@ -501,10 +518,7 @@ body{position:fixed;inset:0}
     gap:1vw;
   }
 
-  .hourly-item{
-    gap:2.5vh;
-  }
-
+  .hourly-item{gap:2.5vh}
   .hourly-time{font-size:5vh}
   .hourly-icon{font-size:11vh}
   .hourly-temp{font-size:10vh}
@@ -528,16 +542,12 @@ body{position:fixed;inset:0}
         fill="none" stroke="rgba(255,255,255,.16)" stroke-width="1"/>
       <g id="clockTicks"></g>
       <g id="clockNumbers"></g>
-
       <line id="hourHand" class="clock-hand hour-hand"
         x1="100" y1="100" x2="100" y2="61"/>
-
       <line id="minuteHand" class="clock-hand minute-hand"
         x1="100" y1="100" x2="100" y2="42"/>
-
       <line id="secondHand" class="clock-hand second-hand"
         x1="100" y1="100" x2="100" y2="27"/>
-
       <circle class="clock-center" cx="100" cy="100" r="4"/>
     </svg>
   </div>
@@ -546,6 +556,7 @@ body{position:fixed;inset:0}
 <!-- CLIMAT INTERIEUR -->
 <section id="indoorScreen" class="screen">
   <div class="indoor-title">Climat intérieur · Salon</div>
+
   <div class="indoor-values">
     <div class="indoor-value">
       <div class="indoor-number">
@@ -553,6 +564,7 @@ body{position:fixed;inset:0}
       </div>
       <div class="indoor-label">Température</div>
     </div>
+
     <div class="indoor-value">
       <div class="indoor-number">
         <span id="indoorHumidity">--</span><span class="indoor-unit">%</span>
@@ -560,24 +572,30 @@ body{position:fixed;inset:0}
       <div class="indoor-label">Humidité</div>
     </div>
   </div>
+
   <div id="indoorStatus" class="indoor-status">Connexion au capteur...</div>
 </section>
 
 <!-- METEO EXTERIEURE -->
 <section id="outdoorScreen" class="screen sky-clear day">
   <canvas id="weatherEffects"></canvas>
+
   <div class="outdoor-content">
     <div class="outdoor-location">Saint-Samson-de-Bonfossé</div>
+
     <div class="outdoor-main">
       <div id="outdoorIcon" class="outdoor-icon">☀️</div>
       <div id="outdoorTemp" class="outdoor-temperature">--°</div>
     </div>
+
     <div id="outdoorDescription" class="outdoor-description">Chargement...</div>
+
     <div class="outdoor-details">
       <div class="outdoor-detail">Ressenti<strong id="outdoorFeels">--°</strong></div>
       <div class="outdoor-detail">Humidité<strong id="outdoorHumidity">--%</strong></div>
       <div class="outdoor-detail">Vent<strong id="outdoorWind">-- km/h</strong></div>
     </div>
+
     <div id="weatherUpdated" class="outdoor-updated">Météo Open-Meteo</div>
   </div>
 </section>
@@ -585,6 +603,7 @@ body{position:fixed;inset:0}
 <!-- PREVISIONS HORAIRES -->
 <section id="hourlyScreen" class="screen">
   <div class="hourly-title">Les prochaines heures</div>
+
   <div class="hourly-list">
     <div class="hourly-item">
       <div id="hourTime0" class="hourly-time">--h</div>
@@ -592,18 +611,21 @@ body{position:fixed;inset:0}
       <div id="hourTemp0" class="hourly-temp">--°</div>
       <div id="hourRain0" class="hourly-rain"></div>
     </div>
+
     <div class="hourly-item">
       <div id="hourTime1" class="hourly-time">--h</div>
       <div id="hourIcon1" class="hourly-icon">☁️</div>
       <div id="hourTemp1" class="hourly-temp">--°</div>
       <div id="hourRain1" class="hourly-rain"></div>
     </div>
+
     <div class="hourly-item">
       <div id="hourTime2" class="hourly-time">--h</div>
       <div id="hourIcon2" class="hourly-icon">☁️</div>
       <div id="hourTemp2" class="hourly-temp">--°</div>
       <div id="hourRain2" class="hourly-rain"></div>
     </div>
+
     <div class="hourly-item">
       <div id="hourTime3" class="hourly-time">--h</div>
       <div id="hourIcon3" class="hourly-icon">☁️</div>
@@ -688,7 +710,1351 @@ function buildClockFace(){
   }
 }
 
-/* POSITIONNEMENT DIRECT DES AIGUILLES */
+function positionHand(id,angle,length){
+  const radians=angle*Math.PI/180;
+  const x=100+Math.sin(radians)*length;
+  const y=100-Math.cos(radians)*length;
+
+  const hand=document.getElementById(id);
+  hand.setAttribute("x1","100");
+  hand.setAttribute("y1","100");
+  hand.setAttribute("x2",x.toFixed(3));
+  hand.setAttribute("y2",y.toFixed(3));
+}
+
+function updateClock(){
+  const now=new Date();
+
+  const time=now.toLocaleTimeString("fr-FR",{
+    hour:"2-digit",
+    minute:"2-digit",
+    hour12:false
+  });
+
+  document.getElementById("digitalClock").innerHTML=
+    time.replace(":",
+      '<span class="clock-separator">:</span>'
+    );
+
+  document.getElementById("clockDate").textContent=
+    now.toLocaleDateString("fr-FR",{
+      weekday:"long",
+      day:"numeric",
+      month:"long"
+    });
+
+  const seconds=now.getSeconds();
+  const minutes=now.getMinutes()+seconds/60;
+  const hours=(now.getHours()%12)+minutes/60;
+
+  positionHand("hourHand",hours*30,39);
+  positionHand("minuteHand",minutes*6,58);
+  positionHand("secondHand",seconds*6,73);
+}
+
+buildClockFace();
+updateClock();
+setInterval(updateClock,1000);
+
+/* CLIMAT INTERIEUR TADO° */
+
+function displayIndoorData(temp,humidity){
+  const t=Number(temp);
+  const h=Number(humidity);
+
+  if(Number.isFinite(t)){
+    document.getElementById("indoorTemp").textContent=
+      t.toFixed(1).replace(".",",");
+  }
+
+  if(Number.isFinite(h)){
+    document.getElementById("indoorHumidity").textContent=Math.round(h);
+  }
+
+  if(Number.isFinite(t)&&Number.isFinite(h)){
+    document.getElementById("indoorStatus").textContent=
+      "Données actualisées · tado°";
+  }
+}
+
+function refreshIndoorReadings(){
+  if(!APPS_SCRIPT_URL||APPS_SCRIPT_URL.includes("..."))return;
+
+  const callbackName="tadoCallback_"+Date.now();
+
+  window[callbackName]=function(data){
+    try{
+      if(data&&data.temp!==undefined&&data.humidity!==undefined){
+        displayIndoorData(data.temp,data.humidity);
+      }
+    }catch(error){
+      console.error("Erreur données tado°",error);
+    }
+
+    const script=document.getElementById(callbackName);
+    if(script)script.remove();
+    delete window[callbackName];
+  };
+
+  const script=document.createElement("script");
+  script.id=callbackName;
+  script.src=APPS_SCRIPT_URL+
+    "?callback="+callbackName+
+    "&_="+Date.now();
+
+  script.onerror=function(){
+    document.getElementById("indoorStatus").textContent=
+      "Connexion au capteur indisponible";
+    script.remove();
+    delete window[callbackName];
+  };
+
+  document.head.appendChild(script);
+}
+
+refreshIndoorReadings();
+setInterval(refreshIndoorReadings,INDOOR_REFRESH);
+
+/* CODES METEO OPEN-METEO */
+
+function getWeatherDescription(code){
+  const descriptions={
+    0:"Ciel dégagé",
+    1:"Majoritairement dégagé",
+    2:"Partiellement nuageux",
+    3:"Couvert",
+    45:"Brouillard",
+    48:"Brouillard givrant",
+    51:"Bruine faible",
+    53:"Bruine modérée",
+    55:"Bruine dense",
+    56:"Bruine verglaçante faible",
+    57:"Bruine verglaçante dense",
+    61:"Pluie faible",
+    63:"Pluie modérée",
+    65:"Pluie forte",
+    66:"Pluie verglaçante faible",
+    67:"Pluie verglaçante forte",
+    71:"Neige faible",
+    73:"Neige modérée",
+    75:"Neige forte",
+    77:"Grains de neige",
+    80:"Averses faibles",
+    81:"Averses modérées",
+    82:"Averses violentes",
+    85:"Averses de neige faibles",
+    86:"Averses de neige fortes",
+    95:"Orage",
+    96:"Orage avec grêle",
+    97:"Orage violent",
+    99:"Orage violent avec forte grêle"
+  };
+
+  return descriptions[code]||"Conditions variables";
+}
+
+function getWeatherIcon(code,isDay=true){
+  if(code===0)return isDay?"☀️":"🌙";
+  if(code===1)return isDay?"🌤️":"🌙";
+  if(code===2)return isDay?"⛅":"☁️";
+  if(code===3)return "☁️";
+  if(code===45||code===48)return "🌫️";
+  if([51,53,55,56,57].includes(code))return "🌦️";
+  if([61,63,65,66,67].includes(code))return "🌧️";
+  if([71,73,75,77].includes(code))return "❄️";
+  if([80,81,82].includes(code))return "🌧️";
+  if([85,86].includes(code))return "🌨️";
+  if([95,96,97,99].includes(code))return "⛈️";
+  return "☁️";
+}
+
+function getSkyClass(code){
+  if(code===0)return "sky-clear";
+  if(code===1||code===2)return "sky-partly";
+  if(code===3)return "sky-cloudy";
+  if(code===45||code===48)return "sky-fog";
+  if([51,53,55,56,57].includes(code))return "sky-drizzle";
+  if([61,63,65,66,67].includes(code))return "sky-rain";
+  if([71,73,75,77,85,86].includes(code))return "sky-snow";
+  if([80,81,82].includes(code))return "sky-showers";
+  if([95,96,97,99].includes(code))return "sky-storm";
+  return "sky-cloudy";
+}
+
+function updateSkyBackground(code,isDay){
+  const screen=document.getElementById("outdoorScreen");
+
+  screen.classList.remove(
+    "sky-clear","sky-partly","sky-cloudy","sky-fog",
+    "sky-drizzle","sky-rain","sky-snow","sky-showers","sky-storm",
+    "day","night"
+  );
+
+  screen.classList.add(getSkyClass(code));
+  screen.classList.add(isDay?"day":"night");
+}
+
+/* ANIMATIONS METEO CANVAS */
+
+const weatherCanvas=document.getElementById("weatherEffects");
+const ctx=weatherCanvas.getContext("2d");
+
+let canvasWidth=0;
+let canvasHeight=0;
+let weatherCode=0;
+let weatherIsDay=true;
+let weatherParticles=[];
+let weatherClouds=[];
+let weatherCategory="clear";
+let lightning=0;
+let lightningCooldown=0;
+let lastAnimationFrame=0;
+
+function resizeWeatherCanvas(){
+  const rect=weatherCanvas.getBoundingClientRect();
+  const dpr=Math.min(window.devicePixelRatio||1,1.5);
+
+  canvasWidth=rect.width;
+  canvasHeight=rect.height;
+
+  weatherCanvas.width=Math.round(canvasWidth*dpr);
+  weatherCanvas.height=Math.round(canvasHeight*dpr);
+
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  createWeatherParticles();
+  createWeatherClouds();
+}
+
+window.addEventListener("resize",resizeWeatherCanvas);
+window.addEventListener("orientationchange",()=>{
+  setTimeout(resizeWeatherCanvas,300);
+});
+
+function getWeatherCategory(code){
+  if(code===0)return "clear";
+  if([1,2,3].includes(code))return "clouds";
+  if([45,48].includes(code))return "fog";
+  if([51,53,55].includes(code))return "drizzle";
+  if([56,57].includes(code))return "freezingDrizzle";
+  if([61,63,65].includes(code))return "rain";
+  if([66,67].includes(code))return "freezingRain";
+  if([71,73,75,85,86].includes(code))return "snow";
+  if(code===77)return "snowGrains";
+  if([80,81,82].includes(code))return "showers";
+  if([95,96,97,99].includes(code))return "storm";
+  return "clouds";
+}
+
+function createWeatherClouds(){
+  weatherClouds=[];
+
+  const count=weatherCategory==="clear"?1:
+    weatherCategory==="clouds"?5:
+    weatherCategory==="fog"?7:4;
+
+  for(let i=0;i<count;i++){
+    weatherClouds.push({
+      x:Math.random()*canvasWidth,
+      y:canvasHeight*(.08+Math.random()*.38),
+      size:50+Math.random()*100,
+      speed:.08+Math.random()*.22,
+      opacity:.06+Math.random()*.13
+    });
+  }
+}
+
+function createWeatherParticles(){
+  weatherParticles=[];
+
+  let count=0;
+
+  switch(weatherCategory){
+    case "drizzle":count=55;break;
+    case "freezingDrizzle":count=55;break;
+    case "rain":count=100;break;
+    case "freezingRain":count=90;break;
+    case "showers":count=130;break;
+    case "snow":count=65;break;
+    case "snowGrains":count=90;break;
+    case "storm":count=140;break;
+    case "fog":count=45;break;
+  }
+
+  for(let i=0;i<count;i++){
+    weatherParticles.push({
+      x:Math.random()*canvasWidth,
+      y:Math.random()*canvasHeight,
+      size:Math.random()*3+1,
+      speed:Math.random()*2+1,
+      drift:Math.random()*1.5-.75,
+      opacity:.25+Math.random()*.65,
+      angle:Math.random()*Math.PI*2
+    });
+  }
+}
+
+function updateWeatherAnimation(code,isDay){
+  weatherCode=code;
+  weatherIsDay=isDay;
+  weatherCategory=getWeatherCategory(code);
+  createWeatherParticles();
+  createWeatherClouds();
+  lightning=0;
+  lightningCooldown=0;
+}
+
+function drawClouds(time){
+  weatherClouds.forEach((cloud,i)=>{
+    cloud.x+=cloud.speed;
+
+    if(cloud.x-cloud.size>canvasWidth+100){
+      cloud.x=-cloud.size-100;
+    }
+
+    const y=cloud.y+Math.sin(time/5000+i)*5;
+
+    ctx.save();
+    ctx.globalAlpha=cloud.opacity;
+    ctx.fillStyle=weatherIsDay?"#ffffff":"#c3d0e0";
+
+    ctx.beginPath();
+    ctx.ellipse(cloud.x,y,cloud.size,cloud.size*.23,0,0,Math.PI*2);
+    ctx.ellipse(cloud.x-cloud.size*.35,y+5,cloud.size*.38,cloud.size*.19,0,0,Math.PI*2);
+    ctx.ellipse(cloud.x+cloud.size*.35,y+3,cloud.size*.43,cloud.size*.2,0,0,Math.PI*2);
+    ctx.fill();
+    ctx.restore();
+  });
+}
+
+function drawSunAndMoon(time){
+  if(weatherCategory!=="clear"&&weatherCategory!=="clouds")return;
+
+  const x=canvasWidth*.82;
+  const y=canvasHeight*.23;
+  const radius=Math.min(canvasWidth,canvasHeight)*.065;
+
+  ctx.save();
+
+  if(weatherIsDay){
+    const glow=ctx.createRadialGradient(x,y,radius*.2,x,y,radius*3);
+    glow.addColorStop(0,"rgba(255,235,180,.24)");
+    glow.addColorStop(1,"rgba(255,235,180,0)");
+    ctx.fillStyle=glow;
+    ctx.beginPath();
+    ctx.arc(x,y,radius*3,0,Math.PI*2);
+    ctx.fill();
+
+    ctx.fillStyle="rgba(255,235,190,.7)";
+    ctx.beginPath();
+    ctx.arc(x,y,radius,0,Math.PI*2);
+    ctx.fill();
+  }else{
+    ctx.fillStyle="rgba(230,240,255,.7)";
+    ctx.beginPath();
+    ctx.arc(x,y,radius*.75,0,Math.PI*2);
+    ctx.fill();
+
+    ctx.fillStyle="rgba(30,48,70,.9)";
+    ctx.beginPath();
+    ctx.arc(x+radius*.35,y-radius*.18,radius*.68,0,Math.PI*2);
+    ctx.fill();
+  }
+
+  ctx.restore();
+}
+
+function drawRain(){
+  const heavy=weatherCategory==="showers"||weatherCategory==="storm";
+  const speed=heavy?13:weatherCategory==="drizzle"?3:8;
+  const length=heavy?22:weatherCategory==="drizzle"?7:15;
+
+  ctx.save();
+  ctx.lineWidth=weatherCategory==="drizzle"?.8:1.4;
+  ctx.strokeStyle="rgba(210,230,245,.58)";
+
+  weatherParticles.forEach(p=>{
+    p.y+=speed*p.speed*.45;
+    p.x+=p.drift-2;
+
+    if(p.y>canvasHeight+20){
+      p.y=-20;
+      p.x=Math.random()*canvasWidth;
+    }
+    if(p.x<-20)p.x=canvasWidth+20;
+
+    ctx.globalAlpha=p.opacity;
+    ctx.beginPath();
+    ctx.moveTo(p.x,p.y);
+    ctx.lineTo(p.x-4,p.y+length);
+    ctx.stroke();
+  });
+
+  ctx.restore();
+}
+
+function drawSnow(){
+  const heavy=weatherCode===75||weatherCode===86;
+  ctx.save();
+
+  weatherParticles.forEach(p=>{
+    p.y+=(heavy?1.7:1)*p.speed*.45;
+    p.x+=Math.sin(p.angle)*.7+p.drift*.3;
+    p.angle+=.015;
+
+    if(p.y>canvasHeight+10){
+      p.y=-10;
+      p.x=Math.random()*canvasWidth;
+    }
+    if(p.x>canvasWidth+10)p.x=-10;
+    if(p.x<-10)p.x=canvasWidth+10;
+
+    ctx.globalAlpha=p.opacity;
+    ctx.fillStyle="#ffffff";
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,p.size*(heavy?1.2:1),0,Math.PI*2);
+    ctx.fill();
+  });
+
+  ctx.restore();
+}
+
+function drawIceParticles(){
+  ctx.save();
+
+  weatherParticles.forEach(p=>{
+    p.y+=3*p.speed*.4;
+    p.x+=p.drift;
+
+    if(p.y>canvasHeight){
+      p.y=-5;
+      p.x=Math.random()*canvasWidth;
+    }
+
+    ctx.globalAlpha=p.opacity;
+    ctx.fillStyle="#c9efff";
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,1.5+p.size*.4,0,Math.PI*2);
+    ctx.fill();
+  });
+
+  ctx.restore();
+}
+
+function drawFog(time){
+  ctx.save();
+
+  for(let i=0;i<5;i++){
+    const y=canvasHeight*(.35+i*.14)+Math.sin(time/3500+i)*12;
+    const gradient=ctx.createLinearGradient(0,y-30,0,y+40);
+
+    gradient.addColorStop(0,"rgba(225,235,240,0)");
+    gradient.addColorStop(.5,"rgba(225,235,240,.12)");
+    gradient.addColorStop(1,"rgba(225,235,240,0)");
+
+    ctx.fillStyle=gradient;
+    ctx.fillRect(0,y-30,canvasWidth,70);
+  }
+
+  ctx.restore();
+}
+
+function drawLightning(){
+  if(weatherCategory!=="storm")return;
+
+  if(lightningCooldown>0){
+    lightningCooldown--;
+  }else if(Math.random()<.008){
+    lightning=1;
+    lightningCooldown=50+Math.random()*100;
+  }
+
+  if(lightning>0){
+    ctx.save();
+    ctx.fillStyle=`rgba(225,235,255,${lightning*.2})`;
+    ctx.fillRect(0,0,canvasWidth,canvasHeight);
+    ctx.restore();
+    lightning=Math.max(0,lightning-.18);
+  }
+}
+
+function drawWeatherFrame(time){
+  if(document.hidden){
+    requestAnimationFrame(drawWeatherFrame);
+    return;
+  }
+
+  if(time-lastAnimationFrame<32){
+    requestAnimationFrame(drawWeatherFrame);
+    return;
+  }
+
+  lastAnimationFrame=time;
+  ctx.clearRect(0,0,canvasWidth,canvasHeight);
+
+  if(weatherCategory==="clear"||weatherCategory==="clouds"){
+    drawSunAndMoon(time);
+  }
+
+  if(["clouds","fog","drizzle","freezingDrizzle","rain",
+      "freezingRain","showers","storm"].includes(weatherCategory)){
+    drawClouds(time);
+  }
+
+  if(weatherCategory==="fog")drawFog(time);
+
+  if(["drizzle","rain","showers","storm"].includes(weatherCategory)){
+    drawRain();
+  }
+
+  if(weatherCategory==="freezingDrizzle"||weatherCategory==="freezingRain"){
+    drawRain();
+    drawIceParticles();
+  }
+
+  if(weatherCategory==="snow"||weatherCategory==="snowGrains"){
+    drawSnow();
+  }
+
+  if(weatherCategory==="storm"){
+    drawLightning();
+
+    if(weatherCode===96||weatherCode===99){
+      drawIceParticles();
+    }
+  }
+
+  requestAnimationFrame(drawWeatherFrame);
+}
+
+resizeWeatherCanvas();
+requestAnimationFrame(drawWeatherFrame);
+
+/* PREVISIONS HORAIRES */
+
+function updateHourlyForecast(data){
+  if(!data||!data.hourly)return;
+
+  const hourly=data.hourly;
+  const times=hourly.time||[];
+  const temperatures=hourly.temperature_2m||[];
+  const codes=hourly.weather_code||[];
+  const rain=hourly.precipitation_probability||[];
+
+  const now=new Date();
+  let startIndex=times.findIndex(time=>new Date(time)>now);
+
+  if(startIndex<0)startIndex=0;
+
+  for(let i=0;i<4;i++){
+    const index=startIndex+i;
+    if(index>=times.length)break;
+
+    const date=new Date(times[index]);
+    const hour=date.getHours();
+    const isDay=hour>=7&&hour<21;
+    const code=Number(codes[index]);
+
+    document.getElementById("hourTime"+i).textContent=
+      String(hour).padStart(2,"0")+"h";
+
+    document.getElementById("hourIcon"+i).textContent=
+      getWeatherIcon(code,isDay);
+
+    document.getElementById("hourTemp"+i).textContent=
+      Math.round(temperatures[index])+"°";
+
+    document.getElementById("hourRain"+i).textContent=
+      rain[index]>0?Math.round(rain[index])+" %":"";
+  }
+}
+
+/* ACTUALISATION METEO OPEN-METEO */
+
+async function refreshWeather(){
+  const url=
+    "https://api.open-meteo.com/v1/forecast"+
+    "?latitude="+LATITUDE+
+    "&longitude="+LONGITUDE+
+    "&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,precipitation,weather_code,wind_speed_10m"+
+    "&hourly=temperature_2m,precipitation_probability,weather_code"+
+    "&timezone=Europe%2FParis"+
+    "&forecast_days=2";
+
+  try{
+    const response=await fetch(url,{cache:"no-store"});
+
+    if(!response.ok)throw new Error("Réponse météo indisponible");
+
+    const data=await response.json();
+    const current=data.current;
+
+    if(!current)throw new Error("Données météo manquantes");
+
+    const code=Number(current.weather_code);
+    const isDay=Number(current.is_day)===1;
+
+    document.getElementById("outdoorTemp").textContent=
+      Math.round(current.temperature_2m)+"°";
+
+    document.getElementById("outdoorIcon").textContent=
+      getWeatherIcon(code,isDay);
+
+    document.getElementById("outdoorDescription").textContent=
+      getWeatherDescription(code);
+
+    document.getElementById("outdoorFeels").textContent=
+      Math.round(current.apparent_temperature)+"°";
+
+    document.getElementById("outdoorHumidity").textContent=
+      Math.round(current.relative_humidity_2m)+"%";
+
+    document.getElementById("outdoorWind").textContent=
+      Math.round(current.wind_speed_10m)+" km/h";
+
+    document.getElementById("weatherUpdated").textContent=
+      "Mis à jour à "+new Date().toLocaleTimeString("fr-FR",{
+        hour:"2-digit",
+        minute:"2-digit"
+      });
+
+    updateSkyBackground(code,isDay);
+    updateWeatherAnimation(code,isDay);
+    updateHourlyForecast(data);
+
+  }catch(error){
+    console.error("Erreur météo :",error);
+    document.getElementById("outdoorDescription").textContent=
+      "Météo momentanément indisponible";
+  }
+}
+
+refreshWeather();
+setInterval(refreshWeather,WEATHER_REFRESH);
+
+/* REPRISE APRES MISE EN VEILLE */
+
+document.addEventListener("visibilitychange",()=>{
+  if(!document.hidden){
+    updateClock();
+    refreshIndoorReadings();
+    refreshWeather();
+  }
+});
+</script>
+
+</body>
+</html>
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#101820">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Météo">
+<title>Station météo</title>
+
+<style>
+*{box-sizing:border-box}
+
+html,body{
+  margin:0;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  background:#101820;
+  color:#f4f6f8;
+  font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;
+  -webkit-user-select:none;
+  user-select:none;
+}
+
+body{position:fixed;inset:0}
+
+.screen{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  padding:30px 5vw;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  opacity:0;
+  visibility:hidden;
+  transition:opacity 1.5s ease,visibility 1.5s;
+  overflow:hidden;
+}
+
+.screen.active{opacity:1;visibility:visible}
+
+/* HORLOGE */
+
+#clockScreen{
+  flex-direction:row;
+  justify-content:space-evenly;
+  align-items:center;
+  gap:1vw;
+  padding:1vh 2vw;
+  background:radial-gradient(ellipse at center,#1c2a38 0%,#101820 72%);
+}
+
+.clock-left{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  flex:1;
+  min-width:0;
+}
+
+.clock-digital{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  white-space:nowrap;
+  max-width:100%;
+  font-size:clamp(110px,23vw,250px);
+  font-weight:300;
+  letter-spacing:-.055em;
+  line-height:1;
+  font-variant-numeric:tabular-nums;
+}
+
+.clock-separator{
+  display:inline-block;
+  margin:0 .10em;
+  opacity:.75;
+  font-weight:200;
+}
+
+.clock-date{
+  margin-top:2vh;
+  text-align:center;
+  font-size:clamp(18px,2.5vw,30px);
+  font-weight:300;
+  letter-spacing:.08em;
+  color:#aebdca;
+  text-transform:capitalize;
+}
+
+.analog-clock{
+  flex:0 0 auto;
+  width:min(44vw,76vh);
+  height:min(44vw,76vh);
+}
+
+.analog-clock svg{
+  display:block;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+}
+
+.clock-number{
+  fill:#e9eef2;
+  font-size:19px;
+  font-weight:300;
+  text-anchor:middle;
+  dominant-baseline:middle;
+}
+
+.clock-tick{
+  stroke:#748596;
+  stroke-width:1;
+  opacity:.6;
+}
+
+.clock-tick.major{
+  stroke:#dce5ec;
+  stroke-width:2;
+  opacity:.9;
+}
+
+.clock-hand{stroke-linecap:round;transform:none!important}
+.hour-hand{stroke:#f5f7f9;stroke-width:4.5}
+.minute-hand{stroke:#c8d3dc;stroke-width:3}
+.second-hand{stroke:#8eb8d6;stroke-width:1.3}
+.clock-center{fill:#f5f7f9}
+
+/* CLIMAT INTERIEUR AGRANDI */
+
+#indoorScreen{
+  background:radial-gradient(ellipse at 50% 45%,#263747 0%,#172633 48%,#101820 100%);
+  flex-direction:column;
+}
+
+.indoor-title{
+  position:absolute;
+  top:7%;
+  left:0;
+  right:0;
+  text-align:center;
+  color:#b9c7d1;
+  font-size:clamp(20px,2.5vw,28px);
+  font-weight:400;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+}
+
+.indoor-values{
+  width:100%;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  align-items:center;
+  max-width:1200px;
+  gap:2vw;
+}
+
+.indoor-value{
+  text-align:center;
+  padding:10px;
+}
+
+.indoor-value+.indoor-value{
+  border-left:1px solid rgba(255,255,255,.16);
+}
+
+.indoor-number{
+  font-size:clamp(110px,16vw,190px);
+  font-weight:200;
+  line-height:1;
+  letter-spacing:-.065em;
+  font-variant-numeric:tabular-nums;
+  white-space:nowrap;
+}
+
+.indoor-unit{
+  font-size:.38em;
+  vertical-align:top;
+  margin-left:8px;
+  color:#b9c8d3;
+  font-weight:300;
+}
+
+.indoor-label{
+  margin-top:25px;
+  font-size:clamp(20px,2.5vw,28px);
+  color:#b9c7d1;
+  font-weight:300;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+}
+
+.indoor-status{
+  position:absolute;
+  bottom:5%;
+  color:#8294a3;
+  font-size:13px;
+  letter-spacing:.08em;
+}
+
+/* METEO EXTERIEURE */
+
+#outdoorScreen{
+  position:absolute;
+  background:#172737;
+  isolation:isolate;
+}
+
+#outdoorScreen::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:-2;
+  background:linear-gradient(160deg,#345a78 0%,#243e56 50%,#172737 100%);
+  transition:background 2s ease;
+}
+
+#outdoorScreen::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:-1;
+  background:linear-gradient(180deg,rgba(5,12,20,.05),rgba(5,12,20,.48));
+  pointer-events:none;
+}
+
+#outdoorScreen.sky-clear.day::before{
+  background:linear-gradient(150deg,#477da5 0%,#315e83 48%,#1b354d 100%);
+}
+#outdoorScreen.sky-clear.night::before{
+  background:linear-gradient(150deg,#101d36 0%,#182a43 55%,#101820 100%);
+}
+#outdoorScreen.sky-partly.day::before{
+  background:linear-gradient(150deg,#527c9c 0%,#3b5d78 50%,#20394f 100%);
+}
+#outdoorScreen.sky-partly.night::before{
+  background:linear-gradient(150deg,#17283f 0%,#25364b 55%,#101820 100%);
+}
+#outdoorScreen.sky-cloudy::before{
+  background:linear-gradient(150deg,#596b7a 0%,#3d4e5d 55%,#202e3b 100%);
+}
+#outdoorScreen.sky-fog::before{
+  background:linear-gradient(150deg,#87949b 0%,#657681 55%,#344653 100%);
+}
+#outdoorScreen.sky-rain::before,
+#outdoorScreen.sky-drizzle::before,
+#outdoorScreen.sky-showers::before{
+  background:linear-gradient(150deg,#435b70 0%,#293f53 55%,#172633 100%);
+}
+#outdoorScreen.sky-snow::before{
+  background:linear-gradient(150deg,#71899b 0%,#526b7e 55%,#2c4051 100%);
+}
+#outdoorScreen.sky-storm::before{
+  background:linear-gradient(150deg,#30394b 0%,#202b3b 55%,#101820 100%);
+}
+
+#outdoorScreen>*{position:relative;z-index:1}
+
+#weatherEffects{
+  position:absolute!important;
+  inset:0;
+  width:100%;
+  height:100%;
+  z-index:0!important;
+  pointer-events:none;
+}
+
+.outdoor-content{
+  width:100%;
+  height:100%;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  padding:3vh 3vw;
+}
+
+.outdoor-location{
+  position:absolute!important;
+  top:7%;
+  left:0;
+  right:0;
+  color:rgba(255,255,255,.72);
+  font-size:clamp(14px,2vw,22px);
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  font-weight:400;
+}
+
+.outdoor-main{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:2vw;
+  margin-top:1vh;
+}
+
+.outdoor-icon{
+  font-size:clamp(75px,13vw,150px);
+  line-height:1;
+  filter:drop-shadow(0 8px 15px rgba(0,0,0,.15));
+}
+
+.outdoor-temperature{
+  font-size:clamp(100px,20vw,230px);
+  font-weight:200;
+  line-height:.95;
+  letter-spacing:-.07em;
+  font-variant-numeric:tabular-nums;
+}
+
+.outdoor-description{
+  margin-top:2vh;
+  font-size:clamp(20px,3vw,34px);
+  font-weight:300;
+  color:rgba(255,255,255,.9);
+  text-transform:capitalize;
+}
+
+.outdoor-details{
+  display:flex;
+  justify-content:center;
+  gap:clamp(20px,5vw,70px);
+  margin-top:5vh;
+  flex-wrap:wrap;
+}
+
+.outdoor-detail{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  color:rgba(255,255,255,.72);
+  font-size:clamp(12px,1.6vw,17px);
+  letter-spacing:.05em;
+}
+
+.outdoor-detail strong{
+  color:white;
+  font-size:clamp(19px,2.7vw,30px);
+  font-weight:400;
+  letter-spacing:0;
+}
+
+.outdoor-updated{
+  position:absolute!important;
+  bottom:4%;
+  color:rgba(255,255,255,.45);
+  font-size:11px;
+}
+
+/* PREVISIONS HORAIRES AGRANDIES */
+
+#hourlyScreen{
+  background:radial-gradient(ellipse at center,#263b4d 0%,#172633 60%,#101820 100%);
+  flex-direction:column;
+}
+
+.hourly-title{
+  position:absolute;
+  top:7%;
+  left:0;
+  right:0;
+  text-align:center;
+  font-size:clamp(20px,2.5vw,28px);
+  font-weight:400;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  color:#b9c7d1;
+}
+
+.hourly-list{
+  width:100%;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:2vw;
+  max-width:1200px;
+  align-items:center;
+  margin-top:5vh;
+}
+
+.hourly-item{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:clamp(16px,3vh,30px);
+  min-width:0;
+}
+
+.hourly-time{
+  color:#d0dbe4;
+  font-size:clamp(22px,2.8vw,30px);
+  font-weight:400;
+}
+
+.hourly-icon{
+  font-size:clamp(55px,8vw,85px);
+  line-height:1;
+}
+
+.hourly-temp{
+  font-size:clamp(48px,7vw,78px);
+  font-weight:300;
+  letter-spacing:-.04em;
+  font-variant-numeric:tabular-nums;
+}
+
+.hourly-rain{
+  font-size:clamp(16px,2vw,21px);
+  color:#9dc9e4;
+}
+
+/* MODE PORTRAIT */
+
+@media (orientation:portrait){
+  .screen{padding:20px}
+
+  #clockScreen{
+    flex-direction:column;
+    justify-content:space-evenly;
+    gap:1vh;
+    padding:2vh 2vw;
+  }
+
+  .clock-left{flex:none}
+  .clock-digital{font-size:24vw}
+  .clock-date{margin-top:1vh}
+
+  .analog-clock{
+    width:68vw;
+    height:68vw;
+  }
+
+  .indoor-number{font-size:18vw}
+  .outdoor-temperature{font-size:27vw}
+  .outdoor-main{gap:1vw}
+  .outdoor-icon{font-size:18vw}
+  .outdoor-details{gap:18px;margin-top:4vh}
+  .hourly-list{gap:1vw}
+  .hourly-icon{font-size:9vw}
+  .hourly-temp{font-size:8vw}
+}
+
+/* PETITS ECRANS EN PAYSAGE */
+
+@media (orientation:landscape) and (max-height:420px){
+  #clockScreen{
+    padding:1vh 2vw;
+    gap:0;
+  }
+
+  .clock-left{
+    flex:1;
+    min-width:0;
+  }
+
+  .clock-digital{
+    font-size:clamp(105px,20vw,145px);
+  }
+
+  .clock-date{
+    margin-top:2vh;
+    font-size:4vh;
+  }
+
+  .analog-clock{
+    width:72vh;
+    height:72vh;
+  }
+
+  /* CLIMAT INTERIEUR SUR IPHONE EN PAYSAGE */
+
+  .indoor-title{
+    top:5%;
+    font-size:5vh;
+  }
+
+  .indoor-number{
+    font-size:25vh;
+  }
+
+  .indoor-unit{
+    font-size:.35em;
+    margin-left:5px;
+  }
+
+  .indoor-label{
+    margin-top:3vh;
+    font-size:5vh;
+  }
+
+  .indoor-status{
+    bottom:3%;
+    font-size:3vh;
+  }
+
+  .outdoor-icon{font-size:18vh}
+  .outdoor-temperature{font-size:25vh}
+  .outdoor-description{margin-top:1vh;font-size:5vh}
+  .outdoor-details{margin-top:3vh}
+  .outdoor-detail strong{font-size:5vh}
+
+  .hourly-title{
+    top:4%;
+    font-size:5vh;
+  }
+
+  .hourly-list{
+    margin-top:5vh;
+    gap:1vw;
+  }
+
+  .hourly-item{gap:2.5vh}
+  .hourly-time{font-size:5vh}
+  .hourly-icon{font-size:11vh}
+  .hourly-temp{font-size:10vh}
+  .hourly-rain{font-size:4vh}
+}
+</style>
+</head>
+
+<body>
+
+<!-- HORLOGE -->
+<section id="clockScreen" class="screen active">
+  <div class="clock-left">
+    <div id="digitalClock" class="clock-digital">--:--</div>
+    <div id="clockDate" class="clock-date">Chargement...</div>
+  </div>
+
+  <div class="analog-clock">
+    <svg viewBox="0 0 200 200" aria-label="Horloge analogique">
+      <circle cx="100" cy="100" r="94"
+        fill="none" stroke="rgba(255,255,255,.16)" stroke-width="1"/>
+      <g id="clockTicks"></g>
+      <g id="clockNumbers"></g>
+      <line id="hourHand" class="clock-hand hour-hand"
+        x1="100" y1="100" x2="100" y2="61"/>
+      <line id="minuteHand" class="clock-hand minute-hand"
+        x1="100" y1="100" x2="100" y2="42"/>
+      <line id="secondHand" class="clock-hand second-hand"
+        x1="100" y1="100" x2="100" y2="27"/>
+      <circle class="clock-center" cx="100" cy="100" r="4"/>
+    </svg>
+  </div>
+</section>
+
+<!-- CLIMAT INTERIEUR -->
+<section id="indoorScreen" class="screen">
+  <div class="indoor-title">Climat intérieur · Salon</div>
+
+  <div class="indoor-values">
+    <div class="indoor-value">
+      <div class="indoor-number">
+        <span id="indoorTemp">--</span><span class="indoor-unit">°</span>
+      </div>
+      <div class="indoor-label">Température</div>
+    </div>
+
+    <div class="indoor-value">
+      <div class="indoor-number">
+        <span id="indoorHumidity">--</span><span class="indoor-unit">%</span>
+      </div>
+      <div class="indoor-label">Humidité</div>
+    </div>
+  </div>
+
+  <div id="indoorStatus" class="indoor-status">Connexion au capteur...</div>
+</section>
+
+<!-- METEO EXTERIEURE -->
+<section id="outdoorScreen" class="screen sky-clear day">
+  <canvas id="weatherEffects"></canvas>
+
+  <div class="outdoor-content">
+    <div class="outdoor-location">Saint-Samson-de-Bonfossé</div>
+
+    <div class="outdoor-main">
+      <div id="outdoorIcon" class="outdoor-icon">☀️</div>
+      <div id="outdoorTemp" class="outdoor-temperature">--°</div>
+    </div>
+
+    <div id="outdoorDescription" class="outdoor-description">Chargement...</div>
+
+    <div class="outdoor-details">
+      <div class="outdoor-detail">Ressenti<strong id="outdoorFeels">--°</strong></div>
+      <div class="outdoor-detail">Humidité<strong id="outdoorHumidity">--%</strong></div>
+      <div class="outdoor-detail">Vent<strong id="outdoorWind">-- km/h</strong></div>
+    </div>
+
+    <div id="weatherUpdated" class="outdoor-updated">Météo Open-Meteo</div>
+  </div>
+</section>
+
+<!-- PREVISIONS HORAIRES -->
+<section id="hourlyScreen" class="screen">
+  <div class="hourly-title">Les prochaines heures</div>
+
+  <div class="hourly-list">
+    <div class="hourly-item">
+      <div id="hourTime0" class="hourly-time">--h</div>
+      <div id="hourIcon0" class="hourly-icon">☁️</div>
+      <div id="hourTemp0" class="hourly-temp">--°</div>
+      <div id="hourRain0" class="hourly-rain"></div>
+    </div>
+
+    <div class="hourly-item">
+      <div id="hourTime1" class="hourly-time">--h</div>
+      <div id="hourIcon1" class="hourly-icon">☁️</div>
+      <div id="hourTemp1" class="hourly-temp">--°</div>
+      <div id="hourRain1" class="hourly-rain"></div>
+    </div>
+
+    <div class="hourly-item">
+      <div id="hourTime2" class="hourly-time">--h</div>
+      <div id="hourIcon2" class="hourly-icon">☁️</div>
+      <div id="hourTemp2" class="hourly-temp">--°</div>
+      <div id="hourRain2" class="hourly-rain"></div>
+    </div>
+
+    <div class="hourly-item">
+      <div id="hourTime3" class="hourly-time">--h</div>
+      <div id="hourIcon3" class="hourly-icon">☁️</div>
+      <div id="hourTemp3" class="hourly-temp">--°</div>
+      <div id="hourRain3" class="hourly-rain"></div>
+    </div>
+  </div>
+</section>
+
+<script>
+/* CONFIGURATION */
+
+const SCREEN_DURATION=10000;
+const INDOOR_REFRESH=15000;
+const WEATHER_REFRESH=1800000;
+
+const LATITUDE=49.049;
+const LONGITUDE=-1.128;
+
+const APPS_SCRIPT_URL=
+"https://script.google.com/macros/s/AKfycbyOFvPcB_zDX5uiR0lLCQ2DjzTFFi5l9hFCOTazwZRJRSyZkTOzqumUqNbjeCCD-o67fg/exec";
+
+/* GESTION DES ECRANS */
+
+const screens=[
+  document.getElementById("clockScreen"),
+  document.getElementById("indoorScreen"),
+  document.getElementById("outdoorScreen"),
+  document.getElementById("hourlyScreen")
+];
+
+let currentScreen=0;
+
+function showScreen(index){
+  screens.forEach((screen,i)=>{
+    screen.classList.toggle("active",i===index);
+  });
+}
+
+setInterval(()=>{
+  currentScreen=(currentScreen+1)%screens.length;
+  showScreen(currentScreen);
+},SCREEN_DURATION);
+
+/* HORLOGE ANALOGIQUE */
+
+function buildClockFace(){
+  const ticks=document.getElementById("clockTicks");
+  const numbers=document.getElementById("clockNumbers");
+
+  for(let i=0;i<60;i++){
+    const angle=i*Math.PI/30;
+    const major=i%5===0;
+    const r1=major?83:88;
+    const r2=93;
+
+    const x1=100+Math.sin(angle)*r1;
+    const y1=100-Math.cos(angle)*r1;
+    const x2=100+Math.sin(angle)*r2;
+    const y2=100-Math.cos(angle)*r2;
+
+    const line=document.createElementNS("http://www.w3.org/2000/svg","line");
+    line.setAttribute("x1",x1);
+    line.setAttribute("y1",y1);
+    line.setAttribute("x2",x2);
+    line.setAttribute("y2",y2);
+    line.setAttribute("class",major?"clock-tick major":"clock-tick");
+    ticks.appendChild(line);
+  }
+
+  for(let n=1;n<=12;n++){
+    const angle=n*Math.PI/6;
+    const x=100+Math.sin(angle)*69;
+    const y=100-Math.cos(angle)*69;
+
+    const text=document.createElementNS("http://www.w3.org/2000/svg","text");
+    text.setAttribute("x",x);
+    text.setAttribute("y",y);
+    text.setAttribute("class","clock-number");
+    text.textContent=n;
+    numbers.appendChild(text);
+  }
+}
 
 function positionHand(id,angle,length){
   const radians=angle*Math.PI/180;
@@ -696,7 +2062,6 @@ function positionHand(id,angle,length){
   const y=100-Math.cos(radians)*length;
 
   const hand=document.getElementById(id);
-
   hand.setAttribute("x1","100");
   hand.setAttribute("y1","100");
   hand.setAttribute("x2",x.toFixed(3));
