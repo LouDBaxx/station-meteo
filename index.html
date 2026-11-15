@@ -14,9 +14,7 @@
 <title>Station météo</title>
 
 <style>
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 html, body {
   margin: 0;
@@ -28,9 +26,7 @@ html, body {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
-body {
-  position: relative;
-}
+body { position: relative; }
 
 /* ÉCRANS */
 
@@ -192,28 +188,20 @@ body {
   z-index: 1;
 }
 
-/* CIEL DÉGAGÉ */
-
 .sky-clear-day {
-  background:
-    linear-gradient(155deg, #2476a8 0%, #18547e 48%, #102d48 100%);
+  background: linear-gradient(155deg, #2476a8 0%, #18547e 48%, #102d48 100%);
 }
 
 .sky-clear-day::before {
-  background:
-    radial-gradient(ellipse at 78% 12%, rgba(255,239,190,0.42) 0%, rgba(255,220,150,0.12) 20%, transparent 43%);
+  background: radial-gradient(ellipse at 78% 12%, rgba(255,239,190,0.42) 0%, rgba(255,220,150,0.12) 20%, transparent 43%);
 }
 
 .sky-clear-day::after {
-  background:
-    linear-gradient(180deg, transparent 55%, rgba(5,20,35,0.25) 100%);
+  background: linear-gradient(180deg, transparent 55%, rgba(5,20,35,0.25) 100%);
 }
 
-/* CIEL PARTIELLEMENT NUAGEUX */
-
 .sky-partly-day {
-  background:
-    linear-gradient(150deg, #387fa7 0%, #386e91 48%, #193d59 100%);
+  background: linear-gradient(150deg, #387fa7 0%, #386e91 48%, #193d59 100%);
 }
 
 .sky-partly-day::before {
@@ -228,11 +216,8 @@ body {
     radial-gradient(ellipse at 12% 65%, rgba(220,232,238,0.13) 0%, transparent 33%);
 }
 
-/* CIEL COUVERT */
-
 .sky-cloudy-day {
-  background:
-    linear-gradient(155deg, #667d8c 0%, #425b6c 48%, #263c4d 100%);
+  background: linear-gradient(155deg, #667d8c 0%, #425b6c 48%, #263c4d 100%);
 }
 
 .sky-cloudy-day::before {
@@ -242,20 +227,15 @@ body {
 }
 
 .sky-cloudy-day::after {
-  background:
-    radial-gradient(ellipse at 45% 70%, rgba(10,25,38,0.24), transparent 55%);
+  background: radial-gradient(ellipse at 45% 70%, rgba(10,25,38,0.24), transparent 55%);
 }
 
-/* BROUILLARD */
-
 .sky-fog-day {
-  background:
-    linear-gradient(155deg, #9baab0 0%, #758992 45%, #4a626e 100%);
+  background: linear-gradient(155deg, #9baab0 0%, #758992 45%, #4a626e 100%);
 }
 
 .sky-fog-day::before {
-  background:
-    radial-gradient(ellipse at 50% 35%, rgba(255,255,255,0.48), transparent 55%);
+  background: radial-gradient(ellipse at 50% 35%, rgba(255,255,255,0.48), transparent 55%);
 }
 
 .sky-fog-day::after {
@@ -264,11 +244,8 @@ body {
     linear-gradient(5deg, transparent 35%, rgba(238,242,243,0.15) 60%, transparent 80%);
 }
 
-/* PLUIE */
-
 .sky-rain-day {
-  background:
-    linear-gradient(155deg, #455e70 0%, #2b4051 48%, #172a3b 100%);
+  background: linear-gradient(155deg, #455e70 0%, #2b4051 48%, #172a3b 100%);
 }
 
 .sky-rain-day::before {
@@ -278,15 +255,7 @@ body {
 }
 
 .sky-rain-day::after {
-  background:
-    repeating-linear-gradient(
-      108deg,
-      transparent 0px,
-      transparent 17px,
-      rgba(220,237,245,0.10) 18px,
-      transparent 19px,
-      transparent 29px
-    );
+  background: repeating-linear-gradient(108deg, transparent 0px, transparent 17px, rgba(220,237,245,0.10) 18px, transparent 19px, transparent 29px);
   opacity: 0.55;
   animation: rain 1.4s linear infinite;
 }
@@ -296,16 +265,12 @@ body {
   to { transform: translateY(12px); }
 }
 
-/* NEIGE */
-
 .sky-snow-day {
-  background:
-    linear-gradient(155deg, #829ba9 0%, #526f80 48%, #293f51 100%);
+  background: linear-gradient(155deg, #829ba9 0%, #526f80 48%, #293f51 100%);
 }
 
 .sky-snow-day::before {
-  background:
-    radial-gradient(ellipse at 50% 20%, rgba(255,255,255,0.30), transparent 50%);
+  background: radial-gradient(ellipse at 50% 20%, rgba(255,255,255,0.30), transparent 50%);
 }
 
 .sky-snow-day::after {
@@ -315,11 +280,8 @@ body {
     radial-gradient(circle at 40% 80%, rgba(255,255,255,0.20) 0 2px, transparent 3px);
 }
 
-/* ORAGE */
-
 .sky-storm-day {
-  background:
-    linear-gradient(155deg, #394454 0%, #222e40 48%, #111d2c 100%);
+  background: linear-gradient(155deg, #394454 0%, #222e40 48%, #111d2c 100%);
 }
 
 .sky-storm-day::before {
@@ -329,11 +291,8 @@ body {
 }
 
 .sky-storm-day::after {
-  background:
-    linear-gradient(180deg, transparent 30%, rgba(5,12,24,0.25) 100%);
+  background: linear-gradient(180deg, transparent 30%, rgba(5,12,24,0.25) 100%);
 }
-
-/* CIEL NOCTURNE */
 
 .sky-clear-night,
 .sky-partly-night,
@@ -342,8 +301,7 @@ body {
 .sky-rain-night,
 .sky-snow-night,
 .sky-storm-night {
-  background:
-    linear-gradient(155deg, #172b45 0%, #101d32 50%, #090f1c 100%);
+  background: linear-gradient(155deg, #172b45 0%, #101d32 50%, #090f1c 100%);
 }
 
 .sky-clear-night::before,
@@ -360,33 +318,22 @@ body {
 }
 
 .sky-fog-night::before {
-  background:
-    radial-gradient(ellipse at 50% 40%, rgba(190,204,213,0.16), transparent 55%);
+  background: radial-gradient(ellipse at 50% 40%, rgba(190,204,213,0.16), transparent 55%);
 }
 
 .sky-rain-night::before,
 .sky-storm-night::before {
-  background:
-    radial-gradient(ellipse at 40% 20%, rgba(120,145,175,0.15), transparent 45%);
+  background: radial-gradient(ellipse at 40% 20%, rgba(120,145,175,0.15), transparent 45%);
 }
 
 .sky-rain-night::after {
-  background:
-    repeating-linear-gradient(
-      108deg,
-      transparent 0px,
-      transparent 17px,
-      rgba(205,225,240,0.09) 18px,
-      transparent 19px,
-      transparent 29px
-    );
+  background: repeating-linear-gradient(108deg, transparent 0px, transparent 17px, rgba(205,225,240,0.09) 18px, transparent 19px, transparent 29px);
   opacity: 0.5;
   animation: rain 1.4s linear infinite;
 }
 
 .sky-snow-night::before {
-  background:
-    radial-gradient(ellipse at 50% 20%, rgba(210,225,240,0.17), transparent 50%);
+  background: radial-gradient(ellipse at 50% 20%, rgba(210,225,240,0.17), transparent 50%);
 }
 
 .sky-snow-night::after {
@@ -396,8 +343,7 @@ body {
 }
 
 .sky-storm-night::after {
-  background:
-    linear-gradient(180deg, transparent 20%, rgba(0,0,0,0.24) 100%);
+  background: linear-gradient(180deg, transparent 20%, rgba(0,0,0,0.24) 100%);
 }
 
 /* EN-TÊTE MÉTÉO */
@@ -425,8 +371,6 @@ body {
   letter-spacing: 0.08em;
   color: rgba(255,255,255,0.65);
 }
-
-/* TEMPÉRATURE ET ICÔNE */
 
 .outdoor-center {
   display: flex;
@@ -485,8 +429,6 @@ body {
   text-transform: capitalize;
 }
 
-/* INDICATEURS MÉTÉO */
-
 .outdoor-divider {
   width: 70%;
   height: 1px;
@@ -526,13 +468,13 @@ body {
   color: rgba(255,255,255,0.68);
 }
 
-/* PRÉVISIONS HORAIRES */
+/* NOUVELLE PAGE : 4 PROCHAINES HEURES */
 
 #hourlyScreen {
   justify-content: space-between;
-  padding: 4vh 3vw 5vh;
+  padding: 7vh 5vw 6vh;
   background:
-    radial-gradient(ellipse at 50% 0%, #263d50 0%, #172a3a 48%, #101820 100%);
+    radial-gradient(ellipse at 50% 0%, #30485c 0%, #1b3042 48%, #101820 100%);
 }
 
 .hourly-heading {
@@ -540,15 +482,15 @@ body {
   text-align: center;
   display: flex;
   flex-direction: column;
-  gap: 0.7vh;
+  gap: 1vh;
 }
 
 .hourly-title {
-  font-size: clamp(22px, 3.2vw, 32px);
+  font-size: clamp(24px, 3.6vw, 36px);
   font-weight: 300;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: rgba(255,255,255,0.95);
+  color: rgba(255,255,255,0.96);
 }
 
 .hourly-location {
@@ -563,10 +505,11 @@ body {
   flex: 1;
   min-height: 0;
   display: grid;
-  grid-template-columns: repeat(12, minmax(0, 1fr));
-  grid-template-rows: repeat(2, minmax(0, 1fr));
-  gap: 8px 6px;
-  margin-top: 2vh;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 2vw;
+  align-items: stretch;
+  margin-top: 4vh;
+  margin-bottom: 2vh;
 }
 
 .hour-cell {
@@ -575,23 +518,26 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 1.2vh;
-  background: rgba(255,255,255,0.055);
-  border: 1px solid rgba(255,255,255,0.055);
-  border-radius: 9px;
-  padding: 7px 2px;
+  gap: 2.4vh;
+  background: linear-gradient(160deg, rgba(255,255,255,0.10), rgba(255,255,255,0.035));
+  border: 1px solid rgba(255,255,255,0.10);
+  border-radius: 18px;
+  padding: 2vh 1vw;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.10);
 }
 
 .hour-cell.current-hour {
-  background: rgba(150,196,222,0.17);
-  border-color: rgba(190,222,240,0.35);
+  background: linear-gradient(160deg, rgba(155,203,231,0.25), rgba(125,174,205,0.10));
+  border-color: rgba(205,232,248,0.38);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.14);
 }
 
 .hour-time {
-  font-size: clamp(12px, 1.8vw, 18px);
+  font-size: clamp(19px, 2.8vw, 29px);
   font-weight: 400;
   color: rgba(255,255,255,0.78);
   white-space: nowrap;
+  letter-spacing: 0.02em;
 }
 
 .hour-cell.current-hour .hour-time {
@@ -599,17 +545,19 @@ body {
 }
 
 .hour-icon {
-  font-size: clamp(20px, 3.2vw, 32px);
-  line-height: 1.1;
+  font-size: clamp(48px, 8vw, 86px);
+  line-height: 1;
   white-space: nowrap;
+  filter: drop-shadow(0 5px 12px rgba(0,0,0,0.18));
 }
 
 .hour-temp {
-  font-size: clamp(17px, 2.6vw, 27px);
+  font-size: clamp(30px, 5vw, 52px);
   font-weight: 300;
   font-variant-numeric: tabular-nums;
   color: #ffffff;
   white-space: nowrap;
+  letter-spacing: -0.04em;
 }
 
 .hourly-footer {
@@ -619,75 +567,35 @@ body {
   font-weight: 300;
   letter-spacing: 0.06em;
   color: rgba(255,255,255,0.42);
-  margin-top: 1.5vh;
 }
 
 /* MODE PORTRAIT */
 
 @media (orientation: portrait) {
-  #clock {
-    font-size: min(24vw, 24vh);
-  }
+  #clock { font-size: min(24vw, 24vh); }
 
-  .indoor-value {
-    font-size: min(19vw, 25vh);
-  }
+  .indoor-value { font-size: min(19vw, 25vh); }
+  .indoor-data { gap: 3vw; }
+  .indoor-separator { height: 12vh; }
+  .indoor-label { font-size: clamp(13px, 3vw, 20px); }
 
-  .indoor-data {
-    gap: 3vw;
-  }
+  .outdoor-screen { padding: 5vh 5vw; }
+  .weather-main { gap: 3vw; }
+  .weather-icon { font-size: clamp(65px, 15vw, 110px); }
+  .outdoor-temperature { font-size: min(24vw, 30vh); }
+  .outdoor-bottom { gap: 1vw; }
 
-  .indoor-separator {
-    height: 12vh;
-  }
-
-  .indoor-label {
-    font-size: clamp(13px, 3vw, 20px);
-  }
-
-  .outdoor-screen {
-    padding: 5vh 5vw;
-  }
-
-  .weather-main {
-    gap: 3vw;
-  }
-
-  .weather-icon {
-    font-size: clamp(65px, 15vw, 110px);
-  }
-
-  .outdoor-temperature {
-    font-size: min(24vw, 30vh);
-  }
-
-  .outdoor-bottom {
-    gap: 1vw;
-  }
-
-  #hourlyScreen {
-    padding: 3vh 2vw;
-  }
+  #hourlyScreen { padding: 4vh 3vw; }
 
   .hourly-grid {
-    gap: 5px 3px;
+    gap: 2vw;
+    margin-top: 3vh;
   }
 
-  .hour-cell {
-    gap: 0.8vh;
-  }
-
-  .hour-time {
-    font-size: clamp(9px, 2.5vw, 14px);
-  }
-
-  .hour-icon {
-    font-size: clamp(15px, 4vw, 23px);
-  }
-
-  .hour-temp {
-    font-size: clamp(12px, 3vw, 19px);
-  }
+  .hour-cell { gap: 2vh; }
+  .hour-time { font-size: clamp(14px, 3vw, 20px); }
+  .hour-icon { font-size: clamp(35px, 9vw, 60px); }
+  .hour-temp { font-size: clamp(23px, 5vw, 35px); }
 }
 
 /* ACCESSIBILITÉ */
@@ -797,19 +705,19 @@ body {
 
 </section>
 
-<!-- PAGE 4 : PRÉVISIONS HORAIRES -->
+<!-- PAGE 4 : 4 PROCHAINES HEURES -->
 
 <section id="hourlyScreen" class="screen">
 
   <div class="hourly-heading">
-    <div class="hourly-title">Prévisions horaires</div>
-    <div class="hourly-location">Saint-Samson-de-Bonfossé · 24 prochaines heures</div>
+    <div class="hourly-title">Les prochaines heures</div>
+    <div class="hourly-location">Saint-Samson-de-Bonfossé</div>
   </div>
 
   <div id="hourlyGrid" class="hourly-grid">
 
     <div class="hour-cell">
-      <div class="hour-time">--</div>
+      <div class="hour-time">-- h</div>
       <div class="hour-icon">☁</div>
       <div class="hour-temp">--°</div>
     </div>
@@ -876,9 +784,7 @@ let currentScreen = 0;
 
 function showNextScreen() {
   screens[currentScreen].classList.remove("active");
-
   currentScreen = (currentScreen + 1) % screens.length;
-
   screens[currentScreen].classList.add("active");
 }
 
@@ -888,7 +794,6 @@ setInterval(showNextScreen, SCREEN_DURATION);
 
 function refreshIndoorData() {
   const callbackName = "tadoCallback_" + Date.now();
-
   const script = document.createElement("script");
 
   window[callbackName] = function(data) {
@@ -966,21 +871,13 @@ function getWeatherDescription(code) {
 
 function getWeatherIcon(code, isDay) {
   if ([45, 48].includes(code)) return "≋";
-
-  if ([51, 53, 55, 56, 57].includes(code)) return "☂";
-
-  if ([61, 63, 65, 66, 67, 80, 81, 82].includes(code)) return "☂";
-
+  if ([51, 53, 55, 56, 57].includes(code)) return "🌦";
+  if ([61, 63, 65, 66, 67, 80, 81, 82].includes(code)) return "🌧";
   if ([71, 73, 75, 77, 85, 86].includes(code)) return "❄";
-
-  if ([95, 96, 97, 99].includes(code)) return "⚡";
-
+  if ([95, 96, 97, 99].includes(code)) return "⛈";
   if (code === 3) return "☁";
-
   if (code === 2) return "⛅";
-
   if (code === 1) return isDay ? "🌤" : "☾";
-
   if (code === 0) return isDay ? "☀" : "☾";
 
   return "☁";
@@ -990,7 +887,6 @@ function getWeatherIcon(code, isDay) {
 
 function getSkyClass(code, isDay) {
   const night = Number(isDay) === 0;
-
   let condition = "clear";
 
   if ([45, 48].includes(code)) {
@@ -1027,34 +923,48 @@ function updateSkyBackground(code, isDay) {
   screen.classList.add(getSkyClass(code, isDay));
 }
 
-/* PRÉVISIONS HORAIRES */
+/* PRÉVISIONS DES 4 PROCHAINES HEURES */
 
 function updateHourlyForecast(hourly, currentTime) {
   const grid = document.getElementById("hourlyGrid");
 
-  let startIndex = hourly.time.indexOf(currentTime);
-
-  if (startIndex === -1) {
-    startIndex = hourly.time.findIndex(function(time) {
-      return time >= currentTime;
-    });
-  }
-
-  if (startIndex === -1) {
-    console.error("Impossible de trouver l'heure actuelle dans les prévisions.");
+  if (!hourly || !hourly.time || !hourly.temperature_2m ||
+      !hourly.weather_code || !hourly.is_day) {
+    console.error("Données horaires indisponibles.");
     return;
   }
 
-  const forecast = hourly.time.slice(startIndex, startIndex + 24);
+  // On recherche la prochaine heure pleine à venir.
+  const currentDate = new Date(currentTime);
+  const nextHour = new Date(currentDate);
+  nextHour.setMinutes(0, 0, 0);
 
-  if (forecast.length < 24) {
-    console.error("Les prévisions horaires sont incomplètes.");
+  if (currentDate.getMinutes() > 0 || currentDate.getSeconds() > 0) {
+    nextHour.setHours(nextHour.getHours() + 1);
+  }
+
+  const nextHourString =
+    nextHour.getFullYear() + "-" +
+    String(nextHour.getMonth() + 1).padStart(2, "0") + "-" +
+    String(nextHour.getDate()).padStart(2, "0") + "T" +
+    String(nextHour.getHours()).padStart(2, "0") + ":00";
+
+  let startIndex = hourly.time.indexOf(nextHourString);
+
+  if (startIndex === -1) {
+    startIndex = hourly.time.findIndex(function(time) {
+      return time >= nextHourString;
+    });
+  }
+
+  if (startIndex === -1 || startIndex + 3 >= hourly.time.length) {
+    console.error("Prévisions horaires incomplètes.");
     return;
   }
 
   let html = "";
 
-  for (let i = 0; i < 24; i++) {
+  for (let i = 0; i < 4; i++) {
     const index = startIndex + i;
 
     const time = hourly.time[index];
@@ -1062,15 +972,12 @@ function updateHourlyForecast(hourly, currentTime) {
     const code = Number(hourly.weather_code[index]);
     const isDay = Number(hourly.is_day[index]);
 
-    const hour = time.substring(11, 16);
-
-    const label = i === 0 ? "Maint." : hour.substring(0, 2) + "h";
-
+    const hour = time.substring(11, 13);
     const icon = getWeatherIcon(code, isDay);
 
     html += `
       <div class="hour-cell ${i === 0 ? "current-hour" : ""}">
-        <div class="hour-time">${label}</div>
+        <div class="hour-time">${hour} h</div>
         <div class="hour-icon">${icon}</div>
         <div class="hour-temp">${temperature}°</div>
       </div>
@@ -1125,7 +1032,7 @@ async function refreshWeather() {
 
     updateSkyBackground(code, isDay);
 
-    /* PRÉVISIONS DES 24 PROCHAINES HEURES */
+    /* PRÉVISIONS DES 4 PROCHAINES HEURES */
 
     updateHourlyForecast(data.hourly, current.time);
 
