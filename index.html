@@ -65,22 +65,23 @@ body {
   width: 100%;
   white-space: nowrap;
   text-align: center;
-  font-family: -apple-system, BlinkMacSystemFont,
+  font-family: "Avenir Next", -apple-system, BlinkMacSystemFont,
                "Helvetica Neue", Arial, sans-serif;
   font-size: min(34vw, 61vh);
-  font-weight: 500;
-  letter-spacing: -0.055em;
+  font-weight: 300;
+  letter-spacing: -0.035em;
   line-height: 1;
   color: #ffffff;
   font-variant-numeric: tabular-nums;
-  text-shadow: 0 2px 15px rgba(255,255,255,0.05);
+  text-shadow: 0 2px 15px rgba(255,255,255,0.04);
 }
 
 .clock-separator {
   display: inline-block;
-  margin: 0 0.12em;
-  font-weight: 400;
+  margin: 0 0.10em;
+  font-weight: 300;
   letter-spacing: 0;
+  color: #cbd2d9;
 }
 
 .date {
@@ -154,10 +155,6 @@ body {
   font-weight: 500;
 }
 
-.weather-date {
-  margin-top: 2vh;
-}
-
 /* ÉCRAN INTÉRIEUR */
 
 .indoor-values {
@@ -195,10 +192,6 @@ body {
   vertical-align: top;
   margin-left: 4px;
   font-weight: 300;
-}
-
-.indoor-date {
-  margin-top: 4vh;
 }
 
 /* MODE PORTRAIT */
@@ -254,8 +247,6 @@ body {
       </div>
     </div>
   </div>
-
-  <div id="indoorDate" class="date indoor-date"></div>
 </section>
 
 <!-- ÉCRAN 3 : MÉTÉO EXTÉRIEURE -->
@@ -290,7 +281,6 @@ body {
     </div>
   </div>
 
-  <div id="outdoorDate" class="date weather-date"></div>
   <div id="status" style="font-size:12px;color:#657482;margin-top:8px;"></div>
 </section>
 
@@ -330,8 +320,6 @@ function updateClock() {
     time.replace(":", '<span class="clock-separator">:</span>');
 
   document.getElementById("date").textContent = date;
-  document.getElementById("indoorDate").textContent = date;
-  document.getElementById("outdoorDate").textContent = date;
 }
 
 updateClock();
