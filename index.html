@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -204,7 +203,9 @@ body{position:fixed;inset:0}
 /* PHASES DE LA LUNE */
 
 #moonScreen{
-  background:radial-gradient(ellipse at 50% 42%,#263747 0%,#172633 48%,#101820 100%);
+  background:
+    radial-gradient(ellipse at 28% 48%,rgba(64,91,119,.25) 0%,transparent 48%),
+    radial-gradient(ellipse at 80% 50%,#1a2a3b 0%,#121f2d 55%,#101820 100%);
   flex-direction:column;
 }
 .moon-title{top:6%}
@@ -216,13 +217,28 @@ body{position:fixed;inset:0}
   display:flex;flex-direction:column;align-items:center;
   justify-content:center;flex:0 0 42%;
 }
+.moon-canvas-wrap{
+  position:relative;
+  width:min(39vh,40vw);
+  aspect-ratio:1;
+  display:flex;align-items:center;justify-content:center;
+}
+.moon-canvas-wrap::before{
+  content:"";
+  position:absolute;inset:4%;
+  border-radius:50%;
+  background:rgba(153,190,225,.10);
+  filter:blur(35px);
+  transform:scale(1.08);
+}
 #moonCanvas{
-  width:min(35vh,38vw);height:min(35vh,38vw);
-  max-width:300px;max-height:300px;
-  filter:drop-shadow(0 0 28px rgba(160,190,220,.12));
+  position:relative;
+  width:100%;height:100%;
+  max-width:370px;max-height:370px;
+  filter:drop-shadow(0 0 22px rgba(180,205,230,.16));
 }
 .moon-phase-name{
-  margin-top:2vh;font-size:clamp(23px,3vw,36px);
+  margin-top:1.5vh;font-size:clamp(23px,3vw,36px);
   font-weight:300;letter-spacing:.04em;text-align:center;
 }
 .moon-phase-age{
@@ -272,10 +288,11 @@ body{position:fixed;inset:0}
   .hourly-list{gap:1vw}
   .hourly-icon{font-size:9vw}
   .hourly-temp{font-size:8vw}
-  .moon-content{flex-direction:column;gap:2vh;padding:10vh 3vw 5vh}
+  .moon-content{flex-direction:column;gap:1vh;padding:9vh 3vw 5vh}
   .moon-visual{flex:0 0 auto}
-  #moonCanvas{width:30vw;height:30vw}
-  .moon-phase-name{margin-top:1vh}
+  .moon-canvas-wrap{width:29vw;max-width:220px}
+  .moon-phase-name{margin-top:.5vh}
+  .moon-phase-age{margin-top:5px}
   .moon-information{
     width:90%;max-width:450px;display:grid;
     grid-template-columns:1fr 1fr;gap:2vh 5vw;
@@ -312,7 +329,7 @@ body{position:fixed;inset:0}
   .hourly-rain{font-size:4vh}
   .moon-title{top:4%;font-size:5vh}
   .moon-content{padding:6vh 5vw 3vh;gap:5vw}
-  #moonCanvas{width:52vh;height:52vh}
+  .moon-canvas-wrap{width:55vh}
   .moon-phase-name{font-size:6vh;margin-top:1vh}
   .moon-phase-age{font-size:3vh;margin-top:3px}
   .moon-information{gap:2vh}
@@ -424,7 +441,9 @@ body{position:fixed;inset:0}
   <div class="moon-title">Cycle lunaire</div>
   <div class="moon-content">
     <div class="moon-visual">
-      <canvas id="moonCanvas" width="320" height="320"></canvas>
+      <div class="moon-canvas-wrap">
+        <canvas id="moonCanvas" width="512" height="512"></canvas>
+      </div>
       <div id="moonPhaseName" class="moon-phase-name">Pleine lune</div>
       <div id="moonPhaseAge" class="moon-phase-age">-- jours de cycle</div>
     </div>
@@ -443,7 +462,7 @@ body{position:fixed;inset:0}
       </div>
     </div>
   </div>
-  <div class="moon-note">Cycle lunaire calculé · Données astronomiques approximatives</div>
+  <div class="moon-note">Représentation lunaire simulée · Calcul astronomique indicatif</div>
 </section>
 
 <script>
@@ -1124,6 +1143,8 @@ function updateRainForecast(data,current){
 const SYNODIC_MONTH=29.530588853;
 const KNOWN_NEW_MOON=Date.UTC(2000,0,6,18,14);
 
+/* Calcul de la phase lunaire */
+
 function getMoonData(date){
   const elapsed=(date.getTime()-KNOWN_NEW_MOON)/86400000;
   const age=((elapsed%SYNODIC_MONTH)+SYNODIC_MONTH)%SYNODIC_MONTH;
@@ -1143,17 +1164,249 @@ function getMoonData(date){
   return {age,phase,illumination,name};
 }
 
-function drawMoon(phase){
-  const canvas=document.getElementById("moonCanvas");
-  const context=canvas.getContext("2d");
-  const size=canvas.width;
-  const center=size/2;
-  const radius=size*.44;
+/*
+  TEXTURE LUNAIRE
+  Les cratères sont générés une seule fois.
+  Leur position et leur relief restent fixes pendant les changements de phase.
+*/
 
-  const image=context.createImageData(size,size);
-  const data=image.data;
+const moonCanvas=document.getElementById("moonCanvas");
+const moonContext=moonCanvas.getContext("2d");
+const MOON_SIZE=moonCanvas.width;
+const MOON_CENTER=MOON_SIZE/2;
+const MOON_RADIUS=MOON_SIZE*.445;
+
+let moonBaseImage=null;
+let moonCraterTexture=null;
+
+function seededRandom(seed){
+  let value=seed;
+  return function(){
+    value=(value*1664525+1013904223)>>>0;
+    return value/4294967296;
+  };
+}
+
+function createMoonTexture(){
+  const random=seededRandom(82461);
+  const size=MOON_SIZE;
+  const center=MOON_CENTER;
+  const radius=MOON_RADIUS;
+
+  const texture=document.createElement("canvas");
+  texture.width=size;
+  texture.height=size;
+
+  const tctx=texture.getContext("2d");
+  const image=tctx.createImageData(size,size);
+  const pixels=image.data;
+
+  const craters=[];
+
+  /* Grands cratères */
+
+  for(let i=0;i<48;i++){
+    const angle=random()*Math.PI*2;
+    const distance=Math.sqrt(random())*.86;
+    const r=3+random()*17;
+
+    craters.push({
+      x:center+Math.cos(angle)*distance*radius,
+      y:center+Math.sin(angle)*distance*radius,
+      r:r,
+      depth:.5+random()*.5,
+      type:random()
+    });
+  }
+
+  /* Petits impacts */
+
+  for(let i=0;i<125;i++){
+    const angle=random()*Math.PI*2;
+    const distance=Math.sqrt(random())*.93;
+
+    craters.push({
+      x:center+Math.cos(angle)*distance*radius,
+      y:center+Math.sin(angle)*distance*radius,
+      r:1+random()*5,
+      depth:.35+random()*.55,
+      type:random()
+    });
+  }
+
+  /* Texture de surface et relief */
+
+  const maria=[
+    {x:-.35,y:-.18,r:.28,v:-.13},
+    {x:.30,y:-.32,r:.22,v:-.10},
+    {x:.18,y:.30,r:.25,v:-.12},
+    {x:-.40,y:.38,r:.16,v:-.08},
+    {x:.02,y:-.02,r:.12,v:-.08}
+  ];
+
+  for(let y=0;y<size;y++){
+    for(let x=0;x<size;x++){
+      const nx=(x-center)/radius;
+      const ny=(y-center)/radius;
+      const d=nx*nx+ny*ny;
+      const index=(y*size+x)*4;
+
+      if(d>1)continue;
+
+      let surface=
+        .5+
+        .035*Math.sin(x*.075+y*.043)+
+        .025*Math.sin(x*.19-y*.13)+
+        .018*Math.cos(x*.31+y*.22)+
+        .012*Math.sin(x*.51-y*.37);
+
+      /* Grandes mers lunaires */
+
+      for(const sea of maria){
+        const dx=nx-sea.x;
+        const dy=ny-sea.y;
+        const dist=Math.sqrt(dx*dx+dy*dy);
+        const influence=Math.exp(-(dist*dist)/(sea.r*sea.r*.42));
+        surface+=sea.v*influence;
+      }
+
+      /* Relief des cratères */
+
+      for(const crater of craters){
+        const dx=x-crater.x;
+        const dy=y-crater.y;
+        const dist=Math.sqrt(dx*dx+dy*dy)/crater.r;
+
+        if(dist>1.5)continue;
+
+        let relief=0;
+
+        /* Bord relevé */
+
+        if(dist>.78&&dist<1.08){
+          const rim=Math.exp(-Math.pow((dist-.92)/.12,2));
+          relief+=rim*.22*crater.depth;
+        }
+
+        /* Fond du cratère */
+
+        if(dist<.82){
+          const floor=Math.exp(-Math.pow(dist/.72,2));
+          relief-=floor*.15*crater.depth;
+        }
+
+        /* Paroi interne */
+
+        if(dist>=.55&&dist<=.95){
+          const wall=Math.exp(-Math.pow((dist-.75)/.12,2));
+          relief-=wall*.08*crater.depth;
+        }
+
+        surface+=relief;
+      }
+
+      surface=Math.max(.18,Math.min(.82,surface));
+
+      /* Grain fin de la surface */
+
+      const grain=
+        Math.sin(x*1.7+y*.9)*.009+
+        Math.cos(x*.8-y*1.3)*.008;
+
+      surface+=grain;
+
+      const base=177+surface*92;
+
+      pixels[index]=base*1.02;
+      pixels[index+1]=base*.99;
+      pixels[index+2]=base*.91;
+      pixels[index+3]=255;
+    }
+  }
+
+  tctx.putImageData(image,0,0);
+
+  /*
+    Ajout de reliefs dessinés sur la texture :
+    bord clair et ombre intérieure pour donner du volume.
+  */
+
+  craters.forEach(crater=>{
+    const x=crater.x;
+    const y=crater.y;
+    const r=crater.r;
+
+    tctx.save();
+
+    const shadow=tctx.createRadialGradient(
+      x-r*.25,y-r*.28,r*.08,
+      x,y,r*1.15
+    );
+
+    shadow.addColorStop(0,"rgba(55,51,45,.30)");
+    shadow.addColorStop(.58,"rgba(80,75,67,.16)");
+    shadow.addColorStop(.82,"rgba(235,226,209,.23)");
+    shadow.addColorStop(1,"rgba(255,255,255,0)");
+
+    tctx.fillStyle=shadow;
+    tctx.beginPath();
+    tctx.arc(x,y,r*1.15,0,Math.PI*2);
+    tctx.fill();
+
+    /* Ombre sur la paroi */
+
+    tctx.beginPath();
+    tctx.arc(x+r*.08,y+r*.08,r*.72,0,Math.PI*2);
+    tctx.fillStyle="rgba(48,45,40,.14)";
+    tctx.fill();
+
+    /* Petit pic central sur certains cratères */
+
+    if(r>9&&crater.type>.55){
+      const peak=tctx.createRadialGradient(
+        x-r*.12,y-r*.12,0,
+        x,y,r*.23
+      );
+      peak.addColorStop(0,"rgba(245,239,222,.30)");
+      peak.addColorStop(1,"rgba(245,239,222,0)");
+
+      tctx.fillStyle=peak;
+      tctx.beginPath();
+      tctx.arc(x,y,r*.23,0,Math.PI*2);
+      tctx.fill();
+    }
+
+    tctx.restore();
+  });
+
+  moonCraterTexture=texture;
+  moonBaseImage=tctx.getImageData(0,0,size,size);
+}
+
+/* Rendu de la Lune en fonction de son éclairage */
+
+function drawMoon(phase){
+  if(!moonBaseImage)createMoonTexture();
+
+  const size=MOON_SIZE;
+  const center=MOON_CENTER;
+  const radius=MOON_RADIUS;
+
+  const source=moonBaseImage.data;
+  const output=moonContext.createImageData(size,size);
+  const target=output.data;
+
+  /*
+    Direction de la lumière solaire.
+    Nouvelle lune : face visible sombre.
+    Premier quartier : moitié droite éclairée.
+    Pleine lune : disque entièrement éclairé.
+    Dernier quartier : moitié gauche éclairée.
+  */
 
   const angle=2*Math.PI*phase;
+  const lightX=Math.sin(angle);
+  const lightZ=-Math.cos(angle);
 
   for(let y=0;y<size;y++){
     for(let x=0;x<size;x++){
@@ -1165,41 +1418,53 @@ function drawMoon(phase){
       if(distance>1)continue;
 
       const nz=Math.sqrt(1-distance);
-      const light=nx*Math.sin(angle)-nz*Math.cos(angle);
-      const isLit=light>=0;
 
-      const variation=
-        Math.max(0,Math.min(1,
-          .88+.10*Math.sin(x*.11+y*.08)+.04*Math.cos(x*.19-y*.13)
-        ));
+      /* Lumière sur la sphère */
 
-      if(isLit){
-        const shade=215*variation;
-        data[index]=shade*.94;
-        data[index+1]=shade*.97;
-        data[index+2]=shade;
-      }else{
-        const shade=38*variation;
-        data[index]=shade*.85;
-        data[index+1]=shade*.95;
-        data[index+2]=shade*1.15;
-      }
+      const light=nx*lightX+nz*lightZ;
+      const illumination=Math.max(0,light);
 
-      data[index+3]=255;
+      /* Transition douce sur le terminateur */
+
+      const edge=.035;
+      const lit=Math.max(0,Math.min(1,(light+edge)/(2*edge)));
+
+      const baseR=source[index];
+      const baseG=source[index+1];
+      const baseB=source[index+2];
+
+      /* Relief légèrement accentué par la lumière */
+
+      const textureFactor=.88+illumination*.16;
+      const ambient=.075;
+
+      const brightness=ambient+lit*(.92+illumination*.08);
+
+      const edgeFactor=
+        .94+.06*Math.sqrt(Math.max(0,1-distance));
+
+      target[index]=Math.min(255,baseR*textureFactor*brightness*edgeFactor);
+      target[index+1]=Math.min(255,baseG*textureFactor*brightness*edgeFactor);
+      target[index+2]=Math.min(255,baseB*textureFactor*brightness*edgeFactor);
+      target[index+3]=255;
     }
   }
 
-  context.clearRect(0,0,size,size);
-  context.putImageData(image,0,0);
+  moonContext.clearRect(0,0,size,size);
+  moonContext.putImageData(output,0,0);
 
-  context.save();
-  context.beginPath();
-  context.arc(center,center,radius,0,Math.PI*2);
-  context.strokeStyle="rgba(220,235,250,.28)";
-  context.lineWidth=1.5;
-  context.stroke();
-  context.restore();
+  /* Liseré atmosphérique discret */
+
+  moonContext.save();
+  moonContext.beginPath();
+  moonContext.arc(center,center,radius,0,Math.PI*2);
+  moonContext.strokeStyle="rgba(225,235,247,.23)";
+  moonContext.lineWidth=1.5;
+  moonContext.stroke();
+  moonContext.restore();
 }
+
+/* Dates des prochaines phases */
 
 function formatMoonDate(date){
   return date.toLocaleDateString("fr-FR",{
@@ -1220,8 +1485,8 @@ function updateMoon(){
   document.getElementById("moonIllumination").textContent=
     Math.round(moon.illumination*100)+" %";
 
-  const daysToFull=(.5-moon.phase+1)%1*SYNODIC_MONTH;
-  const daysToNew=(1-moon.phase)%1*SYNODIC_MONTH;
+  const daysToFull=((.5-moon.phase+1)%1)*SYNODIC_MONTH;
+  const daysToNew=((1-moon.phase)%1)*SYNODIC_MONTH;
 
   const nextFull=new Date(now.getTime()+daysToFull*86400000);
   const nextNew=new Date(now.getTime()+daysToNew*86400000);
@@ -1233,8 +1498,9 @@ function updateMoon(){
     formatMoonDate(nextNew)+" · dans "+Math.ceil(daysToNew)+" jours";
 }
 
+createMoonTexture();
 updateMoon();
-setInterval(updateMoon,3600000);
+setInterval(updateMoon,60000);
 
 /* ACTUALISATION METEO OPEN-METEO */
 
