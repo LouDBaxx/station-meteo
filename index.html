@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#101820">
 <title>Station météo</title>
+
 <style>
 *{box-sizing:border-box}
 body{
@@ -19,8 +20,10 @@ main{width:100%;max-width:650px}
 header{text-align:center;margin-bottom:35px}
 #clock{font-size:clamp(48px,12vw,82px);font-weight:300;letter-spacing:2px}
 #date{color:#a8b5bf;font-size:17px;margin-top:5px}
-h2{font-size:14px;color:#91a2af;text-transform:uppercase;
-letter-spacing:2px;font-weight:500;margin:25px 0 12px}
+h2{
+  font-size:14px;color:#91a2af;text-transform:uppercase;
+  letter-spacing:2px;font-weight:500;margin:25px 0 12px
+}
 .panel{
   background:#1b2934;border-radius:18px;
   padding:24px;margin-bottom:14px;
@@ -34,20 +37,24 @@ letter-spacing:2px;font-weight:500;margin:25px 0 12px}
 #status{font-size:12px;color:#82939f;text-align:center;margin-top:22px}
 </style>
 </head>
+
 <body>
 <main>
+
 <header>
   <div id="clock">--:--</div>
   <div id="date">Chargement...</div>
 </header>
 
 <h2>À l'intérieur · Salon</h2>
+
 <div class="grid">
   <section class="panel">
     <div class="label">Température</div>
     <span class="value" id="temp">--</span>
     <span class="unit">°C</span>
   </section>
+
   <section class="panel">
     <div class="label">Humidité relative</div>
     <span class="value" id="humidity">--</span>
@@ -56,81 +63,165 @@ letter-spacing:2px;font-weight:500;margin:25px 0 12px}
 </div>
 
 <h2>À l'extérieur</h2>
+
 <section class="panel">
   <div id="weatherIcon">🌤️</div>
   <div id="weatherDesc">Chargement de la météo...</div>
-  <div class="value"><span id="outsideTemp">--</span><span class="unit"> °C</span></div>
+  <div class="value">
+    <span id="outsideTemp">--</span>
+    <span class="unit"> °C</span>
+  </div>
   <div class="label" id="weatherDetails">Conditions extérieures</div>
 </section>
+
 <div id="status">Station météo · Données en attente</div>
+
 </main>
 
 <script>
+
+// HORLOGE
 function updateClock(){
   const now=new Date();
+
   document.getElementById("clock").textContent=
-    now.toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"});
+    now.toLocaleTimeString("fr-FR",{
+      hour:"2-digit",
+      minute:"2-digit"
+    });
+
   document.getElementById("date").textContent=
-    now.toLocaleDateString("fr-FR",{weekday:"long",day:"numeric",month:"long"});
+    now.toLocaleDateString("fr-FR",{
+      weekday:"long",
+      day:"numeric",
+      month:"long"
+    });
 }
+
 updateClock();
 setInterval(updateClock,1000);
 
-// Lecture des valeurs transmises par le raccourci iPhone
+
+// LECTURE DES DONNÉES TADO°
 const params=new URLSearchParams(window.location.search);
-const temp=params.get("temp");
-const humidity=params.get("humidite");
 
-if(temp!==null && Number.isFinite(Number(temp))){
-  document.getElementById("temp").textContent=Number(temp).toFixed(1);
-}
-if(humidity!==null && Number.isFinite(Number(humidity))){
-  document.getElementById("humidity").textContent=Math.round(Number(humidity));
+function readNumber(value){
+  if(value===null || value.trim()==="") return null;
+
+  // Accepte les virgules et les points décimaux
+  const normalized=value.trim().replace(",",".");
+  const number=Number(normalized);
+
+  return Number.isFinite(number) ? number : null;
 }
 
-// Météo extérieure via Open-Meteo
+const temp=readNumber(params.get("temp"));
+const humidity=readNumber(params.get("humidite"));
+
+if(temp!==null){
+  document.getElementById("temp").textContent=temp.toFixed(1).replace(".",",");
+}
+
+if(humidity!==null && humidity>=0 && humidity<=100){
+  document.getElementById("humidity").textContent=Math.round(humidity);
+}
+
+
+// MÉTÉO EXTÉRIEURE VIA OPEN-METEO
 const descriptions={
-  0:["Ciel dégagé","☀️"],1:["Principalement dégagé","🌤️"],
-  2:["Partiellement nuageux","⛅"],3:["Couvert","☁️"],
-  45:["Brouillard","🌫️"],48:["Brouillard givrant","🌫️"],
-  51:["Bruine légère","🌦️"],53:["Bruine","🌦️"],55:["Bruine forte","🌧️"],
-  61:["Pluie faible","🌦️"],63:["Pluie modérée","🌧️"],65:["Pluie forte","🌧️"],
-  71:["Neige faible","🌨️"],73:["Neige","🌨️"],75:["Neige forte","❄️"],
-  80:["Averses faibles","🌦️"],81:["Averses","🌧️"],82:["Fortes averses","⛈️"],
-  95:["Orage","⛈️"],96:["Orage et grêle","⛈️"],99:["Orage violent","⛈️"]
+  0:["Ciel dégagé","☀️"],
+  1:["Principalement dégagé","🌤️"],
+  2:["Partiellement nuageux","⛅"],
+  3:["Couvert","☁️"],
+  45:["Brouillard","🌫️"],
+  48:["Brouillard givrant","🌫️"],
+  51:["Bruine légère","🌦️"],
+  53:["Bruine","🌦️"],
+  55:["Bruine forte","🌧️"],
+  61:["Pluie faible","🌦️"],
+  63:["Pluie modérée","🌧️"],
+  65:["Pluie forte","🌧️"],
+  71:["Neige faible","🌨️"],
+  73:["Neige","🌨️"],
+  75:["Neige forte","❄️"],
+  80:["Averses faibles","🌦️"],
+  81:["Averses","🌧️"],
+  82:["Fortes averses","⛈️"],
+  95:["Orage","⛈️"],
+  96:["Orage et grêle","⛈️"],
+  99:["Orage violent","⛈️"]
 };
 
 async function loadWeather(lat,lon){
-  const url=`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m&timezone=auto`;
+
+  const url=
+    `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m&timezone=auto`;
+
   try{
     const response=await fetch(url);
+
+    if(!response.ok){
+      throw new Error("Erreur météo");
+    }
+
     const data=await response.json();
     const c=data.current;
-    const info=descriptions[c.weather_code]||["Conditions variables","🌤️"];
+
+    const info=
+      descriptions[c.weather_code]||
+      ["Conditions variables","🌤️"];
+
     document.getElementById("weatherIcon").textContent=info[1];
+
     document.getElementById("weatherDesc").textContent=info[0];
-    document.getElementById("outsideTemp").textContent=Math.round(c.temperature_2m);
+
+    document.getElementById("outsideTemp").textContent=
+      Math.round(c.temperature_2m);
+
     document.getElementById("weatherDetails").textContent=
       `Ressenti ${Math.round(c.apparent_temperature)} °C · Humidité ${c.relative_humidity_2m} % · Vent ${Math.round(c.wind_speed_10m)} km/h`;
-    document.getElementById("status").textContent="Météo actualisée · "+new Date().toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"});
+
+    document.getElementById("status").textContent=
+      "Météo actualisée · "+
+      new Date().toLocaleTimeString("fr-FR",{
+        hour:"2-digit",
+        minute:"2-digit"
+      });
+
   }catch(e){
-    document.getElementById("weatherDesc").textContent="Météo momentanément indisponible";
+
+    document.getElementById("weatherDesc").textContent=
+      "Météo momentanément indisponible";
   }
 }
 
+
+// LOCALISATION ET ACTUALISATION MÉTÉO
 function refreshWeather(){
+
   if(navigator.geolocation){
+
     navigator.geolocation.getCurrentPosition(
-      p=>loadWeather(p.coords.latitude,p.coords.longitude),
+
+      p=>loadWeather(
+        p.coords.latitude,
+        p.coords.longitude
+      ),
+
       ()=>loadWeather(49.08,-1.10),
+
       {timeout:8000}
     );
+
   }else{
+
     loadWeather(49.08,-1.10);
   }
 }
+
 refreshWeather();
 setInterval(refreshWeather,30*60*1000);
+
 </script>
 </body>
 </html>
