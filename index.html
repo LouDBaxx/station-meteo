@@ -619,6 +619,28 @@ body.night-mode #moonCanvas{
   }
 }
 
+
+
+/* DATE DE LA PREMIERE PAGE — IPHONE 8 EN MODE PAYSAGE UNIQUEMENT */
+@media (orientation:landscape) and (max-height:430px) and (max-width:750px){
+  #clockScreen .clock-left{
+    width:100%;
+    min-width:0;
+  }
+  #clockScreen .clock-date{
+    width:100%;
+    max-width:100%;
+    margin-top:3vh;
+    padding:0 4px;
+    font-size:clamp(30px,5.1vw,38px);
+    line-height:1.22;
+    font-weight:500;
+    letter-spacing:.025em;
+    text-align:center;
+    white-space:normal;
+  }
+}
+
 </style>
 </head>
 
