@@ -841,6 +841,23 @@ body.night-mode #moonCanvas{filter:brightness(.68) saturate(.62) drop-shadow(0 0
   transition:background 3s ease,color 3s ease,border-color 3s ease,filter 3s ease,opacity 3s ease;
 }
 
+
+/* PAGE LUNE — LISIBILITE RENFORCEE SUR IPHONE 8 EN PAYSAGE */
+@media (orientation:landscape) and (max-height:420px){
+  .moon-information{gap:2.5vh;max-width:520px}
+  .moon-info-label{
+    font-size:3.8vh;
+    letter-spacing:.08em;
+    line-height:1.2;
+  }
+  .moon-info-value{font-size:7vh;margin-top:5px}
+  .moon-next{gap:6px}
+  .moon-next-value{font-size:5vh;line-height:1.15}
+  body.night-mode .moon-info-label{color:#9aafc8}
+  body.night-mode .moon-info-value{color:#d2deed}
+  body.night-mode .moon-next-value{color:#c0d0e4}
+}
+
 </style>
 </head>
 
