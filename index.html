@@ -26,15 +26,15 @@ body{position:fixed;inset:0}
   padding:30px 5vw;display:flex;align-items:center;justify-content:center;
   opacity:0;visibility:hidden;
   /* Fondu sortant lent : la page reste visible pendant toute la transition */
-  transition:opacity 4s cubic-bezier(.4,0,.2,1),visibility 0s linear 4s,
-    background 4s ease,color 4s ease;
+  transition:opacity 2.5s cubic-bezier(.4,0,.2,1),visibility 0s linear 2.5s,
+    background 2.5s ease,color 2.5s ease;
   overflow:hidden;
 }
 .screen.active{
   opacity:1;visibility:visible;
   /* Fondu entrant lent et progressif */
-  transition:opacity 4s cubic-bezier(.4,0,.2,1),visibility 0s,
-    background 4s ease,color 4s ease;
+  transition:opacity 2.5s cubic-bezier(.4,0,.2,1),visibility 0s,
+    background 2.5s ease,color 2.5s ease;
 }
 
 /* HORLOGE */
@@ -725,7 +725,8 @@ body.night-mode #moonCanvas{
     grid-template-columns:50% 50%;
   }
   #outdoorScreen .outdoor-icon{
-    font-size:clamp(155px,47vh,205px);
+    /* Icône contenue dans la zone météo, sans empiéter sur le bandeau pluie */
+    font-size:clamp(118px,33vh,138px);
   }
 
   /* Page climat intérieur : température et humidité plus visibles */
@@ -743,6 +744,101 @@ body.night-mode #moonCanvas{
     font-size:clamp(18px,5vh,22px);
     letter-spacing:.10em;
   }
+}
+
+
+/* MIDNIGHT — AMBIANCE SALON, TRES FAIBLE LUMINOSITE (22 H → 7 H)
+   Palette bleu nuit encre, contrastes doux et suppression des accents trop lumineux. */
+body.night-mode,
+body.night-mode .screen{
+  background-color:#050810;
+  color:#b9c5d5;
+}
+body.night-mode #clockScreen{
+  background:radial-gradient(ellipse at 50% 48%,#0b1220 0%,#060a12 68%,#04070d 100%);
+}
+body.night-mode .clock-digital{color:#aebbd0; text-shadow:0 0 18px rgba(91,119,158,.08)}
+body.night-mode .clock-date{color:#65758d}
+body.night-mode .clock-number{fill:#8292aa}
+body.night-mode .clock-tick{stroke:#354258;opacity:.34}
+body.night-mode .clock-tick.major{stroke:#687991;opacity:.48}
+body.night-mode .hour-hand{stroke:#9eacc0}
+body.night-mode .minute-hand{stroke:#788aa3}
+body.night-mode .second-hand{stroke:#526d91}
+body.night-mode .clock-center{fill:#9eacc0}
+
+body.night-mode #indoorScreen{
+  background:radial-gradient(ellipse at 50% 45%,#101827 0%,#090f1a 54%,#050810 100%);
+}
+body.night-mode .indoor-title,
+body.night-mode .indoor-label{color:#7889a2}
+body.night-mode .indoor-number{color:#b5c2d4;text-shadow:0 0 20px rgba(100,130,170,.06)}
+body.night-mode .indoor-unit{color:#74869e}
+body.night-mode .indoor-value+.indoor-value{border-left-color:rgba(140,160,190,.09)}
+body.night-mode .indoor-status{color:#52627a}
+
+body.night-mode #outdoorScreen::before{filter:brightness(.38) saturate(.48)}
+body.night-mode #outdoorScreen::after{
+  background:linear-gradient(180deg,rgba(2,5,12,.48),rgba(2,5,12,.78));
+}
+body.night-mode #weatherEffects{opacity:.48;filter:brightness(.62) saturate(.65)}
+body.night-mode .outdoor-icon{filter:brightness(.72) saturate(.65) drop-shadow(0 5px 12px rgba(0,0,0,.35))}
+body.night-mode .outdoor-temperature{color:#bdc9da}
+body.night-mode .outdoor-description{color:rgba(183,198,218,.72)}
+body.night-mode .outdoor-detail{color:rgba(153,171,196,.62)}
+body.night-mode .outdoor-detail strong{color:#aebdd1}
+body.night-mode .rain-forecast{
+  background:rgba(3,8,17,.72);
+  border-color:rgba(125,151,185,.12);
+  color:#9eafc7;
+  box-shadow:0 6px 18px rgba(0,0,0,.18);
+  backdrop-filter:blur(7px);
+}
+body.night-mode .rain-forecast-icon{filter:brightness(.72) saturate(.65)}
+body.night-mode .rain-forecast strong{color:#8daecc}
+body.night-mode .rain-hour-value{color:#a6bad2}
+body.night-mode .rain-hour-track{background:rgba(125,151,185,.10)}
+body.night-mode .rain-hour-bar{background:linear-gradient(180deg,#6d9fc4,#315c82)}
+body.night-mode .rain-hour-time{color:rgba(157,175,199,.58)}
+body.night-mode .outdoor-updated{color:rgba(145,163,188,.28)}
+
+body.night-mode #hourlyScreen{
+  background:radial-gradient(ellipse at center,#0d1726 0%,#080e19 62%,#04070d 100%);
+}
+body.night-mode .hourly-title{color:#788ba5}
+body.night-mode .hourly-time{color:#9aaac0}
+body.night-mode .hourly-icon{filter:brightness(.72) saturate(.62)}
+body.night-mode .hourly-temp{color:#b8c5d7}
+body.night-mode .hourly-rain{color:#7798bb}
+body.night-mode .hourly-item{
+  background:rgba(3,8,16,.38);
+  border-color:rgba(132,155,187,.10);
+}
+
+body.night-mode #moonScreen{
+  background:
+    radial-gradient(ellipse at 28% 48%,rgba(43,62,91,.08) 0%,transparent 48%),
+    radial-gradient(ellipse at 80% 50%,#0b1320 0%,#070d17 58%,#04070d 100%);
+}
+body.night-mode .moon-title{color:#788ba5}
+body.night-mode .moon-phase-name{color:#b9c6d8}
+body.night-mode .moon-phase-age{color:#71839c}
+body.night-mode .moon-info-label{color:#71839c}
+body.night-mode .moon-info-value{color:#b9c6d8}
+body.night-mode .moon-next-value{color:#9eafc5}
+body.night-mode .moon-note{color:#4e6078}
+body.night-mode .moon-canvas-wrap::before{background:rgba(78,105,143,.045)}
+body.night-mode #moonCanvas{filter:brightness(.68) saturate(.62) drop-shadow(0 0 10px rgba(100,130,175,.06))}
+
+/* Fondu chromatique cohérent lors du passage en Midnight */
+#clockScreen,#indoorScreen,#outdoorScreen,#hourlyScreen,#moonScreen,
+.clock-digital,.clock-date,.clock-number,.clock-tick,.clock-hand,
+.indoor-number,.indoor-title,.indoor-label,.indoor-status,
+.outdoor-temperature,.outdoor-description,.outdoor-detail,.outdoor-detail strong,
+.rain-forecast,.rain-hour-value,.rain-hour-time,
+.hourly-title,.hourly-time,.hourly-temp,.hourly-rain,.hourly-item,
+.moon-title,.moon-phase-name,.moon-phase-age,.moon-info-label,.moon-info-value,.moon-next-value,.moon-note{
+  transition:background 3s ease,color 3s ease,border-color 3s ease,filter 3s ease,opacity 3s ease;
 }
 
 </style>
@@ -907,8 +1003,8 @@ function updateNightMode(){
   const now=new Date();
   const minutes=now.getHours()*60+now.getMinutes();
 
-  // Mode nuit de 21 h à 7 h
-  const night=minutes>=21*60||minutes<7*60;
+  // Mode Midnight de 22 h à 7 h
+  const night=minutes>=22*60||minutes<7*60;
 
   if(night!==isNightMode){
     isNightMode=night;
