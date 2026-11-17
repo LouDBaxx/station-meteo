@@ -881,6 +881,65 @@ body.night-mode #moonCanvas{filter:brightness(.68) saturate(.62) drop-shadow(0 0
   body.night-mode .moon-next-value{color:#cbd8e8}
 }
 
+
+
+/* PAGE LUNAIRE — IPHONE 8 EN PAYSAGE : BLOCS COMPACTS SANS CHEVAUCHEMENT */
+@media (orientation:landscape) and (max-height:430px) and (max-width:750px){
+  #moonScreen{padding:0;}
+  #moonScreen .moon-title{
+    top:3.2%;font-size:clamp(15px,4.1vh,18px);
+    letter-spacing:.13em;line-height:1.1;
+  }
+  #moonScreen .moon-content{
+    height:100%;min-height:0;box-sizing:border-box;
+    padding:9vh 4vw 5vh;gap:4vw;
+    align-items:center;justify-content:center;
+  }
+  #moonScreen .moon-visual{
+    flex:0 0 37%;min-width:0;min-height:0;
+    justify-content:center;gap:0;
+  }
+  #moonScreen .moon-canvas-wrap{
+    width:min(31vh,25vw);max-width:125px;max-height:125px;
+    flex:0 0 auto;
+  }
+  #moonScreen .moon-phase-name{
+    max-width:100%;margin-top:1vh;
+    font-size:clamp(13px,3.8vh,16px);
+    line-height:1.15;letter-spacing:.015em;
+    white-space:normal;text-align:center;
+  }
+  #moonScreen .moon-phase-age{
+    margin-top:.6vh;font-size:clamp(9px,2.5vh,11px);
+    line-height:1.15;text-align:center;
+  }
+  #moonScreen .moon-information{
+    flex:1;min-width:0;max-width:none;
+    display:flex;flex-direction:column;justify-content:center;
+    gap:1.5vh;
+  }
+  #moonScreen .moon-illumination{
+    padding-bottom:1.1vh;
+  }
+  #moonScreen .moon-info-label{
+    font-size:clamp(9px,2.45vh,11px);
+    line-height:1.15;letter-spacing:.09em;
+  }
+  #moonScreen .moon-info-value{
+    margin-top:.4vh;font-size:clamp(17px,4.4vh,20px);
+    line-height:1.05;
+  }
+  #moonScreen .moon-next{gap:.4vh;min-width:0;}
+  #moonScreen .moon-next-value{
+    font-size:clamp(11px,2.9vh,13px);
+    line-height:1.2;white-space:normal;
+  }
+  #moonScreen .moon-note{
+    bottom:.8%;font-size:clamp(7px,1.65vh,8px);
+    line-height:1.1;max-width:94%;
+  }
+}
+
 </style>
 </head>
 
@@ -1691,11 +1750,12 @@ function updateRainForecast(data,current){
   const times=data.hourly.time||[];
   const probabilities=data.hourly.precipitation_probability||[];
   const amounts=data.hourly.precipitation||[];
+  const now=new Date();
 
+  // Le graphique conserve les probabilités horaires, issues de la requête complémentaire.
   const timeline=document.getElementById("rainTimeline");
   if(timeline){
-    const nowForTimeline=new Date();
-    let firstIndex=times.findIndex(t=>new Date(t)>=nowForTimeline);
+    let firstIndex=times.findIndex(t=>new Date(t)>=now);
     if(firstIndex<0)firstIndex=0;
     const cells=timeline.querySelectorAll(".rain-hour");
     cells.forEach((cell,i)=>{
@@ -1708,54 +1768,62 @@ function updateRainForecast(data,current){
     });
   }
 
-  const now=new Date();
-  let startIndex=times.findIndex(t=>new Date(t)>now);
+  // AROME fournit la quantité de précipitations par pas de 15 minutes sur les 6 prochaines heures.
+  const quarterTimes=data.minutely_15?.time||[];
+  const quarterRain=data.minutely_15?.precipitation||[];
+  let firstQuarterRain=-1;
+  for(let i=0;i<quarterTimes.length;i++){
+    const date=new Date(quarterTimes[i]);
+    if(date<now)continue;
+    if(Number(quarterRain[i])>=0.05){
+      firstQuarterRain=i;
+      break;
+    }
+  }
 
+  if(firstQuarterRain>=0){
+    const date=new Date(quarterTimes[firstQuarterRain]);
+    const hour=String(date.getHours()).padStart(2,"0");
+    const minute=String(date.getMinutes()).padStart(2,"0");
+    const hourIndex=times.findIndex(t=>new Date(t).getHours()===date.getHours() && new Date(t).getDate()===date.getDate());
+    const probability=hourIndex>=0?Math.round(Number(probabilities[hourIndex])||0):0;
+    icon.textContent="🌧️";
+    text.innerHTML="Pluie possible vers <strong>"+hour+"h"+(minute!=="00"?minute:"")+
+      (probability>0?" · "+probability+" %":"")+"</strong>";
+    return;
+  }
+
+  let startIndex=times.findIndex(t=>new Date(t)>now);
   if(startIndex<0){
     text.textContent="Prévision indisponible";
     icon.textContent="☔";
     return;
   }
 
-  let firstRain=null;
   let highestProbability=0;
   let highestIndex=-1;
-
+  let firstRain=-1;
   for(let i=startIndex;i<Math.min(startIndex+6,times.length);i++){
     const probability=Number(probabilities[i])||0;
     const amount=Number(amounts[i])||0;
-
-    if(probability>highestProbability){
-      highestProbability=probability;
-      highestIndex=i;
-    }
-
-    if(probability>=40||amount>=0.1){
-      firstRain=i;
-      break;
-    }
+    if(probability>highestProbability){highestProbability=probability;highestIndex=i;}
+    if(probability>=40||amount>=0.1){firstRain=i;break;}
   }
 
-  if(firstRain!==null){
+  if(firstRain>=0){
     const date=new Date(times[firstRain]);
     const hour=String(date.getHours()).padStart(2,"0");
     const probability=Math.round(Number(probabilities[firstRain])||0);
-
     icon.textContent="🌧️";
-    text.innerHTML=
-      "Pluie possible vers <strong>"+hour+
-      " h · "+probability+" %</strong>";
+    text.innerHTML="Pluie possible vers <strong>"+hour+" h · "+probability+" %</strong>";
     return;
   }
 
   if(highestProbability>=20&&highestIndex>=0){
     const date=new Date(times[highestIndex]);
     const hour=String(date.getHours()).padStart(2,"0");
-
     icon.textContent="🌦️";
-    text.innerHTML=
-      "Risque faible vers <strong>"+hour+
-      " h · "+Math.round(highestProbability)+" %</strong>";
+    text.innerHTML="Risque faible vers <strong>"+hour+" h · "+Math.round(highestProbability)+" %</strong>";
     return;
   }
 
@@ -2075,45 +2143,64 @@ setInterval(updateMoon,60000);
 /* ACTUALISATION METEO OPEN-METEO */
 
 async function refreshWeather(){
+  // Flux principal Météo-France : AROME haute résolution près de l'échéance,
+  // puis ARPEGE pour prolonger la prévision.
   const url=
-    "https://api.open-meteo.com/v1/forecast"+
+    "https://api.open-meteo.com/v1/meteofrance"+
     "?latitude="+LATITUDE+
     "&longitude="+LONGITUDE+
     "&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,precipitation,weather_code,wind_speed_10m"+
-    "&hourly=temperature_2m,precipitation_probability,precipitation,weather_code"+
+    "&hourly=temperature_2m,precipitation,weather_code"+
+    "&minutely_15=precipitation,rain"+
     "&timezone=Europe%2FParis"+
     "&forecast_days=2";
 
   try{
     const response=await fetch(url,{cache:"no-store"});
-    if(!response.ok)throw new Error("Réponse météo indisponible");
+    if(!response.ok)throw new Error("Réponse Météo-France indisponible");
 
     const data=await response.json();
     const current=data.current;
-
     if(!current)throw new Error("Données météo manquantes");
+
+    // La déclinaison Météo-France ne publie pas la probabilité de pluie.
+    // On la récupère séparément pour conserver les pourcentages de l'affichage horaire.
+    try{
+      const probabilityUrl=
+        "https://api.open-meteo.com/v1/forecast"+
+        "?latitude="+LATITUDE+
+        "&longitude="+LONGITUDE+
+        "&hourly=precipitation_probability"+
+        "&timezone=Europe%2FParis"+
+        "&forecast_days=2";
+      const probabilityResponse=await fetch(probabilityUrl,{cache:"no-store"});
+      if(probabilityResponse.ok){
+        const probabilityData=await probabilityResponse.json();
+        const probabilityTimes=probabilityData.hourly?.time||[];
+        const probabilityValues=probabilityData.hourly?.precipitation_probability||[];
+        const probabilityByTime=new Map(probabilityTimes.map((time,index)=>[time,probabilityValues[index]]));
+        data.hourly.precipitation_probability=(data.hourly.time||[]).map(time=>probabilityByTime.get(time)??0);
+      }
+    }catch(probabilityError){
+      console.warn("Probabilités horaires indisponibles :",probabilityError);
+      data.hourly.precipitation_probability=[];
+    }
 
     const code=Number(current.weather_code);
     const isDay=Number(current.is_day)===1;
 
     document.getElementById("outdoorTemp").textContent=
       Math.round(current.temperature_2m)+"°";
-
     document.getElementById("outdoorIcon").textContent=
       getWeatherIcon(code,isDay);
-
     document.getElementById("outdoorDescription").textContent=
       getWeatherDescription(code);
-
     document.getElementById("outdoorFeels").textContent=
       Math.round(current.apparent_temperature)+"°";
-
     document.getElementById("outdoorHumidity").textContent=
       Math.round(current.relative_humidity_2m)+"%";
-
     document.getElementById("outdoorWind").textContent=
       Math.round(current.wind_speed_10m)+" km/h";
-
     document.getElementById("weatherUpdated").textContent=
       "Mis à jour à "+new Date().toLocaleTimeString("fr-FR",{
         hour:"2-digit",minute:"2-digit"
