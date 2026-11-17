@@ -100,7 +100,7 @@ body{position:fixed;inset:0}
   position:absolute;bottom:5%;color:#8294a3;font-size:13px;letter-spacing:.08em;
 }
 
-/* METEO EXTERIEURE */
+/* METEO EXTERIEURE — NOUVELLE COMPOSITION */
 
 #outdoorScreen{position:absolute;background:#172737;isolation:isolate}
 #outdoorScreen::before{
@@ -111,8 +111,7 @@ body{position:fixed;inset:0}
 #outdoorScreen::after{
   content:"";position:absolute;inset:0;z-index:-1;
   background:linear-gradient(180deg,rgba(5,12,20,.05),rgba(5,12,20,.48));
-  pointer-events:none;
-  transition:background 2s ease;
+  pointer-events:none;transition:background 2s ease;
 }
 #outdoorScreen.sky-clear.day::before{background:linear-gradient(150deg,#477da5 0%,#315e83 48%,#1b354d 100%)}
 #outdoorScreen.sky-clear.night::before{background:linear-gradient(150deg,#101d36 0%,#182a43 55%,#101820 100%)}
@@ -120,9 +119,7 @@ body{position:fixed;inset:0}
 #outdoorScreen.sky-partly.night::before{background:linear-gradient(150deg,#17283f 0%,#25364b 55%,#101820 100%)}
 #outdoorScreen.sky-cloudy::before{background:linear-gradient(150deg,#596b7a 0%,#3d4e5d 55%,#202e3b 100%)}
 #outdoorScreen.sky-fog::before{background:linear-gradient(150deg,#87949b 0%,#657681 55%,#344653 100%)}
-#outdoorScreen.sky-rain::before,
-#outdoorScreen.sky-drizzle::before,
-#outdoorScreen.sky-showers::before{background:linear-gradient(150deg,#435b70 0%,#293f53 55%,#172633 100%)}
+#outdoorScreen.sky-rain::before,#outdoorScreen.sky-drizzle::before,#outdoorScreen.sky-showers::before{background:linear-gradient(150deg,#435b70 0%,#293f53 55%,#172633 100%)}
 #outdoorScreen.sky-snow::before{background:linear-gradient(150deg,#71899b 0%,#526b7e 55%,#2c4051 100%)}
 #outdoorScreen.sky-storm::before{background:linear-gradient(150deg,#30394b 0%,#202b3b 55%,#101820 100%)}
 #outdoorScreen>*{position:relative;z-index:1}
@@ -131,55 +128,88 @@ body{position:fixed;inset:0}
   z-index:0!important;pointer-events:none;
 }
 .outdoor-content{
-  width:100%;height:100%;display:flex;flex-direction:column;
-  justify-content:center;align-items:center;text-align:center;padding:3vh 3vw;
+  position:relative;width:100%;height:100%;display:flex;flex-direction:column;
+  justify-content:flex-start;align-items:stretch;text-align:left;
+  padding:5.5vh 3.5vw 2vh;
 }
 .outdoor-location{
-  position:absolute!important;top:7%;left:0;right:0;
-  color:rgba(255,255,255,.72);font-size:clamp(14px,2vw,22px);
+  position:absolute!important;top:2.5%;left:0;right:0;text-align:center;
+  color:rgba(255,255,255,.72);font-size:clamp(12px,2vw,20px);
   letter-spacing:.16em;text-transform:uppercase;font-weight:400;
 }
-.outdoor-main{display:flex;align-items:center;justify-content:center;gap:2vw;margin-top:1vh}
+.outdoor-main{
+  width:100%;height:62%;min-height:0;display:grid;
+  grid-template-columns:48% 52%;align-items:center;gap:0;
+  margin:0 auto;padding-top:1.5vh;
+}
+.outdoor-icon-wrap{
+  width:100%;height:100%;display:flex;align-items:center;justify-content:center;
+  overflow:visible;
+}
 .outdoor-icon{
-  font-size:clamp(75px,13vw,150px);line-height:1;
-  filter:drop-shadow(0 8px 15px rgba(0,0,0,.15));
+  display:block;font-size:clamp(145px,37vh,250px);line-height:1;
+  filter:drop-shadow(0 8px 18px rgba(0,0,0,.20));
+}
+.outdoor-reading{
+  min-width:0;display:flex;flex-direction:column;align-items:flex-start;
+  justify-content:center;padding-left:1vw;
 }
 .outdoor-temperature{
-  font-size:clamp(100px,20vw,230px);font-weight:200;
-  line-height:.95;letter-spacing:-.07em;font-variant-numeric:tabular-nums;
+  font-size:clamp(105px,25vh,190px);font-weight:200;
+  line-height:.88;letter-spacing:-.075em;font-variant-numeric:tabular-nums;
+  white-space:nowrap;
 }
 .outdoor-description{
-  margin-top:2vh;font-size:clamp(20px,3vw,34px);
+  margin-top:1.2vh;font-size:clamp(16px,3.5vh,27px);
   font-weight:300;color:rgba(255,255,255,.9);text-transform:capitalize;
 }
 .outdoor-details{
-  display:flex;justify-content:center;gap:clamp(20px,5vw,70px);
-  margin-top:4vh;flex-wrap:wrap;
+  display:flex;flex-direction:column;align-items:flex-start;gap:0;
+  margin-top:1.6vh;
 }
 .outdoor-detail{
-  display:flex;flex-direction:column;gap:8px;
-  color:rgba(255,255,255,.72);font-size:clamp(12px,1.6vw,17px);
+  display:flex;flex-direction:row;align-items:baseline;gap:9px;
+  color:rgba(255,255,255,.72);font-size:clamp(12px,2.2vh,16px);
   letter-spacing:.05em;
 }
 .outdoor-detail strong{
-  color:white;font-size:clamp(19px,2.7vw,30px);
+  color:white;font-size:clamp(24px,5.2vh,36px);
   font-weight:400;letter-spacing:0;
 }
+.outdoor-detail-secondary{display:none}
 .outdoor-updated{
-  position:absolute!important;bottom:3%;color:rgba(255,255,255,.45);font-size:11px;
+  position:absolute!important;right:3vw;top:3%;color:rgba(255,255,255,.4);font-size:10px;
 }
 
-/* ALERTE PLUIE */
-
+/* PREVISIONS DE PLUIE — GRAND BANDEAU BAS */
 .rain-forecast{
-  display:flex;align-items:center;justify-content:center;gap:12px;
-  margin-top:3vh;padding:12px 22px;
-  border:1px solid rgba(255,255,255,.17);border-radius:30px;
-  background:rgba(10,20,30,.22);color:rgba(255,255,255,.88);
-  font-size:clamp(14px,2vw,19px);font-weight:300;letter-spacing:.03em;
+  width:100%;height:31%;min-height:0;display:flex;flex-direction:column;
+  align-items:stretch;justify-content:space-between;gap:1vh;
+  margin:0;padding:1.5vh 2vw 1.2vh;
+  border:1px solid rgba(255,255,255,.20);border-radius:16px;
+  background:rgba(7,17,29,.34);color:rgba(255,255,255,.92);
+  box-shadow:0 8px 24px rgba(0,0,0,.10);backdrop-filter:blur(5px);
+  font-size:clamp(13px,2.2vh,17px);font-weight:300;letter-spacing:.02em;
 }
-.rain-forecast-icon{font-size:1.3em}
-.rain-forecast strong{color:#b9e2ff;font-weight:500}
+.rain-forecast-heading{display:flex;align-items:center;gap:10px;min-height:0}
+.rain-forecast-icon{font-size:1.35em;flex:0 0 auto}
+.rain-forecast-heading strong{color:#c7e8ff;font-weight:600}
+#rainForecastText{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rain-timeline{
+  flex:1;min-height:0;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));
+  gap:1.2vw;align-items:end;padding-top:.5vh;
+}
+.rain-hour{
+  height:100%;min-width:0;display:flex;flex-direction:column;
+  justify-content:flex-end;align-items:center;gap:.45vh;
+}
+.rain-hour-value{font-size:clamp(11px,2vh,15px);color:#d8edfa;font-weight:500;white-space:nowrap}
+.rain-hour-track{
+  width:min(100%,30px);height:45%;min-height:4px;display:flex;align-items:flex-end;
+  border-radius:8px;background:rgba(210,230,245,.12);overflow:hidden;
+}
+.rain-hour-bar{width:100%;height:0%;border-radius:8px;background:linear-gradient(180deg,#9cddff,#459bd0);transition:height .7s ease}
+.rain-hour-time{font-size:clamp(10px,1.8vh,13px);color:rgba(255,255,255,.66);white-space:nowrap}
 
 /* PREVISIONS HORAIRES */
 
@@ -641,6 +671,47 @@ body.night-mode #moonCanvas{
   }
 }
 
+/* PAGE METEO EXTERIEURE — ADAPTATION IPHONE 8 PAYSAGE ET AUTRES FORMATS */
+@media (orientation:landscape){
+  #outdoorScreen .outdoor-content{padding:5.5vh 3.5vw 2vh}
+  #outdoorScreen .outdoor-main{height:62%;grid-template-columns:48% 52%}
+  #outdoorScreen .outdoor-icon{font-size:clamp(145px,37vh,250px)}
+  #outdoorScreen .outdoor-temperature{font-size:clamp(105px,25vh,190px)}
+  #outdoorScreen .outdoor-description{font-size:clamp(16px,3.5vh,27px)}
+  #outdoorScreen .outdoor-details{margin-top:1.6vh}
+  #outdoorScreen .outdoor-detail strong{font-size:clamp(24px,5.2vh,36px)}
+  #outdoorScreen .rain-forecast{height:31%;padding:1.5vh 2vw 1.2vh}
+}
+@media (orientation:landscape) and (max-height:430px) and (max-width:750px){
+  #outdoorScreen .outdoor-content{padding:5.2vh 3vw 1.5vh}
+  #outdoorScreen .outdoor-location{top:1.8%;font-size:clamp(11px,3.3vh,14px)}
+  #outdoorScreen .outdoor-main{height:61%;padding-top:1.2vh;grid-template-columns:48% 52%}
+  #outdoorScreen .outdoor-icon{font-size:clamp(125px,39vh,170px)}
+  #outdoorScreen .outdoor-temperature{font-size:clamp(92px,27vh,116px)}
+  #outdoorScreen .outdoor-description{margin-top:.8vh;font-size:clamp(14px,4vh,17px)}
+  #outdoorScreen .outdoor-details{margin-top:1vh}
+  #outdoorScreen .outdoor-detail{font-size:clamp(11px,2.8vh,13px);gap:7px}
+  #outdoorScreen .outdoor-detail strong{font-size:clamp(21px,5.5vh,25px)}
+  #outdoorScreen .rain-forecast{height:33%;gap:.6vh;padding:1vh 2vw .8vh;border-radius:13px}
+  #outdoorScreen .rain-forecast-heading{font-size:clamp(12px,3.3vh,14px)}
+  #outdoorScreen .rain-timeline{gap:1.5vw}
+  #outdoorScreen .rain-hour-track{height:42%;width:min(100%,24px)}
+  #outdoorScreen .rain-hour-value{font-size:clamp(10px,2.7vh,12px)}
+  #outdoorScreen .rain-hour-time{font-size:clamp(9px,2.5vh,11px)}
+  #outdoorScreen .outdoor-updated{top:2%;right:2vw;font-size:9px}
+}
+@media (orientation:portrait){
+  #outdoorScreen .outdoor-content{padding:8vh 4vw 2vh}
+  #outdoorScreen .outdoor-main{height:57%;grid-template-columns:42% 58%;padding-top:0}
+  #outdoorScreen .outdoor-icon{font-size:clamp(100px,25vw,190px)}
+  #outdoorScreen .outdoor-temperature{font-size:clamp(76px,20vw,130px)}
+  #outdoorScreen .outdoor-description{font-size:clamp(14px,4vw,22px)}
+  #outdoorScreen .outdoor-details{margin-top:1vh}
+  #outdoorScreen .outdoor-detail strong{font-size:clamp(21px,6vw,30px)}
+  #outdoorScreen .rain-forecast{height:34%;padding:1.5vh 3vw;border-radius:15px}
+  #outdoorScreen .rain-hour-track{height:42%;width:min(100%,22px)}
+}
+
 </style>
 </head>
 
@@ -690,21 +761,35 @@ body.night-mode #moonCanvas{
   <canvas id="weatherEffects"></canvas>
   <div class="outdoor-content">
     <div class="outdoor-location">Saint-Samson-de-Bonfossé</div>
+    <div id="weatherUpdated" class="outdoor-updated">Météo Open-Meteo</div>
     <div class="outdoor-main">
-      <div id="outdoorIcon" class="outdoor-icon">☀️</div>
-      <div id="outdoorTemp" class="outdoor-temperature">--°</div>
-    </div>
-    <div id="outdoorDescription" class="outdoor-description">Chargement...</div>
-    <div class="outdoor-details">
-      <div class="outdoor-detail">Ressenti<strong id="outdoorFeels">--°</strong></div>
-      <div class="outdoor-detail">Humidité<strong id="outdoorHumidity">--%</strong></div>
-      <div class="outdoor-detail">Vent<strong id="outdoorWind">-- km/h</strong></div>
+      <div class="outdoor-icon-wrap">
+        <div id="outdoorIcon" class="outdoor-icon">☀️</div>
+      </div>
+      <div class="outdoor-reading">
+        <div id="outdoorTemp" class="outdoor-temperature">--°</div>
+        <div id="outdoorDescription" class="outdoor-description">Chargement...</div>
+        <div class="outdoor-details">
+          <div class="outdoor-detail">Humidité <strong id="outdoorHumidity">--%</strong></div>
+          <div class="outdoor-detail outdoor-detail-secondary">Ressenti <strong id="outdoorFeels">--°</strong></div>
+          <div class="outdoor-detail outdoor-detail-secondary">Vent <strong id="outdoorWind">-- km/h</strong></div>
+        </div>
+      </div>
     </div>
     <div class="rain-forecast">
-      <span id="rainForecastIcon" class="rain-forecast-icon">☔</span>
-      <span id="rainForecastText">Analyse des précipitations...</span>
+      <div class="rain-forecast-heading">
+        <span id="rainForecastIcon" class="rain-forecast-icon">☔</span>
+        <span id="rainForecastText">Analyse des précipitations...</span>
+      </div>
+      <div id="rainTimeline" class="rain-timeline">
+        <div class="rain-hour"><span class="rain-hour-value">--%</span><div class="rain-hour-track"><div class="rain-hour-bar"></div></div><span class="rain-hour-time">--h</span></div>
+        <div class="rain-hour"><span class="rain-hour-value">--%</span><div class="rain-hour-track"><div class="rain-hour-bar"></div></div><span class="rain-hour-time">--h</span></div>
+        <div class="rain-hour"><span class="rain-hour-value">--%</span><div class="rain-hour-track"><div class="rain-hour-bar"></div></div><span class="rain-hour-time">--h</span></div>
+        <div class="rain-hour"><span class="rain-hour-value">--%</span><div class="rain-hour-track"><div class="rain-hour-bar"></div></div><span class="rain-hour-time">--h</span></div>
+        <div class="rain-hour"><span class="rain-hour-value">--%</span><div class="rain-hour-track"><div class="rain-hour-bar"></div></div><span class="rain-hour-time">--h</span></div>
+        <div class="rain-hour"><span class="rain-hour-value">--%</span><div class="rain-hour-track"><div class="rain-hour-bar"></div></div><span class="rain-hour-time">--h</span></div>
+      </div>
     </div>
-    <div id="weatherUpdated" class="outdoor-updated">Météo Open-Meteo</div>
   </div>
 </section>
 
@@ -1438,6 +1523,22 @@ function updateRainForecast(data,current){
   const times=data.hourly.time||[];
   const probabilities=data.hourly.precipitation_probability||[];
   const amounts=data.hourly.precipitation||[];
+
+  const timeline=document.getElementById("rainTimeline");
+  if(timeline){
+    const nowForTimeline=new Date();
+    let firstIndex=times.findIndex(t=>new Date(t)>=nowForTimeline);
+    if(firstIndex<0)firstIndex=0;
+    const cells=timeline.querySelectorAll(".rain-hour");
+    cells.forEach((cell,i)=>{
+      const index=firstIndex+i;
+      const probability=Math.max(0,Math.min(100,Math.round(Number(probabilities[index])||0)));
+      const date=times[index]?new Date(times[index]):null;
+      cell.querySelector(".rain-hour-value").textContent=times[index]?probability+" %":"--";
+      cell.querySelector(".rain-hour-bar").style.height=probability+"%";
+      cell.querySelector(".rain-hour-time").textContent=date?String(date.getHours()).padStart(2,"0")+"h":"--h";
+    });
+  }
 
   const now=new Date();
   let startIndex=times.findIndex(t=>new Date(t)>now);
