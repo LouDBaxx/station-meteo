@@ -25,11 +25,17 @@ body{position:fixed;inset:0}
   position:absolute;inset:0;width:100%;height:100%;
   padding:30px 5vw;display:flex;align-items:center;justify-content:center;
   opacity:0;visibility:hidden;
-  transition:opacity 1.5s ease,visibility 1.5s,
+  /* Fondu sortant : masquer la page seulement après les 2 secondes */
+  transition:opacity 2s ease,visibility 0s linear 2s,
     background 2s ease,color 2s ease;
   overflow:hidden;
 }
-.screen.active{opacity:1;visibility:visible}
+.screen.active{
+  opacity:1;visibility:visible;
+  /* Fondu entrant : rendre la page visible immédiatement, puis fondre */
+  transition:opacity 2s ease,visibility 0s,
+    background 2s ease,color 2s ease;
+}
 
 /* HORLOGE */
 
@@ -710,6 +716,35 @@ body.night-mode #moonCanvas{
   #outdoorScreen .outdoor-detail strong{font-size:clamp(21px,6vw,30px)}
   #outdoorScreen .rain-forecast{height:34%;padding:1.5vh 3vw;border-radius:15px}
   #outdoorScreen .rain-hour-track{height:42%;width:min(100%,22px)}
+}
+
+
+
+/* AGRANDISSEMENT DES VALEURS — IPHONE 8 EN PAYSAGE */
+@media (orientation:landscape) and (max-height:430px) and (max-width:750px){
+  /* Page météo : l'icône occupe davantage la moitié gauche */
+  #outdoorScreen .outdoor-main{
+    grid-template-columns:50% 50%;
+  }
+  #outdoorScreen .outdoor-icon{
+    font-size:clamp(155px,47vh,205px);
+  }
+
+  /* Page climat intérieur : température et humidité plus visibles */
+  #indoorScreen .indoor-number{
+    font-size:clamp(118px,34vh,142px);
+    line-height:.98;
+    letter-spacing:-.06em;
+  }
+  #indoorScreen .indoor-unit{
+    font-size:.36em;
+    margin-left:5px;
+  }
+  #indoorScreen .indoor-label{
+    margin-top:2.2vh;
+    font-size:clamp(17px,4.5vh,20px);
+    letter-spacing:.10em;
+  }
 }
 
 </style>
