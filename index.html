@@ -721,12 +721,35 @@ body.night-mode #moonCanvas{
 /* AGRANDISSEMENT DES VALEURS — IPHONE 8 EN PAYSAGE */
 @media (orientation:landscape) and (max-height:430px) and (max-width:750px){
   /* Page météo : l'icône occupe davantage la moitié gauche */
+  /* La page 3 devient une vraie page météo plein écran : plus de bandeau horaire */
+  #outdoorScreen .rain-forecast{
+    display:none;
+  }
+  #outdoorScreen .outdoor-content{
+    justify-content:center;
+    padding:3vh 3vw;
+  }
   #outdoorScreen .outdoor-main{
+    height:100%;
     grid-template-columns:50% 50%;
+    padding-top:0;
+    align-items:center;
   }
   #outdoorScreen .outdoor-icon{
-    /* Icône contenue dans la zone météo, sans empiéter sur le bandeau pluie */
-    font-size:clamp(118px,33vh,138px);
+    /* Icône météo agrandie dans tout l'espace disponible */
+    font-size:clamp(170px,52vh,205px);
+  }
+  #outdoorScreen .outdoor-temperature{
+    font-size:clamp(118px,35vh,145px);
+  }
+  #outdoorScreen .outdoor-description{
+    font-size:clamp(17px,4.5vh,20px);
+  }
+  #outdoorScreen .outdoor-details{
+    margin-top:1.8vh;
+  }
+  #outdoorScreen .outdoor-detail strong{
+    font-size:clamp(24px,6vh,29px);
   }
 
   /* Page climat intérieur : température et humidité plus visibles */
@@ -844,18 +867,18 @@ body.night-mode #moonCanvas{filter:brightness(.68) saturate(.62) drop-shadow(0 0
 
 /* PAGE LUNE — LISIBILITE RENFORCEE SUR IPHONE 8 EN PAYSAGE */
 @media (orientation:landscape) and (max-height:420px){
-  .moon-information{gap:2.5vh;max-width:520px}
+  .moon-information{gap:2.5vh;max-width:540px}
   .moon-info-label{
-    font-size:3.8vh;
-    letter-spacing:.08em;
-    line-height:1.2;
+    font-size:clamp(16px,5.2vh,20px);
+    letter-spacing:.07em;
+    line-height:1.25;
   }
-  .moon-info-value{font-size:7vh;margin-top:5px}
-  .moon-next{gap:6px}
-  .moon-next-value{font-size:5vh;line-height:1.15}
-  body.night-mode .moon-info-label{color:#9aafc8}
-  body.night-mode .moon-info-value{color:#d2deed}
-  body.night-mode .moon-next-value{color:#c0d0e4}
+  .moon-info-value{font-size:clamp(35px,9vh,44px);margin-top:6px}
+  .moon-next{gap:7px}
+  .moon-next-value{font-size:clamp(24px,6.5vh,30px);line-height:1.2}
+  body.night-mode .moon-info-label{color:#aabbd0}
+  body.night-mode .moon-info-value{color:#dce6f2}
+  body.night-mode .moon-next-value{color:#cbd8e8}
 }
 
 </style>
