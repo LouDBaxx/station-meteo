@@ -25,16 +25,16 @@ body{position:fixed;inset:0}
   position:absolute;inset:0;width:100%;height:100%;
   padding:30px 5vw;display:flex;align-items:center;justify-content:center;
   opacity:0;visibility:hidden;
-  /* Fondu sortant : masquer la page seulement après les 2 secondes */
-  transition:opacity 2s ease,visibility 0s linear 2s,
-    background 2s ease,color 2s ease;
+  /* Fondu sortant lent : la page reste visible pendant toute la transition */
+  transition:opacity 4s cubic-bezier(.4,0,.2,1),visibility 0s linear 4s,
+    background 4s ease,color 4s ease;
   overflow:hidden;
 }
 .screen.active{
   opacity:1;visibility:visible;
-  /* Fondu entrant : rendre la page visible immédiatement, puis fondre */
-  transition:opacity 2s ease,visibility 0s,
-    background 2s ease,color 2s ease;
+  /* Fondu entrant lent et progressif */
+  transition:opacity 4s cubic-bezier(.4,0,.2,1),visibility 0s,
+    background 4s ease,color 4s ease;
 }
 
 /* HORLOGE */
@@ -345,7 +345,6 @@ body.night-mode #outdoorScreen::before{
 body.night-mode #outdoorScreen::after{
   background:linear-gradient(180deg,rgba(3,8,17,.28),rgba(3,8,17,.68));
 }
-body.night-mode .outdoor-location{color:rgba(215,228,245,.68)}
 body.night-mode .outdoor-temperature{color:#e0e9f4}
 body.night-mode .outdoor-description{color:rgba(220,232,246,.82)}
 body.night-mode .outdoor-detail{color:rgba(195,211,230,.68)}
@@ -387,7 +386,6 @@ body.night-mode #moonCanvas{
 
 /* TRANSITIONS DOUCES DU MODE NUIT */
 
-.screen,
 .clock-digital,
 .clock-date,
 .indoor-number,
@@ -689,21 +687,21 @@ body.night-mode #moonCanvas{
   #outdoorScreen .rain-forecast{height:31%;padding:1.5vh 2vw 1.2vh}
 }
 @media (orientation:landscape) and (max-height:430px) and (max-width:750px){
-  #outdoorScreen .outdoor-content{padding:5.2vh 3vw 1.5vh}
-  #outdoorScreen .outdoor-location{top:1.8%;font-size:clamp(11px,3.3vh,14px)}
-  #outdoorScreen .outdoor-main{height:61%;padding-top:1.2vh;grid-template-columns:48% 52%}
+  #outdoorScreen .outdoor-content{padding:2.2vh 3vw 1.5vh}
+  #outdoorScreen .outdoor-main{height:54%;padding-top:0;grid-template-columns:48% 52%}
   #outdoorScreen .outdoor-icon{font-size:clamp(125px,39vh,170px)}
   #outdoorScreen .outdoor-temperature{font-size:clamp(92px,27vh,116px)}
   #outdoorScreen .outdoor-description{margin-top:.8vh;font-size:clamp(14px,4vh,17px)}
   #outdoorScreen .outdoor-details{margin-top:1vh}
   #outdoorScreen .outdoor-detail{font-size:clamp(11px,2.8vh,13px);gap:7px}
   #outdoorScreen .outdoor-detail strong{font-size:clamp(21px,5.5vh,25px)}
-  #outdoorScreen .rain-forecast{height:33%;gap:.6vh;padding:1vh 2vw .8vh;border-radius:13px}
-  #outdoorScreen .rain-forecast-heading{font-size:clamp(12px,3.3vh,14px)}
-  #outdoorScreen .rain-timeline{gap:1.5vw}
-  #outdoorScreen .rain-hour-track{height:42%;width:min(100%,24px)}
-  #outdoorScreen .rain-hour-value{font-size:clamp(10px,2.7vh,12px)}
-  #outdoorScreen .rain-hour-time{font-size:clamp(9px,2.5vh,11px)}
+  #outdoorScreen .rain-forecast{height:41%;gap:.8vh;padding:1.2vh 2vw 1vh;border-radius:13px}
+  #outdoorScreen .rain-forecast-heading{font-size:clamp(13px,3.6vh,16px)}
+  #outdoorScreen .rain-timeline{gap:1.8vw;padding-top:.8vh}
+  #outdoorScreen .rain-hour{gap:.7vh}
+  #outdoorScreen .rain-hour-track{height:58%;width:min(100%,30px)}
+  #outdoorScreen .rain-hour-value{font-size:clamp(12px,3.2vh,15px)}
+  #outdoorScreen .rain-hour-time{font-size:clamp(11px,2.9vh,13px)}
   #outdoorScreen .outdoor-updated{top:2%;right:2vw;font-size:9px}
 }
 @media (orientation:portrait){
@@ -732,17 +730,17 @@ body.night-mode #moonCanvas{
 
   /* Page climat intérieur : température et humidité plus visibles */
   #indoorScreen .indoor-number{
-    font-size:clamp(118px,34vh,142px);
+    font-size:clamp(145px,42vh,170px);
     line-height:.98;
     letter-spacing:-.06em;
   }
   #indoorScreen .indoor-unit{
-    font-size:.36em;
-    margin-left:5px;
+    font-size:.34em;
+    margin-left:4px;
   }
   #indoorScreen .indoor-label{
-    margin-top:2.2vh;
-    font-size:clamp(17px,4.5vh,20px);
+    margin-top:1.8vh;
+    font-size:clamp(18px,5vh,22px);
     letter-spacing:.10em;
   }
 }
@@ -795,7 +793,6 @@ body.night-mode #moonCanvas{
 <section id="outdoorScreen" class="screen sky-clear day">
   <canvas id="weatherEffects"></canvas>
   <div class="outdoor-content">
-    <div class="outdoor-location">Saint-Samson-de-Bonfossé</div>
     <div id="weatherUpdated" class="outdoor-updated">Météo Open-Meteo</div>
     <div class="outdoor-main">
       <div class="outdoor-icon-wrap">
